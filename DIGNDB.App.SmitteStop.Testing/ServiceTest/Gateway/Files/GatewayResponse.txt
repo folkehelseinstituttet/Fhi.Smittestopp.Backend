@@ -1,0 +1,3 @@
+﻿{"keys": [{"keyData": "Wft+lPUq0FFP6i+9Kek6nQ==","rollingStartIntervalNumber": 1,"rollingPeriod": 144,"transmissionRiskLevel": 1,"visitedCountries": ["DE"],"origin": "DE","reportType": "CONFIRMED_CLINICAL_DIAGNOSIS"},
+{"keyData": "MPbfqhYP4oJ+E9aBwO9QwA==","rollingStartIntervalNumber": 1,"rollingPeriod": 144,"transmissionRiskLevel": 1,"visitedCountries": ["DE"],"origin": "DE","reportType": "CONFIRMED_CLINICAL_DIAGNOSIS"},
+{"keyData": "spSeaFNSf0fiVNb2r6DfzQ==","rollingStartIntervalNumber": 1,"rollingPeriod": 144,"transmissionRiskLevel": 1,"visitedCountries": ["DE"],"origin": "DE","reportType": "CONFIRMED_CLINICAL_DIAGNOSIS"}]}

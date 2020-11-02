@@ -1,0 +1,698 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Testing\\DIGNDB.App.SmitteStop.Testing.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.API\\DIGNDB.App.SmitteStop.API.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.API\\DIGNDB.App.SmitteStop.API.csproj",
+        "projectName": "DIGNDB.App.SmitteStop.API",
+        "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.API\\DIGNDB.App.SmitteStop.API.csproj",
+        "packagesPath": "C:\\Users\\mart\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.API\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\mart\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj"
+              },
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj"
+              },
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\FederationGatewayApi\\FederationGatewayApi.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\FederationGatewayApi\\FederationGatewayApi.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "AntiXSS": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "BouncyCastle.NetCore": {
+              "target": "Package",
+              "version": "[1.8.6, )"
+            },
+            "Google.Protobuf": {
+              "target": "Package",
+              "version": "[3.13.0, )"
+            },
+            "JWT": {
+              "target": "Package",
+              "version": "[7.2.1, )"
+            },
+            "Microsoft.AspNet.WebApi.Core": {
+              "target": "Package",
+              "version": "[5.2.7, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[3.1.4, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Versioning": {
+              "target": "Package",
+              "version": "[4.1.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Moq.Contrib.ExpressionBuilders.Logging": {
+              "target": "Package",
+              "version": "[1.0.5, )"
+            },
+            "Portable.BouncyCastle": {
+              "target": "Package",
+              "version": "[1.8.6.7, )"
+            },
+            "Serilog.Extensions.Logging.File": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.5.1, )"
+            },
+            "Swashbuckle.AspNetCore.Annotations": {
+              "target": "Package",
+              "version": "[5.5.1, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.5.1, )"
+            },
+            "log4net": {
+              "target": "Package",
+              "version": "[2.0.12, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.109\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj",
+        "projectName": "DIGNDB.App.SmitteStop.Core",
+        "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj",
+        "packagesPath": "C:\\Users\\mart\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\mart\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj"
+              },
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Domain\\DIGNDB.App.SmitteStop.Domain.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Domain\\DIGNDB.App.SmitteStop.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[10.0.0, )"
+            },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "BouncyCastle.NetCore": {
+              "target": "Package",
+              "version": "[1.8.6, )"
+            },
+            "Google.Protobuf": {
+              "target": "Package",
+              "version": "[3.13.0, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            },
+            "Portable.BouncyCastle": {
+              "target": "Package",
+              "version": "[1.8.6.7, )"
+            },
+            "Serilog.Extensions.Logging.File": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "System.Security.Cryptography.ProtectedData": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "log4net": {
+              "target": "Package",
+              "version": "[2.0.12, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.109\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj",
+        "projectName": "DIGNDB.App.SmitteStop.DAL",
+        "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj",
+        "packagesPath": "C:\\Users\\mart\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\mart\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Domain\\DIGNDB.App.SmitteStop.Domain.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Domain\\DIGNDB.App.SmitteStop.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Abstractions": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Serilog.Extensions.Logging.File": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.109\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Domain\\DIGNDB.App.SmitteStop.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Domain\\DIGNDB.App.SmitteStop.Domain.csproj",
+        "projectName": "DIGNDB.App.SmitteStop.Domain",
+        "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Domain\\DIGNDB.App.SmitteStop.Domain.csproj",
+        "packagesPath": "C:\\Users\\mart\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\mart\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Google.Protobuf": {
+              "target": "Package",
+              "version": "[3.13.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.109\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.APP.SmitteStop.Jobs\\DIGNDB.APP.SmitteStop.Jobs.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.APP.SmitteStop.Jobs\\DIGNDB.APP.SmitteStop.Jobs.csproj",
+        "projectName": "DIGNDB.APP.SmitteStop.Jobs",
+        "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.APP.SmitteStop.Jobs\\DIGNDB.APP.SmitteStop.Jobs.csproj",
+        "packagesPath": "C:\\Users\\mart\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.APP.SmitteStop.Jobs\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\mart\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj"
+              },
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj"
+              },
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\FederationGatewayApi\\FederationGatewayApi.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\FederationGatewayApi\\FederationGatewayApi.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "Hangfire": {
+              "target": "Package",
+              "version": "[1.7.12, )"
+            },
+            "Microsoft.Extensions.Hosting.WindowsServices": {
+              "target": "Package",
+              "version": "[3.1.8, )"
+            },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[3.1.8, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.109\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Testing\\DIGNDB.App.SmitteStop.Testing.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Testing\\DIGNDB.App.SmitteStop.Testing.csproj",
+        "projectName": "DIGNDB.App.SmitteStop.Testing",
+        "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Testing\\DIGNDB.App.SmitteStop.Testing.csproj",
+        "packagesPath": "C:\\Users\\mart\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Testing\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\mart\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.API\\DIGNDB.App.SmitteStop.API.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.API\\DIGNDB.App.SmitteStop.API.csproj"
+              },
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj"
+              },
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj"
+              },
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.APP.SmitteStop.Jobs\\DIGNDB.APP.SmitteStop.Jobs.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.APP.SmitteStop.Jobs\\DIGNDB.APP.SmitteStop.Jobs.csproj"
+              },
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\FederationGatewayApi\\FederationGatewayApi.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\FederationGatewayApi\\FederationGatewayApi.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "AutoFixture": {
+              "target": "Package",
+              "version": "[4.13.0, )"
+            },
+            "Bogus": {
+              "target": "Package",
+              "version": "[30.0.4, )"
+            },
+            "FluentAssertions": {
+              "target": "Package",
+              "version": "[5.10.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[3.1.5, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.4.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.14.1, )"
+            },
+            "NUnit3TestAdapter": {
+              "target": "Package",
+              "version": "[3.15.1, )"
+            },
+            "coverlet.msbuild": {
+              "target": "Package",
+              "version": "[2.9.0, )"
+            },
+            "nunit": {
+              "target": "Package",
+              "version": "[3.12.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.109\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\FederationGatewayApi\\FederationGatewayApi.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\FederationGatewayApi\\FederationGatewayApi.csproj",
+        "projectName": "FederationGatewayApi",
+        "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\FederationGatewayApi\\FederationGatewayApi.csproj",
+        "packagesPath": "C:\\Users\\mart\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\FederationGatewayApi\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\mart\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.Core\\DIGNDB.App.SmitteStop.Core.csproj"
+              },
+              "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj": {
+                "projectPath": "C:\\Users\\mart\\source\\repos\\SmitteStop\\DIGNDB.App.SmitteStop\\DIGNDB.App.SmitteStop.DAL\\DIGNDB.App.SmitteStop.DAL.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "BouncyCastle.NetCore": {
+              "target": "Package",
+              "version": "[1.8.6, )"
+            },
+            "Google.Protobuf": {
+              "target": "Package",
+              "version": "[3.13.0, )"
+            },
+            "Portable.BouncyCastle": {
+              "target": "Package",
+              "version": "[1.8.6.7, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.109\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

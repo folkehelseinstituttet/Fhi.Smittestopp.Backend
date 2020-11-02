@@ -1,0 +1,44 @@
+# .NET Core
+
+# execute on all branches
+trigger:
+- '*'
+
+pool: 'Default'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+
+# Build the project
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+  displayName: 'Building'
+
+# Run tests and collect code coverage
+- task: DotNetCoreCLI@2
+  inputs:
+    command: test
+    projects: '**/*Testing/*.csproj'
+    arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:Threshold=58 /p:ThresholdStat=total /p:thresholdType=line'
+  displayName: 'Running tests'
+
+# Create the deploy package
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+  displayName: 'Build deployment package'
+
+# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'DIGNDB.App.SmitteStop.API'
+  displayName: 'Publish build artifacts'
+

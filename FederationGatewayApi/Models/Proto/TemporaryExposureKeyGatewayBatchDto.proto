@@ -1,0 +1,56 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "FederationGatewayApi.Models.Proto";
+
+/// <summary>
+/// To compile proto class please:
+/// 1. download the protoc.exe (compiler) in the same version as Protobuffer Nuget. 
+/// 2. Add compiler bin catalog to the system path.
+/// 3. Open current project directory in the Powershell and run "protoc --csharp_out=.\Models\Proto\ .\Models\Proto\TemporaryExposureKeyGatewayBatchDto.proto"
+/// example: PS C:\Dev\Smitte\DIGNDB.App.SmitteStop\FederationGatewayApi> protoc --csharp_out=.\Models\Proto\ .\Models\Proto\TemporaryExposureKeyGatewayBatchDto.proto
+/// </summary>
+
+// Protobuf definition for exports of confirmed temporary exposure keys.
+//
+// These files have a 16-byte, zero-padded header before the protobuf data
+// starts. They will be contained in a zip archive, alongside a signature
+// file verifying the contents.
+//
+// See https://static.googleusercontent.com/media/www.google.com/en//covid19/exposurenotifications/pdfs/Exposure-Key-File-Format-and-Verification.pdf
+
+message TemporaryExposureKeyGatewayBatchDto {
+    repeated TemporaryExposureKeyGatewayDto keys = 1;
+}
+
+message TemporaryExposureKeyGatewayDto {
+   // Key of infected user
+  bytes key_data = 1;
+
+  // The interval number since epoch for which a key starts
+  uint32 rolling_start_interval_number = 2;
+
+  // Varying risk associated with a key depending on diagnosis method
+  // Increments of 10 minutes describing how long a key is valid
+  uint32 rolling_period = 3;
+
+  int32 transmission_risk_level = 4;
+
+  repeated string visited_countries = 5;
+
+  string origin = 6;
+
+  // Type of diagnosis associated with a key.
+  ReportType report_type = 7;
+
+  sint32 days_since_onset_of_symptoms = 8;
+
+  // Data type representing why this key was published.
+  enum ReportType {
+    UNKNOWN = 0;  // Never returned by the client API.
+    CONFIRMED_TEST = 1;
+    CONFIRMED_CLINICAL_DIAGNOSIS = 2;
+    SELF_REPORT = 3;
+    RECURSIVE = 4;  // Reserved for future use.
+    REVOKED = 5;  // Used to revoke a key, never returned by client API.
+  }
+}

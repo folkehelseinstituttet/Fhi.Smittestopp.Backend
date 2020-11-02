@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="BouncyCastle.NetCore" Version="1.8.6" />
+	  <PackageReference Include="Google.Protobuf" Version="3.13.0" />
+	  <PackageReference Include="Portable.BouncyCastle" Version="1.8.6.7" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DIGNDB.App.SmitteStop.Core\DIGNDB.App.SmitteStop.Core.csproj" />
+		<ProjectReference Include="..\DIGNDB.App.SmitteStop.DAL\DIGNDB.App.SmitteStop.DAL.csproj" />
+	</ItemGroup>
+
+</Project>
