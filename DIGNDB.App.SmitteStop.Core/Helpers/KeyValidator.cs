@@ -47,7 +47,7 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
             }
             if (!ValidateRollingPeriod(exposureKey.RollingPeriod))
             {
-                errorMessage += $"{ErrorPrefix} The RollingPeriod date should be in range of 10 minutes to 24 hours.";
+                errorMessage += $"{ErrorPrefix} The RollingPeriod date should be in range of 10 minutes to 24 hours. RollingPeriod: {exposureKey.RollingPeriod}";
                 return !Valid;
             }
             if (!ValidateRollingStartNumber(exposureKey.RollingStartNumber))
@@ -135,7 +135,6 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
 
         private bool ValidateKeyData(byte[] keyData)
         {
-
             return keyData.Length == KeySize;
         }
 
@@ -147,9 +146,6 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
         {
             return value >= minimum && value <= maximum;
         }
-
-
-
         #endregion
     }
 }
