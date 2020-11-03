@@ -51,6 +51,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             services.AddAutoMapper(typeof(CountryMapper));
 
             services.AddHangfire(x => x.UseSqlServerStorage(_hangfireConfig.HangFireConnectionString));
+            services.AddHangfireServer();
             services.AddDbContext<DigNDB_SmittestopContext>(opts =>
                 opts.UseSqlServer(_hangfireConfig.SmittestopConnectionString));
             services.AddScoped<ITemporaryExposureKeyRepository, TemporaryExposureKeyRepository>();
