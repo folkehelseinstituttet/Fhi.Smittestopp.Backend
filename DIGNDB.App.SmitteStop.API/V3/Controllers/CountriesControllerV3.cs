@@ -11,15 +11,15 @@ using Microsoft.Extensions.Logging;
 namespace DIGNDB.App.SmitteStop.API.V2.Controllers
 {
     [ApiController]
-    [ApiVersion("2")]
+    [ApiVersion("3")]
     [Route("v{version:apiVersion}/countries")]
-    public class CountriesController : ControllerBase
+    public class CountriesControlleV3 : ControllerBase
     {
         private readonly ICountryService _countryService;
         private readonly ILogger<CountriesController> _logger;
         private readonly IMapper _mapper;
 
-        public CountriesController(
+        public CountriesControlleV3(
             ICountryService countryService,
             ILogger<CountriesController> logger,
             IMapper mapper)
@@ -33,12 +33,6 @@ namespace DIGNDB.App.SmitteStop.API.V2.Controllers
         /// Returns a list of countries.
         /// This list could be shown to Smitte|Stop user so that he marks which countries he visited.
         /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     GET /countries
-        ///
-        /// </remarks>
         /// <returns>List of countries.</returns>
         /// <response code="200">Returns list of countries</response>
         [HttpGet]

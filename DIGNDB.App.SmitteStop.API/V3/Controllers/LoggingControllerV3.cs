@@ -18,19 +18,21 @@ using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 namespace DIGNDB.App.SmitteStop.API
 {
     [ApiController]
-    [ApiVersion("2")]
+    [ApiVersion("3")]
     [Route("v{version:apiVersion}/logging")]
-    public class LoggingControllerV2 : ControllerBase
+    public class LoggingControllerV3 : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogger<LoggingControllerV2> _logger;
+        private readonly ILogger<LoggingControllerV3> _logger;
         private readonly ILogMessageValidator _logMessageValidator;
         private readonly IDictionary<string, string> _logMobilePatternsDictionary;
         private readonly log4net.ILog _loggerMobile;
         private readonly int _maxTextFieldLength;
         private readonly bool _logEndpointOverride;
 
-        public LoggingControllerV2(ILogMessageValidator logMessageValidator, ILogger<LoggingControllerV2> logger,
+        public LoggingControllerV3(
+            ILogMessageValidator logMessageValidator,
+            ILogger<LoggingControllerV3> logger,
            IConfiguration configuration)
         {
             _logMessageValidator = logMessageValidator;
@@ -42,9 +44,8 @@ namespace DIGNDB.App.SmitteStop.API
             bool.TryParse(configuration["AppSettings:logEndpointOverride"], out _logEndpointOverride);
         }
 
-        [HttpPost]
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
-        [Route("logMessages")]
+        [HttpPost("logMessages")]
         public async Task<IActionResult> UploadMobileLogs()
         {
             var requestBody = String.Empty;
