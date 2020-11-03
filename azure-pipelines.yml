@@ -4,7 +4,9 @@
 trigger:
 - '*'
 
-pool: 'Default'
+pool:
+  name: Azure Pipelines
+  vmImage: ubuntu-lates
 
 variables:
   buildConfiguration: 'Release'
