@@ -27,6 +27,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs
                 }).ConfigureWebHost(config =>
                 {
                     config.UseUrls("http://localhost:5050");
-                }).UseWindowsService();
+                });
     }
 }

@@ -21,7 +21,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.EventLog;
 using System.Linq;
 using System.Reflection;
 
@@ -45,14 +44,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             ModelValidator.ValidateContract(_hangfireConfig);
             var gateWayConfig = _hangfireConfig.EuGateway;
 
-            var _eventLogConfig = _hangfireConfig.Logging.EventLog;
-            services.Configure<EventLogSettings>(config =>
-            {
-                config.SourceName = _eventLogConfig.SourceName;
-                config.LogName = _eventLogConfig.LogName;
-                config.MachineName = _eventLogConfig.MachineName;
-            });
-
             services.AddControllers().AddControllersAsServices();
             services.AddLogging();
 
@@ -60,6 +51,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             services.AddAutoMapper(typeof(CountryMapper));
 
             services.AddHangfire(x => x.UseSqlServerStorage(_hangfireConfig.HangFireConnectionString));
+            services.AddHangfireServer();
             services.AddDbContext<DigNDB_SmittestopContext>(opts =>
                 opts.UseSqlServer(_hangfireConfig.SmittestopConnectionString));
             services.AddScoped<ITemporaryExposureKeyRepository, TemporaryExposureKeyRepository>();
