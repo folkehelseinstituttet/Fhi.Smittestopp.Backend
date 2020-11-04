@@ -2,7 +2,7 @@
 {
     public class AuthOptions
     {
-        public bool AuthHeaderCheckEnabled { get; }
+        public bool MobileAuthHeaderCheckEnabled { get; }
 
         public AuthOptions() : this(false)
         {
@@ -11,7 +11,7 @@
 
         public AuthOptions(bool devMode)
         {
-            AuthHeaderCheckEnabled = !devMode;
+            MobileAuthHeaderCheckEnabled = !devMode;
         }
 
     }
