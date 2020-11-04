@@ -169,7 +169,7 @@ namespace DIGNDB.App.SmitteStop.API
             {
                 c.SwaggerEndpoint("v1/swagger.json", "API Version 1");
                 c.SwaggerEndpoint("v2/swagger.json", "API Version 2");
-                c.SwaggerEndpoint("v2/swagger.json", "API Version 3");
+                c.SwaggerEndpoint("v3/swagger.json", "API Version 3");
             });
 
             app.UseAuthorization();
