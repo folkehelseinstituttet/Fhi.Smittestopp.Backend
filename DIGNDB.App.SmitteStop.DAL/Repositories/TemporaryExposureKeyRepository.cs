@@ -103,7 +103,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
         {
             var query = _dbContext.TemporaryExposureKey
                .Include(k => k.Origin)
-               .Where(k => k.RollingStartNumber > rollingStartNumberThreshold);
+               .Where(k => k.RollingStartNumber >= rollingStartNumberThreshold);
 
             query = query.OrderBy(c => c.CreatedOn);
             return await TakeNextBatch(query, numberOfRecordsToSkip, batchSize).ToListAsync();
