@@ -62,18 +62,13 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddApiVersioning(config =>
             {
                 // Specify the default API Version
-                config.DefaultApiVersion = new ApiVersion(1, 0);
+                config.DefaultApiVersion = new ApiVersion(3, 0);
                 // If the client hasn't specified the API version in the request, use the default API version number
                 config.AssumeDefaultVersionWhenUnspecified = true;
                 // Advertise the API versions supported for the particular endpoint
                 config.ReportApiVersions = true;
                 config.ApiVersionReader = ApiVersionReader.Combine(
-                        new UrlSegmentApiVersionReader(),
-                        new HeaderApiVersionReader()
-                        {
-                            HeaderNames = { "api-version" }
-                        },
-                        new QueryStringApiVersionReader("v")
+                        new UrlSegmentApiVersionReader()
                 );
             });
 
@@ -81,6 +76,7 @@ namespace DIGNDB.App.SmitteStop.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API version 1", Version = "v1" });
                 c.SwaggerDoc("v2", new OpenApiInfo { Title = "API version 2", Version = "v2" });
+                c.SwaggerDoc("v3", new OpenApiInfo { Title = "API version 3", Version = "v3" });
                 c.OperationFilter<RemoveVersionParameterAttribute>();
                 c.DocumentFilter<FilterRoutesDocumentFilter>();
                 c.DocumentFilter<ReplaceVersionWithExactValueInPathAttribute>();
@@ -173,6 +169,7 @@ namespace DIGNDB.App.SmitteStop.API
             {
                 c.SwaggerEndpoint("v1/swagger.json", "API Version 1");
                 c.SwaggerEndpoint("v2/swagger.json", "API Version 2");
+                c.SwaggerEndpoint("v3/swagger.json", "API Version 3");
             });
 
             app.UseAuthorization();

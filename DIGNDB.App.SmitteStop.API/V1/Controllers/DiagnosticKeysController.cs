@@ -81,13 +81,13 @@ namespace DIGNDB.App.SmitteStop.API
                 if (r1_2 == false)
                 {
                     var exposureConfiguration = _exposureConfigurationService.GetConfiguration();
-                    _logger.LogInformation("V1.2 ExposureConfiguration fetched succesfully");
+                    _logger.LogInformation("V1.2 ExposureConfiguration fetched successfully");
                     return Ok(exposureConfiguration);
                 }
                 else
                 {
                     var exposureConfiguration = _exposureConfigurationService.GetConfigurationR1_2();
-                    _logger.LogInformation("ExposureConfiguration fetched succesfully");
+                    _logger.LogInformation("ExposureConfiguration fetched successfully");
                     return Ok(exposureConfiguration);
                 }
             }
@@ -136,7 +136,7 @@ namespace DIGNDB.App.SmitteStop.API
                     await _temporaryExposureKeyRepository.AddTemporaryExposureKeys(newTemporaryExposureKeys);
                 }
 
-                _logger.LogInformation("Keys uploaded succesfully");
+                _logger.LogInformation("Keys uploaded successfully");
                 return Ok();
             }
             catch (JsonException je)
@@ -152,8 +152,8 @@ namespace DIGNDB.App.SmitteStop.API
             }
             catch (SqlException e)
             {
-                _logger.LogError("Error occured when uploading keys to the database." + e);
-                return StatusCode(500, "Error occured when uploading keys to the database.");
+                _logger.LogError("Error occurred when uploading keys to the database." + e);
+                return StatusCode(500, "Error occurred when uploading keys to the database.");
             }
             catch (Exception e)
             {
@@ -212,7 +212,7 @@ namespace DIGNDB.App.SmitteStop.API
                     cacheResult = await _cacheOperations.GetCacheValue(packageDate);
                 }
 
-                //client should ask for the same file until batchcount increses. Then it should ask for that file with the higher batchcount.
+                //client should ask for the same file until batchcount increases. Then it should ask for that file with the higher batchcount.
                 //Call for the day should stop, once a package with FinalForTheDay has been returned. then app can ask for next days package.
                 Response.Headers.Add("Batchcount", cacheResult?.FileBytesList?.Count.ToString() ?? "0");
                 var isLastPackage = (packageNumber == cacheResult?.FileBytesList?.Count - 1) ? true : false;
@@ -231,12 +231,12 @@ namespace DIGNDB.App.SmitteStop.API
                     return NotFound();
                 }
 
-                _logger.LogInformation("Zip package fetched succesfully");
+                _logger.LogInformation("Zip package fetched successfully");
                 return File(cacheResult.FileBytesList[packageNumber], "application/zip");
             }
             catch(SynchronizationLockException e)
             {
-                _logger.LogError("Timout getting lock: " + e);
+                _logger.LogError("Timeout getting lock: " + e);
                 return Accepted();
             }
             catch (FormatException e)

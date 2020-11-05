@@ -82,7 +82,7 @@ namespace DIGNDB.App.SmitteStop.API
                     }
                 }
 
-                _logger.LogDebug("Log message saved successfuly");
+                _logger.LogDebug("Log message saved successfully");
                 return Ok();
             }
             catch (HttpResponseException ex)
@@ -97,7 +97,7 @@ namespace DIGNDB.App.SmitteStop.API
             }
             catch (Exception ex)
             {
-                _logger.LogError("An error occured while trying to save logs " + ex);
+                _logger.LogError("An error occurred while trying to save logs " + ex);
                 return StatusCode(500);
             }
         }

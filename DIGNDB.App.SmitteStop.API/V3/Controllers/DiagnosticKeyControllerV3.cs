@@ -3,6 +3,7 @@ using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.App.SmitteStop.Domain.Dto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -11,17 +12,17 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
-
-namespace DIGNDB.App.SmitteStop.API
+namespace DIGNDB.App.SmitteStop.API.V3.Controllers
 {
     [ApiController]
     [ApiVersion(_apiVersion)]
     [Route("v{version:apiVersion}/diagnostickeys")]
-    public class DiagnosticKeysControllerV2 : ControllerBase
+    public class DiagnosticKeyControllerV3 : ControllerBase
     {
+        private const string _apiVersion = "3";
+
         private readonly IAppleService _appleService;
         private readonly IAddTemporaryExposureKeyService _addTemporaryExposureKeyService;
         private readonly IConfiguration _configuration;
@@ -32,12 +33,17 @@ namespace DIGNDB.App.SmitteStop.API
         private readonly IZipFileInfoService _zipFileInfoService;
         private readonly IAppSettingsConfig _appSettingsConfig;
 
-        private const string _apiVersion = "2";
 
-        public DiagnosticKeysControllerV2(ILogger<DiagnosticKeysControllerV2> logger, IAppleService appleService,
-            IConfiguration configuration, IExposureKeyValidator exposureKeyValidator,
-            IExposureConfigurationService exposureConfigurationService, IKeyValidationConfigurationService keyValidationConfigurationService,
-            IAddTemporaryExposureKeyService addTemporaryExposureKeyService, IZipFileInfoService zipFileInfoService, IAppSettingsConfig appSettingsConfig)
+        public DiagnosticKeyControllerV3(
+            ILogger<DiagnosticKeyControllerV3> logger,
+            IAppleService appleService,
+            IConfiguration configuration,
+            IExposureKeyValidator exposureKeyValidator,
+            IExposureConfigurationService exposureConfigurationService,
+            IKeyValidationConfigurationService keyValidationConfigurationService,
+            IAddTemporaryExposureKeyService addTemporaryExposureKeyService,
+            IZipFileInfoService zipFileInfoService,
+            IAppSettingsConfig appSettingsConfig)
         {
             _configuration = configuration;
             _exposureKeyValidator = exposureKeyValidator;
@@ -51,10 +57,9 @@ namespace DIGNDB.App.SmitteStop.API
         }
 
         #region Smitte|stop API
-        [HttpGet]
-        [Route("exposureconfiguration")]
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
-        public  ActionResult GetExposureConfiguration()
+        [HttpGet("exposureconfiguration")]
+        public ActionResult GetExposureConfiguration()
         {
             try
             {
@@ -73,14 +78,12 @@ namespace DIGNDB.App.SmitteStop.API
                 _logger.LogError("Error returning config:" + e);
                 return StatusCode(500);
             }
-
         }
 
         [HttpPost]
         [TypeFilter(typeof(AuthorizationAttribute))]
         public async Task<IActionResult> UploadDiagnosisKeys()
         {
-
             var requestBody = String.Empty;
 
             try
@@ -120,9 +123,8 @@ namespace DIGNDB.App.SmitteStop.API
         /// </summary>
         /// <param name="packageName">A timestamp in the format of "yyyy-mm-dd"</param>
         /// <returns></returns>
-        [HttpGet]
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
-        [Route("{packageName}")]
+        [HttpGet("{packageName}")]
         public IActionResult DownloadDiagnosisKeysFile(string packageName)
         {
             _logger.LogInformation("DownloadDiagnosisKeysFile endpoint called");
