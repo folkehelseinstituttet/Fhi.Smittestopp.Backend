@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
 using JWT.Algorithms;
 using JWT.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -10,17 +11,21 @@ using Microsoft.Extensions.Logging;
 
 namespace DIGNDB.App.SmitteStop.API.Attributes
 {
-    public class AuthorizationAttribute : Attribute, IActionFilter
+    public class AuthorizationAttribute : ActionFilterAttribute
     {
         private readonly IAppSettingsConfig _appSettingsConfig;
+        private readonly AuthOptions _authOptions;
 
-        public AuthorizationAttribute(IAppSettingsConfig appSettingsConfig)
+        public AuthorizationAttribute(IAppSettingsConfig appSettingsConfig, AuthOptions authOptions)
         {
             _appSettingsConfig = appSettingsConfig;
+            _authOptions = authOptions;
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
+            if (!_authOptions.AuthHeaderCheckEnabled) return;
+
             var logger = context.HttpContext.RequestServices.GetService<ILogger<DiagnosticKeysController>>();
             try
             {

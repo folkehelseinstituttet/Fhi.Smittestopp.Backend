@@ -25,7 +25,7 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!_authOptions.MobileAuthHeaderCheckEnabled) return;
+            if (!_authOptions.AuthHeaderCheckEnabled) return;
 
             StringValues values = new StringValues();
             if (context.HttpContext.Request.Headers.TryGetValue("authorization_mobile", out values))
