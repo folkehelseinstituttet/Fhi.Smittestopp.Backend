@@ -1,4 +1,5 @@
-﻿using FederationGatewayApi.Config;
+﻿using System.Collections.Generic;
+using FederationGatewayApi.Config;
 using System.ComponentModel.DataAnnotations;
 
 namespace DIGNDB.APP.SmitteStop.Jobs.Config
@@ -11,8 +12,8 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Config
         [Required(AllowEmptyStrings = false)]
         public string SmittestopConnectionString { get; set; }
 
-        [Required(AllowEmptyStrings = false)]
-        public string ZipFilesFolder { get; set; }
+        [Required]
+        public List<string> ZipFilesFolders { get; set; }
 
         [Required]
         public int DaysToInvalidateZipFile { get; set; }

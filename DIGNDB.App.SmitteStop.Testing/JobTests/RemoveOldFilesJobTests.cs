@@ -7,6 +7,7 @@ using DIGNDB.APP.SmitteStop.Jobs.Jobs.Interfaces;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace DIGNDB.App.SmitteStop.Testing.JobTests
 {
@@ -21,7 +22,7 @@ namespace DIGNDB.App.SmitteStop.Testing.JobTests
         public void Init()
         {
             _hangfireConfig = new HangfireConfig();
-            _hangfireConfig.ZipFilesFolder = "";
+            _hangfireConfig.ZipFilesFolders = new List<string>(){""};
             _hangfireConfig.DaysToInvalidateZipFile = 1;
             _fileSystem = new FileSystemMockFactory().GetMock();
             _zipFileInfo = new ZipFileInfoServiceMockFactory().GetMock();
