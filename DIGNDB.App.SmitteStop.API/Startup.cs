@@ -133,6 +133,8 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<IEpochConverter, EpochConverter>();
             services.AddScoped<IRiskCalculator, RiskCalculator>();
 
+            services.AddCoreDependencies();
+
             services.AddMemoryCache();
 
             var controllers = Assembly.GetExecutingAssembly().GetTypes()
