@@ -140,7 +140,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V2
         public void GetExposureConfiguration_ShouldReturnOkResult()
         {
             var result = _controller.GetExposureConfiguration();
-            Assert.That(result.Result, Is.InstanceOf<StatusCodeResult>());
+            Assert.That(result, Is.InstanceOf<StatusCodeResult>());
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V2
         public void DownloadDiagnosisKeysFile_GiveInvalidDate_ShouldReturnBadRequest(string invalidDate)
         {
             var result = _controller.DownloadDiagnosisKeysFile(invalidDate);
-            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -172,8 +172,8 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V2
             _controller.ControllerContext.HttpContext = contextWithoutCacheControl;
             var result = _controller.DownloadDiagnosisKeysFile("");
 
-            Assert.That(((FileContentResult)result.Result).FileContents, Is.Not.Empty);
-            Assert.That(((FileContentResult)result.Result).ContentType, Is.EqualTo("application/zip"));
+            Assert.That(((FileContentResult)result).FileContents, Is.Not.Empty);
+            Assert.That(((FileContentResult)result).ContentType, Is.EqualTo("application/zip"));
             string nextBatchExistsString = _controller.Response.Headers["nextBatchExists"].ToString();
             Assert.That(bool.Parse(nextBatchExistsString), Is.True);
         }
