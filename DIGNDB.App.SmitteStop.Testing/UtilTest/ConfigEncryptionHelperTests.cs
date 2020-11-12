@@ -1,29 +1,42 @@
 ﻿using NUnit.Framework;
 using DIGNDB.App.SmitteStop.Core.Helpers;
+using System.Security.Cryptography;
+using System.Text;
 using System;
-using FluentAssertions;
 
 namespace DIGNDB.App.SmitteStop.Testing.UtilTest
 {
     [TestFixture]
     public class ConfigEncryptionHelperTests
     {
+        private byte[] s_aditionalEntropy = { 2, 1, 6, 8, 11 };
+        
+        [Test]
         [TestCase("testEncrypt")]
         [TestCase("abc123@[.]")]
         [TestCase("===@Nghjt")]
         public void ConfigEncryptionHelper_UnprotectedData_ShouldReturnString(string expectValue)
         {
-            Action unprotectString = () => ConfigEncryptionHelper.UnprotectString(null);
-            unprotectString.Should().Throw<NotImplementedException>();
+            var encryptedExpectValue = ProtectedData.Protect(Encoding.UTF8.GetBytes(expectValue), 
+                s_aditionalEntropy, DataProtectionScope.CurrentUser);
+            var encryptedExpectValueToBase64 = Convert.ToBase64String(encryptedExpectValue);
+            var decryptedValue = ConfigEncryptionHelper.UnprotectString(encryptedExpectValueToBase64);
+            Assert.AreEqual(expectValue, decryptedValue);
         }
 
+        [Test]
         [TestCase("testEncrypt")]
         [TestCase("abc123@[.]")]
         [TestCase("===@Nghjt")]
         public void ConfigEncryptionHelper_ProtectedData_ShouldReturnSameDataWhenDecrypted(string data)
         {
-            Action protectString = () => ConfigEncryptionHelper.ProtectString(data);
-            protectString.Should().Throw<NotImplementedException>();
+            var encryptedData = ConfigEncryptionHelper.ProtectString(data);
+            
+            //decrypteding to check
+            var unprotectData = ProtectedData.Unprotect(Convert.FromBase64String(encryptedData),
+                s_aditionalEntropy, DataProtectionScope.CurrentUser);
+            var expectData = Encoding.UTF8.GetString(unprotectData);
+            Assert.AreEqual(expectData, data);
         }
     }
 }
