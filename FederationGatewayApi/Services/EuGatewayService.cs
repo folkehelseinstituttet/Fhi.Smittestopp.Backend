@@ -393,7 +393,7 @@ namespace FederationGatewayApi.Services
 
         private bool TrySendKeyBatchToTheGateway(TemporaryExposureKeyGatewayBatchProtoDto protoBatch, SortOrder keySortOrderForSignature)
         {
-            var upoadKeysEndpointUrl = _euGatewayConfig.Url + EuGatewayContract.Endpoint.KeysUploadEndpoint;
+            var upoadKeysEndpointUrl = _euGatewayConfig.UrlNormalized + EuGatewayContract.Endpoint.KeysUploadEndpoint;
             var batchBytes = protoBatch.ToByteArray();
 
             //sign
