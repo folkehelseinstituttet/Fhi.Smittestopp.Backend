@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-using DIGNDB.App.SmitteStop.API.Services;
+using DIGNDB.App.SmitteStop.API;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Enums;
 using DIGNDB.App.SmitteStop.Testing.Mocks;
@@ -34,6 +35,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
     public class EuGatewayServiceUploadTest
     {
         private DigNDB_SmittestopContext _dbContext;
+        private Country _originCountry;
         private EuGatewayConfig _config;
 
         private Country _denmark;
@@ -65,6 +67,8 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 
             _dbContext.AddRange(new Country[] { _denmark, _poland, _germany, _latvia });
             _dbContext.SaveChanges();
+
+            _originCountry = _denmark;
         }
 
         [TestCase(1)]
@@ -374,7 +378,9 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         private EuGatewayService CreateGatewayServiceAndDependencies(IGatewayHttpClient httpClient)
         {
             var translationsRepositoryMock = new Mock<IGenericRepository<Translation>>(MockBehavior.Strict);
-            var countryRepository = new CountryRepository(_dbContext, translationsRepositoryMock.Object);
+
+            IOriginSpecificSettings originConfig = new AppSettingsConfig() { OriginCuntryCode = _originCountry.Code.ToUpper() };
+            var countryRepository = new CountryRepository(_dbContext, translationsRepositoryMock.Object, originConfig);
             var keysRepository = new TemporaryExposureKeyRepository(_dbContext, countryRepository);
 
             var signatureServiceMock = new Mock<ISignatureService>(MockBehavior.Strict);

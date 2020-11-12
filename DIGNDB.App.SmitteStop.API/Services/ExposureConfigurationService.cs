@@ -20,6 +20,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
         public ExposureConfiguration RetrieveExposureConfigurationFromConfig(IConfiguration configuration, string configSectionName)
         {
             ExposureConfiguration exposureConfiguration = new ExposureConfiguration();
+            // TODO But why?
             exposureConfiguration.AttenuationScores = configuration.GetSection(configSectionName)
                 .GetSection("AttenuationScores").GetChildren().Select(x => int.Parse(x.Value)).ToArray();
             exposureConfiguration.AttenuationWeight = int.Parse(configuration[$"{configSectionName}:AttenuationWeight"]);
@@ -37,6 +38,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
                 .GetSection("TransmissionRiskScores").GetChildren().Select(x => int.Parse(x.Value)).ToArray();
             exposureConfiguration.TransmissionRiskWeight =
                 int.Parse(configuration[$"{configSectionName}:TransmissionRiskWeight"]);
+
             return exposureConfiguration;
         }
 

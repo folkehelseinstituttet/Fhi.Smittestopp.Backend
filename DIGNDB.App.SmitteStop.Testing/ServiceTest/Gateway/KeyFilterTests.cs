@@ -15,6 +15,7 @@ using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using DIGNDB.App.SmitteStop.API;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 {
@@ -30,7 +31,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         public Mock<ITemporaryExposureKeyRepository> _repository;
         public Mock<ICountryRepository> _countryRepository;
         public SetupMockedServices _mockServices;
-        private Mock<IKeyValidationConfigurationService> _configurationMock;
 
         private const int DaysOffset = 14;
 
@@ -48,10 +48,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             _keyMapper = _mockServices.CreateAutoMapperWithDependencies(_countryRepository.Object);
             _mockServices.SetupKeyValidatorMock(_keyValidator);
             _mockServices.SetupTemopraryExposureKeyRepositoryMock(_repository);
-
-            _configurationMock = new Mock<IKeyValidationConfigurationService>();
-            _configurationMock.Setup(m => m.GetConfiguration())
-                .Returns(new KeyValidationConfiguration() {OutdatedKeysDayOffset = DaysOffset});
 
             var mapper = new ExposureKeyMapper();
             _keyFilter = new KeyFilter(_keyMapper, _keyValidator.Object, mapper, _logger.Object, _repository.Object);
@@ -105,7 +101,9 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             var dbContext = new DigNDB_SmittestopContext(options);
             dbContext.Database.EnsureDeleted();
             var translationsRepositoryMock = new Mock<IGenericRepository<Translation>>(MockBehavior.Strict);
-            var countryRepository = new CountryRepository(dbContext, translationsRepositoryMock.Object);
+
+            var originSpecificSettings = new AppSettingsConfig() { OriginCuntryCode = "dk" };
+            var countryRepository = new CountryRepository(dbContext, translationsRepositoryMock.Object, originSpecificSettings);
             var keysRepository = new TemporaryExposureKeyRepository(dbContext, countryRepository);
 
             _keyFilter = new KeyFilter(_keyMapper, _keyValidator.Object, new ExposureKeyMapper(), _logger.Object, keysRepository);

@@ -1,20 +1,23 @@
 ﻿using DIGNDB.App.SmitteStop.DAL.Context;
-using Microsoft.EntityFrameworkCore;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
+using DIGNDB.App.SmitteStop.Domain.Db;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Domain.Db;
 
 namespace DIGNDB.App.SmitteStop.DAL.Repositories
 {
     public class CountryRepository : GenericRepository<Country>, ICountryRepository
     {
         private readonly IGenericRepository<Translation> _translationRepository;
-        private const string DenmarkIsoCode = "DK";
+        private readonly IOriginSpecificSettings _originSpecificSettings;
 
-        public CountryRepository(DigNDB_SmittestopContext context, IGenericRepository<Translation> translationRepository) : base(context)
+        private Country _originCountryCached;
+
+        public CountryRepository(DigNDB_SmittestopContext context, IGenericRepository<Translation> translationRepository, IOriginSpecificSettings originSpecificSettings ) : base(context)
         {
             _translationRepository = translationRepository;
+            _originSpecificSettings = originSpecificSettings;
         }
 
         public override async Task<IEnumerable<Country>> GetAllAsync()
@@ -35,7 +38,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             return countries.Where(c => c.VisitedCountriesEnabled).ToList();
         }
 
-        public async Task<IEnumerable<Country>> GetGetCountriesToPullFrom()
+        public async Task<IEnumerable<Country>> GetAllCountriesWithGatewayPullingEnabled()
         {
             var countries = await GetAllAsync();
 
@@ -57,10 +60,14 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                 .ToList();
         }
 
-        public Country GetDenmarkCountry()
+        public Country GetApiOriginCountry()
         {
-            return FindByIsoCode(DenmarkIsoCode);
+            if(_originCountryCached == null)
+            {
+                string originCode = _originSpecificSettings.OriginCuntryCode;
+                _originCountryCached = FindByIsoCode(originCode) ?? throw new System.ArgumentException($"Invalid Origin country code: {originCode}. Configuration is wrong!");
+            }
+            return _originCountryCached;
         }
-
     }
 }

@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
-using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using Microsoft.Data.SqlClient;
-using System.Web.Http;
-using DIGNDB.App.SmitteStop.API.Attributes;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
-using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
-using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
-using DIGNDB.App.SmitteStop.Core.Helpers;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using DIGNDB.App.SmitteStop.Domain.Enums;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Http;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace DIGNDB.App.SmitteStop.API
 {
@@ -42,16 +39,16 @@ namespace DIGNDB.App.SmitteStop.API
         private readonly IExposureKeyValidator _exposureKeyValidator;
         private readonly ILogger _logger;
         private readonly IExposureConfigurationService _exposureConfigurationService;
-        private readonly IKeyValidationConfigurationService _keyValidationConfigurationService;
+        private readonly KeyValidationConfiguration _keyValidationRulesConfig;
         private readonly bool _enableCacheOverride;
         private readonly ICountryService _countryService;
         private readonly ICountryRepository _countryRepository;
-        private readonly IAppSettingsConfig _appSettingsConfig;
+        private readonly AppSettingsConfig _appSettingsConfig;
 
         public DiagnosticKeysController(ICacheOperations cacheOperations, ILogger<DiagnosticKeysController> logger, IAppleService appleService,
             ITemporaryExposureKeyRepository temporaryExposureKeyRepository, IExposureKeyMapper exposureKeyMapper, IConfiguration configuration, IExposureKeyValidator exposureKeyValidator,
-            IExposureConfigurationService exposureConfigurationService, IKeyValidationConfigurationService keyValidationConfigurationService, 
-            ICountryRepository countryRepository, ICountryService countryService, IAppSettingsConfig appSettingsConfig, IAddTemporaryExposureKeyService addTemporaryExposureKeyService)
+            IExposureConfigurationService exposureConfigurationService, KeyValidationConfiguration keyValidationRulesConfig, 
+            ICountryRepository countryRepository, ICountryService countryService, AppSettingsConfig appSettingsConfig, IAddTemporaryExposureKeyService addTemporaryExposureKeyService)
         {
             _addTemporaryExposureKeyService = addTemporaryExposureKeyService;
             _cacheOperations = cacheOperations;
@@ -62,7 +59,7 @@ namespace DIGNDB.App.SmitteStop.API
             _logger = logger;
             _appleService = appleService;
             _exposureConfigurationService = exposureConfigurationService;
-            _keyValidationConfigurationService = keyValidationConfigurationService;
+            _keyValidationRulesConfig = keyValidationRulesConfig;
             _countryService = countryService;
             _appSettingsConfig = appSettingsConfig;
             _countryRepository = countryRepository;
@@ -120,8 +117,8 @@ namespace DIGNDB.App.SmitteStop.API
                 }
 
                 var parameter = JsonSerializer.Deserialize<TemporaryExposureKeyBatchDto>(requestBody);
-                _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameter, _keyValidationConfigurationService.GetConfiguration(), _logger);
-                if (_appSettingsConfig.Configuration.GetValue<bool>("deviceVerificationEnabled"))
+                _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameter, _keyValidationRulesConfig, _logger);
+                if (_appSettingsConfig.DeviceVerificationEnabled)
                     await _exposureKeyValidator.ValidateDeviceVerificationPayload(parameter, _appleService, _logger);
                 var newTemporaryExposureKeys = await _addTemporaryExposureKeyService.GetFilteredKeysEntitiesFromDTO(parameter);
                 if (newTemporaryExposureKeys.Any())

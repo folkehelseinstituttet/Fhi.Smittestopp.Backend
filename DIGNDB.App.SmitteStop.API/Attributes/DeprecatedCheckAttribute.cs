@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Net;
 
 namespace DIGNDB.App.SmitteStop.API.Attributes
 {
@@ -10,9 +9,9 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
     {
         private List<string> DeprecatedVersions { get; } = new List<string>();
 
-        public DeprecatedCheckAttribute(IAppSettingsConfig appSettingsConfig)
+        public DeprecatedCheckAttribute(AppSettingsConfig appSettingsConfig)
         {
-            appSettingsConfig.Configuration.GetSection(nameof(DeprecatedVersions)).Bind(DeprecatedVersions);
+            DeprecatedVersions = appSettingsConfig.DeprecatedVersions;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

@@ -17,11 +17,10 @@ namespace DIGNDB.App.SmitteStop.API.Services
         private readonly IGenericRepository<TemporaryExposureKeyCountry> _temporaryExposureKeyCountryRepository;
         private readonly ITemporaryExposureKeyRepository _temporaryExposureKeyRepository;
         private readonly IExposureKeyMapper _exposureKeyMapper;
-        private IAppSettingsConfig _appSettingsConfig;
+        private readonly AppSettingsConfig _appSettingsConfig;
 
-        private string _maxKeysPerFileConfigString = "MaxKeysPerFile";
         public AddTemporaryExposureKeyService(ICountryRepository countryRepository, IGenericRepository<TemporaryExposureKeyCountry> temporaryExposureKeyCountryRepository,
-            IExposureKeyMapper exposureKeyMapper, ITemporaryExposureKeyRepository temporaryExposureKeyRepository, IAppSettingsConfig appSettingsConfig)
+            IExposureKeyMapper exposureKeyMapper, ITemporaryExposureKeyRepository temporaryExposureKeyRepository, AppSettingsConfig appSettingsConfig)
         {
             _countryRepository = countryRepository;
             _temporaryExposureKeyCountryRepository = temporaryExposureKeyCountryRepository;
@@ -49,7 +48,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
         private async Task<List<TemporaryExposureKey>> FilterDuplicateIncommingKeys(List<TemporaryExposureKey> incomingKeys)
         {
             int numberOfRecordsToSkip = 0;
-            int batchSize = _appSettingsConfig.Configuration.GetValue<int>(_maxKeysPerFileConfigString);
+            int batchSize = _appSettingsConfig.MaxKeysPerFile;
             long lowestRollingStartNumber = GetLowestRollingStartNumber(incomingKeys);
             var existingKeysBatch = await _temporaryExposureKeyRepository.GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(lowestRollingStartNumber, numberOfRecordsToSkip, batchSize);
             while (existingKeysBatch.Count != 0)

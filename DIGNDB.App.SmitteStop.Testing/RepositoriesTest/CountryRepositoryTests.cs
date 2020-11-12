@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Bogus;
+using DIGNDB.App.SmitteStop.API;
 using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -54,12 +56,12 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
         }
 
         [Test]
-        public void TestGetDenmarkCountry()
+        public void TestGetOriginCountry()
         {
             var fakeCountries = GenerateFakeCountries();
             var countryRepository = CreateCountryRepository(fakeCountries);
 
-            var denmarkCountry = countryRepository.GetDenmarkCountry();
+            var denmarkCountry = countryRepository.GetApiOriginCountry();
 
             denmarkCountry.Code.Should().Be(ExampleCountryCodeDk);
         }
@@ -93,7 +95,8 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
 
             var translationRepositoryMock = new Mock<IGenericRepository<Translation>>();
 
-            return new CountryRepository(context, translationRepositoryMock.Object);
+            IOriginSpecificSettings config = new AppSettingsConfig() { OriginCuntryCode = ExampleCountryCodeDk};
+            return new CountryRepository(context, translationRepositoryMock.Object, config);
         }
 
         private Country[] GenerateFakeCountries()

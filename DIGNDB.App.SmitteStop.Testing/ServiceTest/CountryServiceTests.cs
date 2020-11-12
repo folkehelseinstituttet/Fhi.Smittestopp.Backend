@@ -44,7 +44,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 .Setup(mock => mock.GetVisibleAsync())
                 .ReturnsAsync(_countries);
             _countryRepositoryMock
-                .Setup(mock => mock.GetGetCountriesToPullFrom())
+                .Setup(mock => mock.GetAllCountriesWithGatewayPullingEnabled())
                 .ReturnsAsync(_countries);
         }
 

@@ -2,9 +2,7 @@
 using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Dto;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,31 +13,40 @@ using System.Web.Http;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
-namespace DIGNDB.App.SmitteStop.API
+namespace DIGNDB.App.SmitteStop.API.Controllers
 {
     [ApiController]
+    [ApiVersion("1")]
     [ApiVersion("2")]
+    [ApiVersion("3")]
     [Route("v{version:apiVersion}/logging")]
-    public class LoggingControllerV2 : ControllerBase
+    [Route("logging")]
+    public class LoggingController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        private readonly ILogger<LoggingControllerV2> _logger;
+        private readonly LogValidationRulesConfig _logValidationRulesCfg;
+        private readonly AppSettingsConfig _appSettingsConfig;
+
+        private readonly ILogger<LoggingController> _logger;
         private readonly ILogMessageValidator _logMessageValidator;
         private readonly IDictionary<string, string> _logMobilePatternsDictionary;
         private readonly log4net.ILog _loggerMobile;
         private readonly int _maxTextFieldLength;
         private readonly bool _logEndpointOverride;
 
-        public LoggingControllerV2(ILogMessageValidator logMessageValidator, ILogger<LoggingControllerV2> logger,
-           IConfiguration configuration)
+        public LoggingController(
+            ILogMessageValidator logMessageValidator,
+            ILogger<LoggingController> logger,
+            LogValidationRulesConfig logValidationRulesCfg,
+            AppSettingsConfig appSettingsConfig)
         {
             _logMessageValidator = logMessageValidator;
-            _configuration = configuration;
+            _logValidationRulesCfg = logValidationRulesCfg;
+            _appSettingsConfig = appSettingsConfig;
             _logger = logger;
-            _logMobilePatternsDictionary = InitializePatternDictionary(_configuration);
+            _logMobilePatternsDictionary = InitializePatternDictionary(_logValidationRulesCfg);
             _loggerMobile = MobileLoggerFactory.GetLogger();
-            int.TryParse(configuration["LogValidationRules:maxTextFieldLength"], out _maxTextFieldLength);
-            bool.TryParse(configuration["AppSettings:logEndpointOverride"], out _logEndpointOverride);
+            _maxTextFieldLength = _logValidationRulesCfg.MaxTextFieldLength;
+            _logEndpointOverride = _appSettingsConfig.LogEndpointOverride;
         }
 
         [HttpPost]
@@ -47,7 +54,7 @@ namespace DIGNDB.App.SmitteStop.API
         [Route("logMessages")]
         public async Task<IActionResult> UploadMobileLogs()
         {
-            var requestBody = String.Empty;
+            var requestBody = string.Empty;
             try
             {
                 if (_logEndpointOverride)
@@ -101,14 +108,15 @@ namespace DIGNDB.App.SmitteStop.API
                 return StatusCode(500);
             }
         }
-        private IDictionary<string, string> InitializePatternDictionary(IConfiguration configuration)
+
+        private IDictionary<string, string> InitializePatternDictionary(LogValidationRulesConfig configuration)
         {
             var logMobilePatternsDictionary = new Dictionary<string, string>();
-            logMobilePatternsDictionary.Add("severityRegex", configuration["LogValidationRules:severityRegex"]);
-            logMobilePatternsDictionary.Add("positiveNumbersRegex", configuration["LogValidationRules:positiveNumbersRegex"]);
-            logMobilePatternsDictionary.Add("buildVersionRegex", configuration["LogValidationRules:buildVersionRegex"]);
-            logMobilePatternsDictionary.Add("operationSystemRegex", configuration["LogValidationRules:operationSystemRegex"]);
-            logMobilePatternsDictionary.Add("deviceOSVersionRegex", configuration["LogValidationRules:deviceOSVersionRegex"]);
+            logMobilePatternsDictionary.Add("severityRegex", configuration.SeverityRegex);
+            logMobilePatternsDictionary.Add("positiveNumbersRegex", configuration.PositiveNumbersRegex);
+            logMobilePatternsDictionary.Add("buildVersionRegex", configuration.BuildVersionRegex);
+            logMobilePatternsDictionary.Add("operationSystemRegex", configuration.OperationSystemRegex);
+            logMobilePatternsDictionary.Add("deviceOSVersionRegex", configuration.DeviceOSVersionRegex);
             return logMobilePatternsDictionary;
         }
     }

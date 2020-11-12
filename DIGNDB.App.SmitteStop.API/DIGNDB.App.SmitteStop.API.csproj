@@ -12,12 +12,9 @@
     <DocumentationFile>bin\Release\DIGNDB.App.SmitteStop.API.xml</DocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Controllers\**" />
-    <Content Remove="Controllers\**" />
-    <EmbeddedResource Remove="Controllers\**" />
-    <None Remove="Controllers\**" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702,1591</NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AntiXSS" Version="4.3.0" />

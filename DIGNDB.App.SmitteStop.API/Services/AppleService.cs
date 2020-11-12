@@ -19,10 +19,10 @@ namespace DIGNDB.App.SmitteStop.API.Services
 {
     public class AppleService : IAppleService
     {
-        private readonly IAppSettingsConfig _appSettingsConfig;
+        private readonly AppSettingsConfig _appSettingsConfig;
         private readonly ILogger<AppleService> _logger;
 
-        public AppleService(IAppSettingsConfig appSettingsConfig, ILogger<AppleService> logger)
+        public AppleService(AppSettingsConfig appSettingsConfig, ILogger<AppleService> logger)
         {
             _appSettingsConfig = appSettingsConfig;
             _logger = logger;
@@ -33,7 +33,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var privateKey = LoadPrivateKey();
 
-            var mobileTokenEncrypted = _appSettingsConfig.Configuration.GetValue<string>("appleDeveloperAccount");
+            var mobileTokenEncrypted = _appSettingsConfig.AppleDeveloperAccount;
             string mobileTokenDecrypted;
 
             try
@@ -55,7 +55,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
             var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
-            string appleKeyIDEncrypted = _appSettingsConfig.Configuration.GetValue<string>("appleKeyID");
+            string appleKeyIDEncrypted = _appSettingsConfig.AppleKeyID;
             string appleKeyIDDecrypted;
             try
             {
@@ -76,8 +76,9 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
         private ECDsa LoadPrivateKey()
         {
-            var decoded =
-                ConfigEncryptionHelper.UnprotectString(_appSettingsConfig.Configuration.GetValue<string>("privateKey")).Replace("#", " ").Replace("\r", "");
+            var decoded = ConfigEncryptionHelper.UnprotectString(_appSettingsConfig.PrivateKey)
+                .Replace("#", " ")
+                .Replace("\r", "");
             using (TextReader reader = new StringReader(decoded))
             {
                 var ecPrivateKeyParameters =
@@ -119,7 +120,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
             using (var httpClient = new HttpClient())
             {
                 var token = BuildJwtAuthorizationToken();
-                var requestUri = new Uri(_appSettingsConfig.Configuration.GetValue<string>("appleQueryBitsUrl"));
+                var requestUri = new Uri(_appSettingsConfig.AppleQueryBitsUrl);
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var request = await httpClient.PostAsync(requestUri, CreateHttpContent(BuildQueryBitsDto(deviceToken)));
                 string content = await request.Content.ReadAsStringAsync();
@@ -137,7 +138,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
             using (var httpClient = new HttpClient())
             {
                 var token = BuildJwtAuthorizationToken();
-                var requestUri = new Uri(_appSettingsConfig.Configuration.GetValue<string>("appleUpdateBitsUrl"));
+                var requestUri = new Uri(_appSettingsConfig.AppleUpdateBitsUrl);
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var request = await httpClient.PostAsync(requestUri, CreateHttpContent(BuildUpdateBitsDto(deviceToken)));
                 string content = await request.Content.ReadAsStringAsync();

@@ -13,10 +13,10 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
 {
     public class AuthorizationAttribute : ActionFilterAttribute
     {
-        private readonly IAppSettingsConfig _appSettingsConfig;
+        private readonly AppSettingsConfig _appSettingsConfig;
         private readonly AuthOptions _authOptions;
 
-        public AuthorizationAttribute(IAppSettingsConfig appSettingsConfig, AuthOptions authOptions)
+        public AuthorizationAttribute(AppSettingsConfig appSettingsConfig, AuthOptions authOptions)
         {
             _appSettingsConfig = appSettingsConfig;
             _authOptions = authOptions;
@@ -32,7 +32,7 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 string authHeader = context.HttpContext.Request.Headers["Authorization"];
                 if (authHeader != null && authHeader.Contains("Bearer"))
                 {
-                    var secret = _appSettingsConfig.Configuration.GetValue<string>("publicKey");
+                    var secret = _appSettingsConfig.AuthJWTPublicKey;
                     byte[] publicKeyDecoded = Convert.FromBase64String(secret);
                     var token = authHeader.Replace("Bearer", "");
                     string jsonPayload = new JwtBuilder()

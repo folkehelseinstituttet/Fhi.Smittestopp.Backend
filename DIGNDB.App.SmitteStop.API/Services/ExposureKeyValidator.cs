@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
@@ -13,6 +6,13 @@ using DIGNDB.App.SmitteStop.Domain.Dto;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
@@ -29,6 +29,8 @@ namespace DIGNDB.App.SmitteStop.API.Services
         {
             var now = DateTime.UtcNow;
             var outdatedKeysDate = DateTime.UtcNow.Date.AddDays(-configuration.OutdatedKeysDayOffset);
+
+            var originCountry = _countryRepository.GetApiOriginCountry();
             //The period of time covered by the data file exceeds 14 days
             if (parameter.keys.Count > configuration.OutdatedKeysDayOffset)
             {
@@ -61,13 +63,20 @@ namespace DIGNDB.App.SmitteStop.API.Services
                 throw new ArgumentException("Incorrect intervals.");
             }
 
-            //There are any gaps in the ENIntervalNumber values for a user
-            //Any keys in the file have overlapping time windows
             if (parameter.keys.Any())
             {
-                if (parameter.regions == null || !configuration.Regions.Contains(parameter.regions.Single()?.ToLower()))
+                var expectedRegionCode = originCountry.Code;
+                if (parameter.regions == null)
                 {
-                    throw new ArgumentException("Incorrect region.");
+                    throw new ArgumentException($"Incorrect regions array - null");
+                }
+                else
+                {
+                    if (parameter.regions.Count != 1 || !parameter.regions.Any(regionValue => regionValue.ToLower() == expectedRegionCode.ToLower()))
+                    {
+                        var regionsStr = string.Join(",", parameter.regions);
+                        throw new ArgumentException($"Incorrect regions: {regionsStr}. Expected single value: {expectedRegionCode}");
+                    }
                 }
             }
             if (parameter.visitedCountries != null)

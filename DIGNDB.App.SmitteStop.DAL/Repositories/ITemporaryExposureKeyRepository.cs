@@ -18,7 +18,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         Task AddTemporaryExposureKeys(IList<TemporaryExposureKey> temporaryExposureKeys);
 
-        IList<TemporaryExposureKey> GetTemporaryExposureKeysWithDkOrigin(DateTime uploadedOn, int fetchCommandTimeout);
+        IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountry(DateTime uploadedOn, int fetchCommandTimeout);
 
         int GetCountOfKeysByUpladedDayAndSource(DateTime uploadDate, KeySource gateway);
 
@@ -26,12 +26,12 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         IList<TemporaryExposureKey> GetAllKeysNextBatch(int numberOfRecordsToSkip, int batchSize);
 
-        IList<TemporaryExposureKey> GetDkTemporaryExposureKeysForPeriodNextBatch(DateTime startDate, int numberOfRecordsToSkip, int batchSize);
+        IList<TemporaryExposureKey> GetOriginCountryKeysForPeriodNextBatch(DateTime startDate, int numberOfRecordsToSkip, int batchSize);
 
         IList<TemporaryExposureKey> GetAllTemporaryExposureKeysForPeriodNextBatch(DateTime startDate, int numberOfRecordsToSkip, int batchSize);
 
         Task<IList<TemporaryExposureKey>> GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(long rollingStartNumberThreshold, int numberOfRecordsToSkip, int batchSize);
 
-        IList<TemporaryExposureKey> GetDkTemporaryExposureKeysUploadedAfterTheDateForGatewayUpload(DateTime uploadedOnAndLater, int numberOfRecordToSkip, int maxCount, KeySource[] sources);
+        IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUpload(DateTime uploadedOnAndLater, int numberOfRecordToSkip, int maxCount, KeySource[] sources);
     }
 }
