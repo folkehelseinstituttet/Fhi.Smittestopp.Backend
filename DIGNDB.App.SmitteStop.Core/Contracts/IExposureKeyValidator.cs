@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using Microsoft.Extensions.Logging;
 
-namespace DIGNDB.App.SmitteStop.API.Services
+namespace DIGNDB.App.SmitteStop.Core.Contracts
 {
     public interface IExposureKeyValidator
     {

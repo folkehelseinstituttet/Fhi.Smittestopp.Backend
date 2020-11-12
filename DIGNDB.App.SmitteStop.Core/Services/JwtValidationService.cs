@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
+using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,6 +14,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
     {
         private const string AuthorizedPartyClaimType = "azp";
         private const string ValidAuthorizedPartyValue = "smittestopp";
+        private const string SupportedAlgorithm = "RS256";
 
         private readonly IRsaProviderService _rsaProviderService;
         private readonly IJwtTokenReplyAttackService _jwtTokenReplyAttackService;
@@ -28,7 +30,10 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         public bool IsTokenValid(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var validationParameters = GetValidationParameters();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            ValidateAlgorithm(jwtToken);
+            var validationParameters = GetValidationParameters(jwtToken.Header.Kid);
 
             IPrincipal principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken outToken);
 
@@ -38,6 +43,21 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             return true;
         }
 
+        private void ValidateAlgorithm(JwtSecurityToken jwtToken)
+        {
+            var algorithmInToken = jwtToken.Header.Alg;
+            if (algorithmInToken != SupportedAlgorithm)
+                throw new NotSupportedException(
+                    $"Provided algorithm is not supported. Algorithm in token: {algorithmInToken}. Supported algorithm: {SupportedAlgorithm}");
+
+            string authorizedPartyInToken = jwtToken.Claims.Single(c => c.Type == AuthorizedPartyClaimType).Value;
+
+            var validationResult = authorizedPartyInToken == ValidAuthorizedPartyValue;
+
+            if (!validationResult)
+                throw new SecurityTokenException(
+                    $"AuthorizeParty claim is invalid. Expected: {ValidAuthorizedPartyValue}, Got: {authorizedPartyInToken}");
+        }
 
         private void ValidateAuthorizedParty(SecurityToken token)
         {
@@ -52,7 +72,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
                     $"AuthorizeParty claim is invalid. Expected: {ValidAuthorizedPartyValue}, Got: {authorizedPartyInToken}");
         }
 
-        private TokenValidationParameters GetValidationParameters()
+        private TokenValidationParameters GetValidationParameters(string rsaKeyId)
         {
             return new TokenValidationParameters
             {
@@ -60,17 +80,8 @@ namespace DIGNDB.App.SmitteStop.Core.Services
                 ValidateAudience = false,
                 ValidateIssuer = true,
                 ValidIssuer = "https://dev-smittestopp-verification.azurewebsites.net",
-                IssuerSigningKey = _rsaProviderService.GetRsaSecurityKey(),
+                IssuerSigningKey = _rsaProviderService.GetRsaSecurityKey(rsaKeyId),
             };
-        }
-
-        static byte[] FromBase64Url(string base64Url)
-        {
-            string padded = base64Url.Length % 4 == 0
-                ? base64Url : base64Url + "====".Substring(base64Url.Length % 4);
-            string base64 = padded.Replace("_", "/")
-                .Replace("-", "+");
-            return Convert.FromBase64String(base64);
         }
     }
 }

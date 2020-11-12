@@ -1,13 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.DependencyInjection;
-using DIGNDB.App.SmitteStop.Core.Services;
+using DIGNDB.App.SmitteStop.Core.Exceptions;
 using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.DAL.DependencyInjection;
-using DIGNDB.App.SmitteStop.Testing.RepositoriesTest;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Moq;
+using Moq.Protected;
 using NUnit.Framework;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
@@ -24,6 +32,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             serviceCollection.AddCoreDependencies();
             serviceCollection.AddDALDependencies();
 
+            serviceCollection.AddScoped<HttpMessageHandler>(provider => CreateMockedHttpClientHandler());
+            var configurationMock = new Mock<IConfiguration>();
+            configurationMock.Setup(config => config["JwkUrl"]).Returns("https://some-example-site.com");
+            serviceCollection.AddScoped(provider => configurationMock.Object);
+
             serviceCollection.AddDbContext<DigNDB_SmittestopContext>(opts =>
                 opts.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
@@ -32,7 +45,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         }
 
         private const string ValidToken =
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDU3MTQyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.ioxn24CWC_TvmT7dMY3Ze9VvqOEZBWw7sAUEcQcEZtBlbmbPvhmcXfUUev1wUKbAi557h3XSYQOqvwU3HFG9xMWjs9VkjT_ORBCHf5OMuRnAAh5iyPM6IByAwH3h3Gq3TWoNRa7XwarXYLD2CtJBi6XwSb7JbNGGncDPnEjD2AhZeq94tFLvDropOsR-hGtk08un8zZAFPocaFaVA7caSeMZQ54Y80Ut0xPFC6Xn8TAl9i0QGhFX2JO_uljzcrd8Sp-WQYvuiriwTM5_J-VvEzG1Vkyt3wcjAMg6D746Db29UE-Dm7sNaDgazdWbFrRMclc_HwUYEzL-lrOK2s4AEw";
+        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDU3MTQyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.SgxHrypaTXQn2ZMLe486_ped8F9vdQGqVdou5sQ9aFjmjLzc04C-LSHpZAf_d8vxYmbdPCQagupy3eD0rfpj2f8j_d49LQykPHbwhISUr8EVw3xaX241FbCD8yRXBtIFMql5Ov2iYcJSuMRRpuumOOlSQYJ5zqwyU3MgNqyymzAfIGIuaIxRCsE-Mw8uvuI5h3FuzbypeK1U_rbNxKGZk4X3RZZudL652H4ie8dJRKEE_IKY_tGO99FyFkxXXF8MiNZN_Or0vyrUbHolc6ZxDUF9zTjOc4HjK3gRFRoqrgZ7Nnk4Isu4zqbm4yWLa0l0kn-8WphQk6rlGQGJyYKMrw";
 
         [Test]
         public void TestValidateToken_WithValidToken()
@@ -54,11 +67,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 .WithMessage("The same token cannot be used again.*");
         }
 
-        private const string TokenWithSignatureAlgorithmHS256 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxNjA1MTc2MjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.AOp-quffQUTHKfep59kykD2M5c6FPLrEhQ5RYiKeQu0";
-        private const string TokenWithSignatureAlgorithmHS384 = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxNjA1MTc2MjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.n06mlIRCwOmsa36TmRBk7tp6VCjFnthI-M4lH0TWR_fPOwdIc4vQlMDBhQloLVkY";
-        private const string TokenWithSignatureAlgorithmHS512 = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxNjA1MTc2MjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.bz8TbcRL5VlolvVbRW_5l6b5c4fsjtjtLpQgZqoGKylIKGJAqyp9Vb_7B4h6BreqY8VMqF7VfIGvkC8IcBWeEQ";
-        private const string TokenWithSignatureAlgorithmPS256 = "eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxNjA1MTc2MjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.H8FUFtgq-TiaObdWchhJDbufU9LpwJIG5gxVn1U9vBhLeImCiLnkV2_TSh0ihuK0XihtBIouIXkbiRFWvz97hVIOJQrw8pwi_2ch5S3f8QAbfRnCd8-SrfQGqWGB06tVZNOcucg1iQhb8BQydkwJIhxyZjYSRGyTjf1NZ3RbJ_lYz0DL8TbyUyERllvZVx0KA7951H4X_lJX2VYUVz0aWzNvUb2JGutalEAKuclzEvxVsLJr_GWUPizcC2KvdEmK78e5b93TSd-jqTm_aYZX-7M2XbynUTQKCTCDz2R_riSYZa3V9YT4cs4GtPx1ScO3tNU_DT7UT0bmTbx6-KQpKA";
-        private const string TokenWithSignatureAlgorithmPS384 = "eyJhbGciOiJQUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxNjA1MTc2MjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.A030A2mbXJmDxz2vpuPobfCiYeGwLq5Mthxm9p7O5WsSgxxXh_lZtGjyMSfG06YacLXygHBA3p2CywAQxabkWjqhHY5zufWzy92rvMT0-cYWcagm5ocYX6R76hthO4B-BbOpuiM6lx42DHDe8dsRyJTHKXj1k7tGZMV9UVCbK4RA_Ek3lN5vYMn5nA4zPOc75GuE291FNmRIpejXOcs_p76OqzLITH_JwO8dDGyRGnEE1aOaYIoYSKQuxcJOPVxwGjuAi2cX9vLwlCN03kCShlZ0Czy6zgrN6DdP_cxxoUy_Q9bl7feVmyiJR2g9iaeoN0dz841f1AejEXKNk6fQrg";
+        private const string TokenWithSignatureAlgorithmHS256 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.A1paNTUnBadV84Q7JPFJDhrbapHaL1FGLgg9j1jhPWE";
+        private const string TokenWithSignatureAlgorithmHS384 = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.6Ri19Ajfcry1qODNMb7q101omtcjISVTmk6pTwJ7PbBP67Ap2uBfk8j1hhlRw26s";
+        private const string TokenWithSignatureAlgorithmHS512 = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.j7UOn_pg4HrXo0xZKvqj1S0U_NmRnHDXmuKSxxgJK3dtgy6cwW6RQz07xNxefcuE5VYMfAhto0r4Gty1m3azEA";
+        private const string TokenWithSignatureAlgorithmPS256 = "eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.R7Cj1MhYvQ7FXP6H-0hU6Brj5gB9UOUNKMRvv0RVyuR5foKnBq2Lo_odZllmZkeBUWvtBMOTJ1obK_DGLscVEmE3YvglrDLyFEvlLqPuHWpXNEKBkpUn3LVWXFgqxWzDN16NAySYtSm4XFvHQTlibXUOF_bhjnfHkAjmNi-QtMrR7p82uYfduur8P5DjMmcyqblnLxG1nBxnDc4xJhSw5XP5ljTUfRQdNSprYCcSmhTZPgivDfUFlzX8XfwASW9mFpLll7APxn22KYXfSLjPY4wCUa4i6FWb58Xzl5XZMpMm4RyEkt6an65yiQnN8EWWNMnA6zpzzwv-FZEahl7DnA";
+        private const string TokenWithSignatureAlgorithmPS384 = "eyJhbGciOiJQUzM4NCIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.YpsZvq699LkO6V0xOMeVt4XWudLrtCH3G_hSN0-dll3s0Kl0M_VNO_st1-bRtCWMPq2MLwzuHVtwGILl6tAS8gXTfFLWfzz3DvO0ZU_9x6Ot1peSZ_mW5SL6kFrqDEVOFpRdCipOHsPBQ8Cv9chylTsQZtXmxfsZHnPUUSuv8VGW3o9boe7kcKz8B0tlfDRSzwrdrV4VqaIdH_g0x7r2_Xge_y-fGKavLQQj7L9jxAeyDyPLLPOuK81mM35EjcMKy1XyuXncI7QKSu2tN0It2sP6iLomk8gyRwXPvLh5s2KaPEMuYtLIlNSFqeAyB7GMG8fiAg5E54ziUgnBkdiQcQ";
 
         [TestCase(TokenWithSignatureAlgorithmHS256)]
         [TestCase(TokenWithSignatureAlgorithmHS384)]
@@ -69,12 +82,12 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         {
             Action validateAction = () => _jwtValidationService.IsTokenValid(token);
 
-            validateAction.Should().Throw<SecurityTokenInvalidSignatureException>()
-                .WithMessage("IDX10503: Signature validation failed.*");
+            validateAction.Should().Throw<NotSupportedException>()
+                .WithMessage("Provided algorithm is not supported.*");
         }
 
         private const string TokenWithInvalidAuthorizedParty =
-            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxNjA1MTc2MjI1LCJhenAiOiJ4eHgiLCJpc3MiOiJodHRwczovL2Rldi1zbWl0dGVzdG9wcC12ZXJpZmljYXRpb24uYXp1cmV3ZWJzaXRlcy5uZXQiLCJqdGkiOiIxIiwia2lkIjoiMiJ9.RvCk9emy-VH8ya65MRDSEq83neImGBGDcKcfayLtEQ0AbP-dtgO-2qHpC6E7BbOHf6rAkS3KGJT82lG1xCPCQtEcz7x8k1VkiOCTL-wQltEck2XDnkMh6kUyW_PseY2k8HZkbd5HPEyIP2NLVZSmjs4D3WMgAeJcEjBqaQASeX8dvUiQ5V1168FHtZzbbD12LWyY0xdZKuTEjgW7uD4X_C7nvA57YGTv5YajAtlx-0_pRQagKIUggaJZ0FgImGJ4TqMQy4Jua6gV1XErDTTF2RHepaVRdt2bIkPlkvdyzD7VahqbjyjtNnSdS1PZ4QDulgsjxkieDUTcXwZ5X1N6Tw";
+            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJ4eHgiLCJpc3MiOiJodHRwczovL2Rldi1zbWl0dGVzdG9wcC12ZXJpZmljYXRpb24uYXp1cmV3ZWJzaXRlcy5uZXQiLCJqdGkiOiIxIn0.K9z3Sz0LRtCxMCZB7Wh1HWJK0r20_9sunPIDzQGp_X21_ciUaLnMsC8uoc4sVj50jtJYehMjkQamhHT6LJndVSbVAZleXky8mQyXkSevoDwA9tjZJdlMgMlLcuQj22JSXPv-EuWiuax72jcwlTfMYLSMlY3EEB0Xilltk3l3w3cUKuqe1iiXVXJjb81NW8Jv2u_g2g5JMyGrZJScCwQfQ52Dq7BmovITviOVviqr2k0dq5Imde1NJIz9Dbi41-BIwHBMjVFFRmNGnQTt0ix0vTLLRs3rPWU8EvJmI6xL8ldvjxgL80bCEdKrNcshVI2glRW3N-hJG7WqI_o5k5ZHDw";
 
         [Test]
         public void TestValidateToken_WithInvalidAuthorizedParty()
@@ -86,9 +99,9 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         }
 
         private const string TokenWithExpiredTimeWindow =
-            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxNjA0ODMwNjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.gvX2LbuOG9J-6b_71ON3xEN_vJaf9uffYNBvKSgT0eg3K1Z0q9Z4cm6nQtaWOldfxrLADC7AzAYQ14uc-PdaaOr-rRfihLxmXVc-iY6ktkTUZt6wSL8ds9lx6zOZIfNhoRbIVAVKFjxWfRkDVtesjA16kBRvA2Wjf8E05xGInKXDDXIond_XJPDdGY7NG6UUfQf5FoLdVgF1d4WryKBSAJlE6Cqm8Bx9hiWPQX86EWwhWMz4sq7Pvo1eOPrB92HZYnOKHLQFs1Vak8dj9OFfJd2pFLHuL029OLfiKHCQfUQDvJPKCSwd5IaeqXqOD4fHQi9WkbvW75vuS1ffj8Aksg";
+            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxNjA0ODMwNjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.PCHkooTIfvF8WiU77oYzuBg_AqBOHIoSMDIwFzAU4BtsperCgWZ-aPp-TyMvbPjupb6E1bfE4lRbT4GtFIrPd27hxqBfTEvNE0yx1q0kX2sRV4oeqiDxI3q4UmJppN-MttY5SL0rxDCwJ9UzoZIYAWK1xNBY1WMsWRXlJoGon61BuNZghZJ_ZreXGhTULdyQYra5MrlmfP3Y3QkJH6_Nr-mvh5gmXUIXvYfm8yY9QkOu2dk8FNIME4fiWbx8TtxgE0G7FN5yczpbcQ_H-QbACjXMPDj6Owf-VwTTfKEpk5py0C3mjnTjo5FyjGEZFuhnKdETVUqe21WtI8fnkivFCg";
         private const string TokenIssuedInTheFuture =
-            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNTQzNTQyNSwiZXhwIjoxNjA0ODMwNjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.QRyz4hov36Kd7SZX4KuWd7r6RnXbnAzRfXHndyT1frzzyHDxOx3KsQPaw9V7XgpxEQIMLHdzjlM05EjhjZfx1cWENHiCTws2yGoHioQ_CvL3NT_zQtpCYfgc-EieuLZBqVvl-KEo9ovn3lUlJdECD6DSZFHZjksESpaM_VA3fMNAekOozMMB3oIsrmQtVfdoBrRlSL-v1nKtXfe3ZrF4pw5LGoN98RFTZms-lpv6Yo3PcXADZypgeK9S8qXps49qP6oVRxgJTj12LcHebwFxJxmQq_iSg2TA8gtHXfG38mHGdGfESNIf91HzxCwlzDday-8mB_qNAMH-qy9GS8ggAw";
+            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNTQzNTQyNSwiZXhwIjoxNjA0ODMwNjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.fIibFcbOkcN7qUoS068kHyPGhI5uOKL5gepwV_wQXgl2McseXQX8bQY_mcMqly0nYv2ZFigw-YFvwy2fSs-UQY1pGfHlwDPX0lrpC7eHQywt5Gs1VpQivwwYBItaMhagtIL4g_RFrtOfk2VBSX4v_vFp00iEM7iM7hYbZ1d9bXHDIuzO9lUssD8sIcZVH51gYJPN3x3A0c19vZ0odjbgv-7_xPhw9r-vnNneMTB2NmwK_79FF4-W49qMpyYOBFi_h944_3k_OyIWebtPHqHm8Ywspa5D64v8fdVAaGXTsBtjzAg2tMY_nBXQazJj-9SEqAO1bm_0ST3sPQ89TohitQ";
 
         [TestCase(TokenWithExpiredTimeWindow)]
         [TestCase(TokenIssuedInTheFuture)]
@@ -101,18 +114,19 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         }
 
         private const string TokenWithNotKnownPublicKey =
-            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDU3MTQyNSwiZXhwIjoxNjA1ODY3NDI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiJ4In0.JHH7dxL9EPluLA7cPN6mSKKkORXplQHiONhEka7isRwM1qSRO-0a6UI84FzviWwhOI8e-voKF0MTT7YyEXfgDN_2P-VzC84GfDopfJDeHn1M2w6xLgi4wnm75lsM6M9El_VOo83L8sOCccsxH4qhFdRi6OqVjE-ycbIdA5gBNGqk0uQcqjXfZQQ896RGttKCzgEi6w03O9ydFhHu1hO0skBIm2-eqq2BOhUP9cqxs58HJELc7VExMs1GbPZjxvYoHdwXTvUDTSAMsqU08a4IIea-JzQKorDog2q2-78dcK1uaAoghneYJdfLN0NZEEX6Fa6ygROLOYLy6Lcobqfe5Q";
+            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IngifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDU3MTQyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.O_eFQbNkHdJhLwi0HXhi7HsYaApmQEugcyv0QRfiNvnGNS3gvy1dZIKcdjL1-99QExBIR1RPv3DpXQKfwM8LU1_lfNjZzJ11aVRt-D1WRoU8578wKmQ9VMVPZl9m23ikpjziZYyIRBvMJZk_qFNNAprFm1dylFDyH-gcO-uWPT22suE3T6J_PWWOjQUWrZ8kE2dby5Heo3Oc-C-6Jn4YxDqYy66p0A4izLf8m0bnqvc7CIw8zPR9n-23AaPLmwlPu025OquPZ4dcr-_6SXjYSI5OZyXQnOU6FH6xK2xn5CfCdejdYKrT5Q1YKH-7lmDHqF6vhDB_Bigm8Vtu_mkHZA";
 
         [Test]
         public void TestValidateToken_WithUnknownPublicKey()
         {
-            var validationResult = _jwtValidationService.IsTokenValid(TokenWithNotKnownPublicKey);
+            Action validateAction = () => _jwtValidationService.IsTokenValid(TokenWithNotKnownPublicKey);
 
-            validationResult.Should().BeFalse();
+            validateAction.Should().Throw<RsaPublicKeyNotFoundException>()
+                .WithMessage("Cannot find RSA public key for given key id.*");
         }
 
         private const string TokenWithInvalidIssuer =
-            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDU3MTQyNSwiZXhwIjoxNjA1ODY3NDI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8veHh4LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.SojLdcNsqCu5O4Maaf_Ns3TjpNX5BPwapCvViEqyJ96eYRsWhDGdzpKY9OPtLhj5iVJgMfeder9p-3ABZLv-QhjJ218C0TXAU9WEQCWFwA-mITCRKf6VgN6QszUVe-oAk-cTjEDDhUXqEj58oGVPpfvnqiJPn-gr_nYgIMRq5tNl2tpvJV69kcLzA1rarxsSwraOlfdwMuzVWOeqBGszVh5_OKzoeSi0ss1STF_AVAXpvAzEeN6kVNd__GkbQ-KIKJ46R3_kkLWaOAFqFQmXsDWgm5ONDM4SZR5BMPr9JOh81c2B9OlCFKrNlNZJ1C5vPUCPuM48YWiIeDYP3tmEoA";
+            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDU3MTQyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8veHh4LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.TA4bKB9_26p6NkjtBLNfCysimjlPyV1NWEMPibUQUJ_V-kfn9ryDJyuCFozWO4-PBjrFG6WB3fbaeWLl7rH9jeoJ8jJVs_ZQNrzZR535iqyqNb26mq454R3a_h4h330Qg5VPPrBPFO7Ec59wyZ3ZDEtt7wD7mk-H-yLD11Cx3CQ11n9cgjVBy719zLJwizaJihe105zefRof50k_j0ytM4G-UdLx3gY4O9zyBnZaC7eLyijImDGRb9p38UgVXVYhroLLQaijPEbJREUrjM41F8v_RQMjopVGO2yUhvfY91p_mtkoWN2IQssBGbeHyCbnMuL6AlZ0Gm1dhdB0BMoahg";
 
         [Test]
         public void TestValidateToken_WithInvalidIssuer()
@@ -121,6 +135,36 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 
             validateAction.Should().Throw<SecurityTokenInvalidIssuerException>()
                 .WithMessage("IDX10205: Issuer validation failed.*");
+        }
+
+        private HttpClientHandler CreateMockedHttpClientHandler()
+        {
+            var expectedJsonWebKeyList = new List<JsonWebKey>
+            {
+                new JsonWebKey
+                {
+                    Kid = "2",
+                    N = "AJ88orNWY3zQdGwYChTEr75E7cJbwbGiau0ucAPpM3lTlaVVsJFnVYWuLN/FzP6Wv8q+O2r+/s91U5rw0cgB3Gk/dsIURBaS7/XI+ZU3iUom8q/zK5v2LYwmVVoGjmCIcK18Ci6j6/9dYp1rAJHyMrbx1k8WWBHFy4AFxblLmkt7hfYBIjUMMxk1Nb9BapKkwa+AfJ1txwjeO11LtLfGNHvpX+LODsUGsFg+/Sff+Xd0ctL21dwJtRbRiYibzsEbCH1QoQ6WErU3B0wjKrb1m1ei9dQVpKcxl0luB7+N6mvhkmDg9kFOvDG+faEpNjgfgbTi6SaH5mxhBoL5sMgiPTM=",
+                    E = "AQAB"
+                }
+            };
+
+            var handlerMock = new Mock<HttpClientHandler>();
+            var expectedResponse = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(expectedJsonWebKeyList)),
+            };
+
+            handlerMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(expectedResponse);
+
+            return handlerMock.Object;
         }
     }
 }
