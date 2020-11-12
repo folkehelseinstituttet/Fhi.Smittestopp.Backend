@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
+using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using JWT.Algorithms;
 using JWT.Builder;
@@ -13,13 +14,13 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
 {
     public class AuthorizationAttribute : ActionFilterAttribute
     {
-        private readonly IAppSettingsConfig _appSettingsConfig;
         private readonly AuthOptions _authOptions;
+        private readonly IJwtValidationService _jwtValidationService;
 
-        public AuthorizationAttribute(IAppSettingsConfig appSettingsConfig, AuthOptions authOptions)
+        public AuthorizationAttribute(AuthOptions authOptions, IJwtValidationService jwtValidationService)
         {
-            _appSettingsConfig = appSettingsConfig;
             _authOptions = authOptions;
+            _jwtValidationService = jwtValidationService;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -32,13 +33,9 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 string authHeader = context.HttpContext.Request.Headers["Authorization"];
                 if (authHeader != null && authHeader.Contains("Bearer"))
                 {
-                    var secret = _appSettingsConfig.Configuration.GetValue<string>("publicKey");
-                    byte[] publicKeyDecoded = Convert.FromBase64String(secret);
                     var token = authHeader.Replace("Bearer", "");
-                    string jsonPayload = new JwtBuilder()
-                        .WithAlgorithm(new RS256Algorithm(new X509Certificate2(publicKeyDecoded)))
-                        .MustVerifySignature()
-                        .Decode(token.Trim());
+
+                    _jwtValidationService.IsTokenValid(token);
                     return;
 
                 }
