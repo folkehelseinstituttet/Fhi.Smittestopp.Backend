@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DIGNDB.App.SmitteStop.DAL.DependencyInjection;
 
 namespace DIGNDB.App.SmitteStop.API
 {
@@ -134,6 +135,7 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<IRiskCalculator, RiskCalculator>();
 
             services.AddCoreDependencies();
+            services.AddDALDependencies();
 
             services.AddMemoryCache();
 

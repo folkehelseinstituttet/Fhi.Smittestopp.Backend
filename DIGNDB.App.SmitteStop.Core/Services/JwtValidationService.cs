@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
+using DIGNDB.App.SmitteStop.DAL.Repositories;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
@@ -14,10 +15,14 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         private const string ValidAuthorizedPartyValue = "smittestopp";
 
         private readonly IRsaProviderService _rsaProviderService;
+        private readonly IJwtTokenReplyAttackService _jwtTokenReplyAttackService;
 
-        public JwtValidationService(IRsaProviderService rsaProviderService)
+        public JwtValidationService(
+            IRsaProviderService rsaProviderService,
+            IJwtTokenReplyAttackService jwtTokenReplyAttackService)
         {
             _rsaProviderService = rsaProviderService;
+            _jwtTokenReplyAttackService = jwtTokenReplyAttackService;
         }
 
         public bool IsTokenValid(string token)
@@ -28,9 +33,11 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             IPrincipal principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken outToken);
 
             ValidateAuthorizedParty(outToken);
+            _jwtTokenReplyAttackService.ValidateReplyAttack(outToken);
 
             return true;
         }
+
 
         private void ValidateAuthorizedParty(SecurityToken token)
         {

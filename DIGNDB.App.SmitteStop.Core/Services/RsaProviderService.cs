@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
 {
-    public class RsaProviderService : IRsaProviderService
+    internal class RsaProviderService : IRsaProviderService
     {
         public RsaSecurityKey GetRsaSecurityKey()
         {

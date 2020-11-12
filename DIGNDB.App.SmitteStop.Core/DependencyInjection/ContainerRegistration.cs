@@ -9,6 +9,7 @@ namespace DIGNDB.App.SmitteStop.Core.DependencyInjection
         {
             services.AddScoped<IJwtValidationService, JwtValidationService>();
             services.AddScoped<IRsaProviderService, RsaProviderService>();
+            services.AddScoped<IJwtTokenReplyAttackService, JwtTokenReplyAttackService>();
 
             return services;
         }

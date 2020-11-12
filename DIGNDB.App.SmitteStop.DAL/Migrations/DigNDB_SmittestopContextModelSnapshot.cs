@@ -238,6 +238,19 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.JwtToken", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JwtToken");
+                });
+
             modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.Setting", b =>
                 {
                     b.Property<long>("Id")

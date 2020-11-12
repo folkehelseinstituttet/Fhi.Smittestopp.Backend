@@ -1,7 +1,11 @@
 ﻿using System;
 using DIGNDB.App.SmitteStop.Core.DependencyInjection;
 using DIGNDB.App.SmitteStop.Core.Services;
+using DIGNDB.App.SmitteStop.DAL.Context;
+using DIGNDB.App.SmitteStop.DAL.DependencyInjection;
+using DIGNDB.App.SmitteStop.Testing.RepositoriesTest;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NUnit.Framework;
@@ -11,20 +15,24 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     [TestFixture]
     public class JwtValidationServiceTests
     {
-        private readonly IJwtValidationService _jwtValidationService;
+        private IJwtValidationService _jwtValidationService;
 
-        public JwtValidationServiceTests()
+        [SetUp]
+        public void Setup()
         {
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddCoreDependencies();
-            // Add mocks to serviceCollection here
+            serviceCollection.AddDALDependencies();
+
+            serviceCollection.AddDbContext<DigNDB_SmittestopContext>(opts =>
+                opts.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
             _jwtValidationService = serviceProvider.GetService<IJwtValidationService>();
         }
 
         private const string ValidToken =
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxNjA1MTc2MjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.AMs2TIXqmqA6uOXQD7Oaa8cgiMcd9Ww-8Qk1xysE7lJem2IM2FNWg9f54KH5HaE2tCS1Pm9rgmGDbz9gG6V9wSE7-bVS4JUrRpqknCswdctYbjy33oILGfHcFCuDGPBAkKcocw9kidXzblWbsYoM_JvmfMBVAlPsFGA6hdcfdnsYduLV_LvYQVUm50y6kcttb8VdmOeCmXiT2o6BdqPcuteQ-WKa0U0KSuJ0zlAlfHOSMMuj237QTqRYdHrCu76ByWv1U1ak6lZsAyYdvhzUw9oGcOSnHoz0nDRRrSnfLYqi9jCyVTZm6acvNRkSjWGqyCIO5gRDuRu42oWQC_EgUQ";
+        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDU3MTQyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.ioxn24CWC_TvmT7dMY3Ze9VvqOEZBWw7sAUEcQcEZtBlbmbPvhmcXfUUev1wUKbAi557h3XSYQOqvwU3HFG9xMWjs9VkjT_ORBCHf5OMuRnAAh5iyPM6IByAwH3h3Gq3TWoNRa7XwarXYLD2CtJBi6XwSb7JbNGGncDPnEjD2AhZeq94tFLvDropOsR-hGtk08un8zZAFPocaFaVA7caSeMZQ54Y80Ut0xPFC6Xn8TAl9i0QGhFX2JO_uljzcrd8Sp-WQYvuiriwTM5_J-VvEzG1Vkyt3wcjAMg6D746Db29UE-Dm7sNaDgazdWbFrRMclc_HwUYEzL-lrOK2s4AEw";
 
         [Test]
         public void TestValidateToken_WithValidToken()
@@ -37,13 +45,13 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         [Test]
         public void TestValidateToken_WithValidTokenButInReplayAttack()
         {
-
             var validationResult = _jwtValidationService.IsTokenValid(ValidToken);
             validationResult.Should().BeTrue();
 
             Action validateAction = () => _jwtValidationService.IsTokenValid(ValidToken);
 
-            validateAction.Should().Throw<SecurityTokenReplayDetectedException>();
+            validateAction.Should().Throw<SecurityTokenReplayDetectedException>()
+                .WithMessage("The same token cannot be used again.*");
         }
 
         private const string TokenWithSignatureAlgorithmHS256 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxNjA1MTc2MjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEiLCJraWQiOiIyIn0.AOp-quffQUTHKfep59kykD2M5c6FPLrEhQ5RYiKeQu0";
