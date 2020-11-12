@@ -9,6 +9,7 @@ using DIGNDB.App.SmitteStop.Core.DependencyInjection;
 using DIGNDB.App.SmitteStop.Core.Exceptions;
 using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.DAL.DependencyInjection;
+using DIGNDB.App.SmitteStop.Domain;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +35,21 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 
             serviceCollection.AddScoped<HttpMessageHandler>(provider => CreateMockedHttpClientHandler());
             var configurationMock = new Mock<IConfiguration>();
+
             configurationMock.Setup(config => config["JwkUrl"]).Returns("https://some-example-site.com");
+            configurationMock
+                .Setup(config =>
+                    config[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.AuthorizedPartyValue)}"])
+                .Returns("smittestopp");
+            configurationMock
+                .Setup(config =>
+                    config[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.SupportedAlgorithm)}"])
+                .Returns("RS256");
+            configurationMock
+                .Setup(config =>
+                    config[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.Issuer)}"])
+                .Returns("https://dev-smittestopp-verification.azurewebsites.net");
+
             serviceCollection.AddScoped(provider => configurationMock.Object);
 
             serviceCollection.AddDbContext<DigNDB_SmittestopContext>(opts =>
