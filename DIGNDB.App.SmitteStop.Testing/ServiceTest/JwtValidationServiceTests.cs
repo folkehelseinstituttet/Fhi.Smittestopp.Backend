@@ -154,13 +154,17 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 
         private HttpClientHandler CreateMockedHttpClientHandler()
         {
-            var expectedJsonWebKeyList = new List<JsonWebKey>
+            var expectedJsonWebKeyCollection = new JsonWebKeyCollection
             {
-                new JsonWebKey
+                Keys = new List<JsonWebKey>
                 {
-                    Kid = "2",
-                    N = "AJ88orNWY3zQdGwYChTEr75E7cJbwbGiau0ucAPpM3lTlaVVsJFnVYWuLN/FzP6Wv8q+O2r+/s91U5rw0cgB3Gk/dsIURBaS7/XI+ZU3iUom8q/zK5v2LYwmVVoGjmCIcK18Ci6j6/9dYp1rAJHyMrbx1k8WWBHFy4AFxblLmkt7hfYBIjUMMxk1Nb9BapKkwa+AfJ1txwjeO11LtLfGNHvpX+LODsUGsFg+/Sff+Xd0ctL21dwJtRbRiYibzsEbCH1QoQ6WErU3B0wjKrb1m1ei9dQVpKcxl0luB7+N6mvhkmDg9kFOvDG+faEpNjgfgbTi6SaH5mxhBoL5sMgiPTM=",
-                    E = "AQAB"
+                    new JsonWebKey
+                    {
+                        Kid = "2",
+                        N =
+                            "AJ88orNWY3zQdGwYChTEr75E7cJbwbGiau0ucAPpM3lTlaVVsJFnVYWuLN/FzP6Wv8q+O2r+/s91U5rw0cgB3Gk/dsIURBaS7/XI+ZU3iUom8q/zK5v2LYwmVVoGjmCIcK18Ci6j6/9dYp1rAJHyMrbx1k8WWBHFy4AFxblLmkt7hfYBIjUMMxk1Nb9BapKkwa+AfJ1txwjeO11LtLfGNHvpX+LODsUGsFg+/Sff+Xd0ctL21dwJtRbRiYibzsEbCH1QoQ6WErU3B0wjKrb1m1ei9dQVpKcxl0luB7+N6mvhkmDg9kFOvDG+faEpNjgfgbTi6SaH5mxhBoL5sMgiPTM=",
+                        E = "AQAB"
+                    }
                 }
             };
 
@@ -168,7 +172,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             var expectedResponse = new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(expectedJsonWebKeyList)),
+                Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(expectedJsonWebKeyCollection)),
             };
 
             handlerMock

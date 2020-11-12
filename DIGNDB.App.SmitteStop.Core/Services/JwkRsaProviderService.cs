@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Exceptions;
+using DIGNDB.App.SmitteStop.Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -42,11 +43,11 @@ namespace DIGNDB.App.SmitteStop.Core.Services
 
         private async Task<JsonWebKey> GetJsonWebKey(string keyId)
         {
-            var keys = await _httpClient.GetFromJsonAsync<List<JsonWebKey>>(_jwkUrl);
-            if (keys == null)
+            var collection = await _httpClient.GetFromJsonAsync<JsonWebKeyCollection>(_jwkUrl);
+            if (collection == null)
                 throw new RsaPublicKeyNotFoundException(keyId);
 
-            var foundKey = keys.SingleOrDefault(key => key.Kid == keyId);
+            var foundKey = collection.Keys.SingleOrDefault(key => key.Kid == keyId);
             if (foundKey == null)
                 throw new RsaPublicKeyNotFoundException(keyId);
 
