@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain.Db;
+using DIGNDB.App.SmitteStop.Domain.Dto;
 using FederationGatewayApi.Mappers;
 using FederationGatewayApi.Models;
 using FluentAssertions;
@@ -11,10 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DIGNDB.App.SmitteStop.Core.Helpers;
-using DIGNDB.App.SmitteStop.Domain.Db;
-using DIGNDB.App.SmitteStop.Domain.Dto;
-using DIGNDB.App.SmitteStop.Core.Services;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {

@@ -1,5 +1,4 @@
 ﻿using DIGNDB.App.SmitteStop.API.Services;
-using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using System;
 
