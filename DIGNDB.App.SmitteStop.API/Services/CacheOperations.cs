@@ -1,11 +1,10 @@
+using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Domain.Dto;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Domain.Dto;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {

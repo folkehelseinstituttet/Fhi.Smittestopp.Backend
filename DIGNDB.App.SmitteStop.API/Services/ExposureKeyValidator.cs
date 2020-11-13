@@ -68,16 +68,16 @@ namespace DIGNDB.App.SmitteStop.API.Services
                 var expectedRegionCode = originCountry.Code;
                 if (parameter.regions == null)
                 {
-                    throw new ArgumentException($"Incorrect regions array - null");
+                    throw new ArgumentException($"Regions array is null.");
                 }
-                else
+              
+                var regions = parameter.regions;
+                if ( regions.Count != 1 || regions.All(r => r.ToLower() != expectedRegionCode.ToLower()))
                 {
-                    if (parameter.regions.Count != 1 || !parameter.regions.Any(regionValue => regionValue.ToLower() == expectedRegionCode.ToLower()))
-                    {
-                        var regionsStr = string.Join(",", parameter.regions);
-                        throw new ArgumentException($"Incorrect regions: {regionsStr}. Expected single value: {expectedRegionCode}");
-                    }
+                    var regionsStr = string.Join(",", parameter.regions);
+                    throw new ArgumentException($"Incorrect regions: {regionsStr}. Expected single value: {expectedRegionCode}");
                 }
+                
             }
             if (parameter.visitedCountries != null)
             {

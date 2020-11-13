@@ -20,10 +20,10 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
         public void SetConfiguration(IConfiguration configuration)
         {
-            // TODO WHY!!!
             _exportKeyConfiguration.PreviousDayFileCaching = TimeSpan.Parse(configuration["AppSettings:PreviousDayFileCaching"]);
             _exportKeyConfiguration.CurrentDayFileCaching = TimeSpan.Parse(configuration["AppSettings:CurrentDayFileCaching"]);
             _exportKeyConfiguration.MaxKeysPerFile = int.Parse(configuration["AppSettings:MaxKeysPerFile"]);
         }
     }
 }
+

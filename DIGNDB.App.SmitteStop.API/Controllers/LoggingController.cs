@@ -23,8 +23,6 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
     [Route("logging")]
     public class LoggingController : ControllerBase
     {
-        private readonly LogValidationRulesConfig _logValidationRulesCfg;
-        private readonly AppSettingsConfig _appSettingsConfig;
 
         private readonly ILogger<LoggingController> _logger;
         private readonly ILogMessageValidator _logMessageValidator;
@@ -36,17 +34,16 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
         public LoggingController(
             ILogMessageValidator logMessageValidator,
             ILogger<LoggingController> logger,
-            LogValidationRulesConfig logValidationRulesCfg,
+            LogValidationRulesConfig logValidationRulesConfig,
             AppSettingsConfig appSettingsConfig)
         {
             _logMessageValidator = logMessageValidator;
-            _logValidationRulesCfg = logValidationRulesCfg;
-            _appSettingsConfig = appSettingsConfig;
+
             _logger = logger;
-            _logMobilePatternsDictionary = InitializePatternDictionary(_logValidationRulesCfg);
+            _logMobilePatternsDictionary = InitializePatternDictionary(logValidationRulesConfig);
             _loggerMobile = MobileLoggerFactory.GetLogger();
-            _maxTextFieldLength = _logValidationRulesCfg.MaxTextFieldLength;
-            _logEndpointOverride = _appSettingsConfig.LogEndpointOverride;
+            _maxTextFieldLength = logValidationRulesConfig.MaxTextFieldLength;
+            _logEndpointOverride = appSettingsConfig.LogEndpointOverride;
         }
 
         [HttpPost]
