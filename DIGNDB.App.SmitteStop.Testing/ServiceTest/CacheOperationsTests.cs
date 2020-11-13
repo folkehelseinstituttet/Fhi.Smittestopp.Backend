@@ -11,13 +11,14 @@ using System.Threading.Tasks;
 using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Dto;
+using DIGNDB.App.SmitteStop.API;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {
     [TestFixture]
     public class CacheOperationsTests
     {
-        private Mock<IConfiguration> _configuration;
+        private AppSettingsConfig _appSettingsConfig;
         private Mock<IPackageBuilderService> _cachePackageBuilder;
         CacheOperations _cacheService;
         MemoryCache _memoryCache;
@@ -30,7 +31,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
             dateAsKey = DateTime.UtcNow.AddDays(-1).Date;
             _memoryCache.Set(dateAsKey, mockCacheResult);
-            _cacheService = new CacheOperations(_memoryCache, _configuration.Object, _cachePackageBuilder.Object);
+            _cacheService = new CacheOperations(_memoryCache, _appSettingsConfig, _cachePackageBuilder.Object);
         }
 
         private CacheResult mockCacheResult =>
@@ -39,10 +40,12 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 
         private void SetupMockConfiguration()
         {
-            _configuration = new Mock<IConfiguration>();
-            _configuration.Setup(config => config["AppSettings:CacheMonitorTimeout"]).Returns("100");
-            _configuration.Setup(config => config["AppSettings:PreviousDayFileCaching"]).Returns("15.00:00:00.000");
-            _configuration.Setup(config => config["AppSettings:CurrentDayFileCaching"]).Returns("02:00:00.000");
+            _appSettingsConfig = new AppSettingsConfig()
+            {
+                CacheMonitorTimeout = 100,
+                PreviousDayFileCaching = TimeSpan.Parse("15.00:00:00.000"),
+                CurrentDayFileCaching = TimeSpan.Parse("02:00:00.000")
+            };
             _cachePackageBuilder = new Mock<IPackageBuilderService>();
         }
 

@@ -94,7 +94,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             services.AddScoped<ISettingsService, SettingsService>();
             services.AddScoped<IEFGSKeyStoreService, EFGSKeyStoreService>();
             services.AddScoped<IGatewayHttpClient, GatewayHttpClient>();
-            services.AddSingleton<IKeyValidationConfigurationService, KeyValidationConfigurationService>();
 
             services.AddSingleton<IGatewayKeyProvider>(
                new GatewayKeyProvider(gateWayConfig.AuthenticationCertificateFingerprint, gateWayConfig.SigningCertificateFingerprint));

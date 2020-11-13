@@ -1,8 +1,7 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
+using DIGNDB.App.SmitteStop.Domain;
 using Microsoft.Extensions.Configuration;
 using System;
-using DIGNDB.App.SmitteStop.Domain;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
@@ -27,3 +26,4 @@ namespace DIGNDB.App.SmitteStop.API.Services
         }
     }
 }
+

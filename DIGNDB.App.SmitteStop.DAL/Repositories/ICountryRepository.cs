@@ -15,8 +15,8 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         IEnumerable<Country> FindByIsoCodes(IList<string> countryCodes);
 
-        Country GetDenmarkCountry();
+        Country GetApiOriginCountry();
 
-        Task<IEnumerable<Country>> GetGetCountriesToPullFrom();
+        Task<IEnumerable<Country>> GetAllCountriesWithGatewayPullingEnabled();
     }
 }

@@ -119,7 +119,7 @@ namespace FederationGatewayApi.Services
             int batchSizePlusOne = batchSize + 1; // if it will return n + 1 then there is at last one more records to send
 
             // Get key package - collection of the records created (uploaded by mobile app) in the db after {uploadedOn}
-            IList<TemporaryExposureKey> keyPackage = _tempKeyRepository.GetDkTemporaryExposureKeysUploadedAfterTheDateForGatewayUpload(
+            IList<TemporaryExposureKey> keyPackage = _tempKeyRepository.GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUpload(
                   uploadedOnAndLater: uploadedOnAndAfter,
                   numberOfRecordToSkip: lastSyncState.NumberOfKeysProcessedFromTheLastCreationDate,
                   maxCount: batchSizePlusOne,
@@ -393,7 +393,7 @@ namespace FederationGatewayApi.Services
 
         private bool TrySendKeyBatchToTheGateway(TemporaryExposureKeyGatewayBatchProtoDto protoBatch, SortOrder keySortOrderForSignature)
         {
-            var upoadKeysEndpointUrl = _euGatewayConfig.Url + EuGatewayContract.Endpoint.KeysUploadEndpoint;
+            var upoadKeysEndpointUrl = _euGatewayConfig.UrlNormalized + EuGatewayContract.Endpoint.KeysUploadEndpoint;
             var batchBytes = protoBatch.ToByteArray();
 
             //sign

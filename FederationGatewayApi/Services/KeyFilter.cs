@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Enums;
@@ -8,9 +9,7 @@ using FederationGatewayApi.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Core.Helpers;
 
 namespace FederationGatewayApi.Services
 {
@@ -21,7 +20,6 @@ namespace FederationGatewayApi.Services
         private readonly IExposureKeyMapper _exposureKeyMapper;
         private readonly ILogger _logger;
         private readonly ITemporaryExposureKeyRepository _tempKeyRepository;
-        private readonly IKeyValidationConfigurationService _keyValidationConfigurationService;
 
         private const int BatchSize = 10000;
         private const int OutdatedKeysDayOffset = 14;

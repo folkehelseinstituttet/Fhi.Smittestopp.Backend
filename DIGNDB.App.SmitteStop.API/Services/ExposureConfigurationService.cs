@@ -37,6 +37,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
                 .GetSection("TransmissionRiskScores").GetChildren().Select(x => int.Parse(x.Value)).ToArray();
             exposureConfiguration.TransmissionRiskWeight =
                 int.Parse(configuration[$"{configSectionName}:TransmissionRiskWeight"]);
+
             return exposureConfiguration;
         }
 

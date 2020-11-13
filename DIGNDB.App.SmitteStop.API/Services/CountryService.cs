@@ -30,7 +30,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
         public async Task<HashSet<long>> GetWhitelistHashSet()
         {
-            var whitelistCountries = await _countryRepository.GetGetCountriesToPullFrom();
+            var whitelistCountries = await _countryRepository.GetAllCountriesWithGatewayPullingEnabled();
 
             var whitelistHashSet = new HashSet<long>();
             foreach (var country in whitelistCountries)

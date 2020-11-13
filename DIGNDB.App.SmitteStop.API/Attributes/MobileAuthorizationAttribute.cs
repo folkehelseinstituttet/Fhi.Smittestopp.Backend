@@ -1,12 +1,11 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Helpers;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Primitives;
-using System.Linq;
-using DIGNDB.App.SmitteStop.Domain.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using System;
+using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.API.Attributes
 {
@@ -14,13 +13,15 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
     {
         private readonly AuthOptions _authOptions;
         private readonly ILogger<MobileAuthorizationAttribute> _logger;
-        private readonly IAppSettingsConfig _appSettingsConfig;
+        private readonly AppSettingsConfig _appSettingsConfig;
 
-        public MobileAuthorizationAttribute(AuthOptions authOptions, ILogger<MobileAuthorizationAttribute> logger, IAppSettingsConfig appSettingsConfig)
+        private readonly string _mobileTokenEncrypted;
+
+        public MobileAuthorizationAttribute(AuthOptions authOptions, ILogger<MobileAuthorizationAttribute> logger, AppSettingsConfig appSettingsConfig)
         {
             _authOptions = authOptions;
             _logger = logger;
-            _appSettingsConfig = appSettingsConfig;
+            _mobileTokenEncrypted = appSettingsConfig.AuthorizationMobile;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -37,16 +38,15 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 else
                 {
                     var token = values.First();
-                    string mobileTokenEncrypted = _appSettingsConfig.Configuration.GetValue<string>("authorizationMobile");
                     string mobileTokenDecrypted;
 
                     try
                     {
-                        mobileTokenDecrypted = ConfigEncryptionHelper.UnprotectString(mobileTokenEncrypted);
+                        mobileTokenDecrypted = ConfigEncryptionHelper.UnprotectString(_mobileTokenEncrypted);
                     }
                     catch (Exception e)
                     {
-                        _logger.LogError($"Configuration error. Cannot decrypt the mobileToken from configuration. MobileTokenEncrypted: {mobileTokenEncrypted}. Message: {e.Message}");
+                        _logger.LogError($"Configuration error. Cannot decrypt the mobileToken from configuration. MobileTokenEncrypted: {_mobileTokenEncrypted}. Message: {e.Message}");
                         throw;
                     }
 

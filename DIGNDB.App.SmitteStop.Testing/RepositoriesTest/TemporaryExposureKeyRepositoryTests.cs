@@ -34,12 +34,12 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
         };
 
         [SetUp]
-        public void createOptions()
+        public void CreateOptions()
         {
             var DBName = "TEST_DB_" + DateTime.UtcNow;
             _options = new DbContextOptionsBuilder<DigNDB_SmittestopContext>().UseInMemoryDatabase(databaseName: DBName).Options;
             _countryRepository = new Mock<ICountryRepository>(MockBehavior.Strict);
-            _countryRepository.Setup(x => x.GetDenmarkCountry()).Returns(_dkCountry);
+            _countryRepository.Setup(x => x.GetApiOriginCountry()).Returns(_dkCountry);
         }
 
         [SetUp]
@@ -83,7 +83,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
                 context.TemporaryExposureKey.AddRange(dataForNotDK);
                 context.SaveChanges();
                 _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object);
-                var keys = _repo.GetTemporaryExposureKeysWithDkOrigin(expectDate, 0);
+                var keys = _repo.GetKeysOnlyFromApiOriginCountry(expectDate, 0);
                 Assert.AreEqual(dataForCurrentDate.Count, keys.Count);
             }
         }

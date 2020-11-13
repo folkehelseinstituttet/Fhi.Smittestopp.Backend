@@ -1,31 +1,30 @@
+using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Domain.Dto;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Domain.Dto;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
     public class CacheOperations : ICacheOperations
     {
-        const int DefaultCacheMonitorTimeout = 100;
         private IMemoryCache _memoryCache;
         private static Object _cacheLock = new object();
-        private readonly IConfiguration _configuration;
         private readonly IPackageBuilderService _cachePackageBuilder;
+
+        private readonly AppSettingsConfig _appSettingsConfig;
         private readonly TimeSpan _previousDayFileCaching;
         private readonly TimeSpan _currentDayFileCaching;
 
-        public CacheOperations(IMemoryCache memoryCache, IConfiguration configuration, IPackageBuilderService cachePackageBuilder)
+        public CacheOperations(IMemoryCache memoryCache, AppSettingsConfig appSettingsConfig, IPackageBuilderService cachePackageBuilder)
         {
             _memoryCache = memoryCache;
-            _configuration = configuration;
+            _appSettingsConfig = appSettingsConfig;
             _cachePackageBuilder = cachePackageBuilder;
-            _previousDayFileCaching = TimeSpan.Parse(_configuration["AppSettings:PreviousDayFileCaching"]);
-            _currentDayFileCaching = TimeSpan.Parse(_configuration["AppSettings:CurrentDayFileCaching"]);
+            _previousDayFileCaching = appSettingsConfig.PreviousDayFileCaching;
+            _currentDayFileCaching = appSettingsConfig.CurrentDayFileCaching;
         }
 
         public async Task<CacheResult> GetCacheValue(DateTime key, bool forceRefresh = false)
@@ -37,11 +36,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
         {
             if (!_memoryCache.TryGetValue(key, out CacheResult result))
             {
-                if (!Int32.TryParse(_configuration["AppSettings:CacheMonitorTimeout"], out int cacheMonitorTimeout))
-                {
-                    cacheMonitorTimeout = DefaultCacheMonitorTimeout;
-                }
-                var timeout = TimeSpan.FromMilliseconds(cacheMonitorTimeout);
+                var timeout = _appSettingsConfig.CacheMonitorTimeout;
                 bool lockTaken = false;
 
                 try

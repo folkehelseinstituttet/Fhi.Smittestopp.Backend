@@ -68,17 +68,17 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             return await _dbContext.TemporaryExposureKey.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public IList<TemporaryExposureKey> GetTemporaryExposureKeysWithDkOrigin(DateTime uploadedOn, int fetchTimeout)
+        public IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountry(DateTime uploadedOn, int fetchTimeout)
         {
-            Country dkCountry = _countryRepository.GetDenmarkCountry();
+            Country apiOrigin = _countryRepository.GetApiOriginCountry();
             if (fetchTimeout > 0)
             {
                 _dbContext.Database.SetCommandTimeout(fetchTimeout);
             }
-            return _dbContext.TemporaryExposureKey.Where(x => x.Origin == dkCountry && x.CreatedOn.Date.CompareTo(uploadedOn.Date) == 0).OrderBy(x => x.Id).ToList();
+            return _dbContext.TemporaryExposureKey.Where(x => x.Origin == apiOrigin && x.CreatedOn.Date.CompareTo(uploadedOn.Date) == 0).OrderBy(x => x.Id).ToList();
         }
 
-        public IList<TemporaryExposureKey> GetDkTemporaryExposureKeysUploadedAfterTheDateForGatewayUpload(
+        public IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUpload(
             DateTime uploadedOnAndLater,
             int numberOfRecordToSkip,
             int maxCount,
@@ -86,11 +86,11 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
         {
             if (maxCount <= 0) throw new ArgumentException($"Incorrect argument maxCount= {maxCount}");
 
-            var dkCountry = _countryRepository.GetDenmarkCountry();
+            Country apiOrigin = _countryRepository.GetApiOriginCountry();
 
             var query = _dbContext.TemporaryExposureKey
                .Include(k => k.Origin)
-               .Where(k => k.Origin == dkCountry)
+               .Where(k => k.Origin == apiOrigin)
                .Where(k => k.CreatedOn >= uploadedOnAndLater)
                .Where(k => sources.Contains(k.KeySource))
                .OrderBy(c => c.CreatedOn)
@@ -110,13 +110,13 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
         }
 
         #region Query based on CreatedOn
-        public IList<TemporaryExposureKey> GetDkTemporaryExposureKeysForPeriodNextBatch(DateTime uploadedAfter, int numberOfRecordsToSkip, int batchSize)
+        public IList<TemporaryExposureKey> GetOriginCountryKeysForPeriodNextBatch(DateTime uploadedAfter, int numberOfRecordsToSkip, int batchSize)
         {
             if (batchSize <= 0) throw new ArgumentException($"Incorrect argument batchSize= {batchSize}");
 
             var query = CreateQueryForKeysUploadedAfterTheDate(uploadedAfter, SortOrder.ASC);
-            var dkCountry = _countryRepository.GetDenmarkCountry();
-            query = query.Where(x => x.Origin == dkCountry);
+            var originCountry = _countryRepository.GetApiOriginCountry();
+            query = query.Where(x => x.Origin == originCountry);
             return TakeNextBatch(query, numberOfRecordsToSkip, batchSize).ToList();
         }
 

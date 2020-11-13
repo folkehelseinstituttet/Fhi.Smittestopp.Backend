@@ -1,8 +1,5 @@
-﻿using NUnit.Framework;
-using DIGNDB.App.SmitteStop.Core.Models;
-using System.Collections.Generic;
-using DIGNDB.App.SmitteStop.Domain;
-using DIGNDB.App.SmitteStop.Domain.Configuration;
+﻿using DIGNDB.App.SmitteStop.Domain.Configuration;
+using NUnit.Framework;
 
 namespace DIGNDB.App.SmitteStop.Testing.ModelTest
 {
@@ -16,15 +13,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ModelTest
             KeyValidationConfiguration config = new KeyValidationConfiguration();
             config.OutdatedKeysDayOffset = expectOutdateKeysDayOffset;
             Assert.AreEqual(expectOutdateKeysDayOffset, config.OutdatedKeysDayOffset);
-        }
-
-        [Test]
-        public void KeyValidationConfiguration_SetRegions_ShouldGetSameValue()
-        {
-            List<string> expectedRegions = new List<string>() { "DK", "Test Region" };
-            KeyValidationConfiguration config = new KeyValidationConfiguration();
-            config.Regions = expectedRegions;
-            CollectionAssert.AreEqual(expectedRegions, config.Regions);
         }
 
         [Test]

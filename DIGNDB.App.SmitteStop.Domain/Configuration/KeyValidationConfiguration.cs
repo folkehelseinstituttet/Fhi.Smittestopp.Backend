@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using DIGNDB.App.SmitteStop.Core.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DIGNDB.App.SmitteStop.Domain.Configuration
 {
     public class KeyValidationConfiguration
     {
+        [Range(minimum: 1, maximum: int.MaxValue)]
         public int OutdatedKeysDayOffset { get; set; }
-        public List<string> Regions { get; set; }
+
+        [Required]
         public PackageNameConfig PackageNames { get; set; }
     }
 }
