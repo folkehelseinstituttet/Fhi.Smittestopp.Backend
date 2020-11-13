@@ -39,7 +39,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             configurationMock.Setup(config => config["JwkUrl"]).Returns("https://some-example-site.com");
             configurationMock
                 .Setup(config =>
-                    config[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.AuthorizedPartyValue)}"])
+                    config[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.ClientId)}"])
                 .Returns("smittestopp");
             configurationMock
                 .Setup(config =>
@@ -60,7 +60,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         }
 
         private const string ValidToken =
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDU3MTQyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.SgxHrypaTXQn2ZMLe486_ped8F9vdQGqVdou5sQ9aFjmjLzc04C-LSHpZAf_d8vxYmbdPCQagupy3eD0rfpj2f8j_d49LQykPHbwhISUr8EVw3xaX241FbCD8yRXBtIFMql5Ov2iYcJSuMRRpuumOOlSQYJ5zqwyU3MgNqyymzAfIGIuaIxRCsE-Mw8uvuI5h3FuzbypeK1U_rbNxKGZk4X3RZZudL652H4ie8dJRKEE_IKY_tGO99FyFkxXXF8MiNZN_Or0vyrUbHolc6ZxDUF9zTjOc4HjK3gRFRoqrgZ7Nnk4Isu4zqbm4yWLa0l0kn-8WphQk6rlGQGJyYKMrw";
+        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDU3MTQyNSwiZXhwIjoxOTIxNDAwMjI1LCJjbGllbnRfaWQiOiJzbWl0dGVzdG9wcCIsImlzcyI6Imh0dHBzOi8vZGV2LXNtaXR0ZXN0b3BwLXZlcmlmaWNhdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsImp0aSI6IjEifQ.WE5opqAN_SdENjAjeV85YsCOxdv0uQnTDAgsbdybWD_8G7LfoASV7hvJ8iHfiPzhfWQMq6L-XS6aai2yTWBiK5L2-BdnXsuEq_AtdDBtmomK7-jcOvKKce1QchA0d-3TILUgda5BCypCs8gi3jByfsP-Rjhm3hipc53tySYEOTqjBQF5pP3BNXkabH89Qez36m9268MIPf_m2IDzGVIKBY3Tfx5mf5EL5hLkJ47tzwLjbyTP8pVFPAASN23RVWRQJymYX3ytVF91cATvksRdz0HTCHzlB_eOBpNnzVBx0RHAkYHDpP3SsGcKKaL_S8_Oh1XcNHXkzieeyOVsxA_IqQ";
 
         [Test]
         public void TestValidateToken_WithValidToken()
@@ -101,16 +101,16 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 .WithMessage("Provided algorithm is not supported.*");
         }
 
-        private const string TokenWithInvalidAuthorizedParty =
-            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxOTIxNDAwMjI1LCJhenAiOiJ4eHgiLCJpc3MiOiJodHRwczovL2Rldi1zbWl0dGVzdG9wcC12ZXJpZmljYXRpb24uYXp1cmV3ZWJzaXRlcy5uZXQiLCJqdGkiOiIxIn0.K9z3Sz0LRtCxMCZB7Wh1HWJK0r20_9sunPIDzQGp_X21_ciUaLnMsC8uoc4sVj50jtJYehMjkQamhHT6LJndVSbVAZleXky8mQyXkSevoDwA9tjZJdlMgMlLcuQj22JSXPv-EuWiuax72jcwlTfMYLSMlY3EEB0Xilltk3l3w3cUKuqe1iiXVXJjb81NW8Jv2u_g2g5JMyGrZJScCwQfQ52Dq7BmovITviOVviqr2k0dq5Imde1NJIz9Dbi41-BIwHBMjVFFRmNGnQTt0ix0vTLLRs3rPWU8EvJmI6xL8ldvjxgL80bCEdKrNcshVI2glRW3N-hJG7WqI_o5k5ZHDw";
+        private const string TokenWithInvalidClientId =
+            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTYwNDgzMDYyNSwiZXhwIjoxOTIxNDAwMjI1LCJjbGllbnRfaWQiOiJ4eHgiLCJpc3MiOiJodHRwczovL2Rldi1zbWl0dGVzdG9wcC12ZXJpZmljYXRpb24uYXp1cmV3ZWJzaXRlcy5uZXQiLCJqdGkiOiIxIn0.JHg3aECpa4L9p_EAL-oFQ069_-Vznht8H-RIb__5hfOfM_3rRQfGuX4G5o6PxGMpV7Qv9TniVTm8oi2BKZxZDYZT-oPfwrRMFikKULaKCQv6QcX62f1TsfyCE46t8c2U-xJQekbKpnK9qI9iHGl1cx7acDVWpwdl-3U4l9Df68IIKd3wvFQWDUlG8rE3imQt4pyWos_Cue4C98nxwXBi4Jqpqm0QMpLQmiDMKB_McXoy_o_6UhTjVDCuukBgOUd4eaDrjz26rRCa8QeoDUVc-eAjUsUdQwmIYp3f-bkuSXhJYg89c9CO5cceqsDDaFZGsAvEzwdxwEVRZiSZlDnSWA";
 
         [Test]
-        public void TestValidateToken_WithInvalidAuthorizedParty()
+        public void TestValidateToken_WithInvalidClientId()
         {
-            Action validateAction = () => _jwtValidationService.IsTokenValid(TokenWithInvalidAuthorizedParty);
+            Action validateAction = () => _jwtValidationService.IsTokenValid(TokenWithInvalidClientId);
 
             validateAction.Should().Throw<SecurityTokenException>()
-                .WithMessage("AuthorizeParty claim is invalid.*");
+                .WithMessage("client_id claim is invalid.*");
         }
 
         private const string TokenWithExpiredTimeWindow =

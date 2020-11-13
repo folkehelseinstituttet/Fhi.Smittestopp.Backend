@@ -10,9 +10,9 @@ namespace DIGNDB.App.SmitteStop.Core.Services
 {
     public class JwtValidationService : IJwtValidationService
     {
-        private const string AuthorizedPartyClaimType = "azp";
+        private const string ClientIdClaimType = "client_id";
 
-        private readonly string _validAuthorizedPartyValue;
+        private readonly string _validClientIdValue;
         private readonly string _supportedAlgorithm;
         private readonly string _validIssuer;
 
@@ -27,7 +27,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             _rsaProviderService = rsaProviderService;
             _jwtTokenReplyAttackService = jwtTokenReplyAttackService;
 
-            _validAuthorizedPartyValue = configuration[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.AuthorizedPartyValue)}"];
+            _validClientIdValue = configuration[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.ClientId)}"];
             _supportedAlgorithm = configuration[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.SupportedAlgorithm)}"];
             _validIssuer = configuration[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.Issuer)}"];
         }
@@ -43,7 +43,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
 
             tokenHandler.ValidateToken(token, validationParameters, out SecurityToken outToken);
 
-            ValidateAuthorizedParty(outToken);
+            ValidateClientId(outToken);
             _jwtTokenReplyAttackService.ValidateReplyAttack(outToken);
 
             return true;
@@ -55,27 +55,19 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             if (algorithmInToken != _supportedAlgorithm)
                 throw new NotSupportedException(
                     $"Provided algorithm is not supported. Algorithm in token: {algorithmInToken}. Supported algorithm: {_supportedAlgorithm}");
-
-            string authorizedPartyInToken = jwtToken.Claims.Single(c => c.Type == AuthorizedPartyClaimType).Value;
-
-            var validationResult = authorizedPartyInToken == _validAuthorizedPartyValue;
-
-            if (!validationResult)
-                throw new SecurityTokenException(
-                    $"AuthorizeParty claim is invalid. Expected: {_validAuthorizedPartyValue}, Got: {authorizedPartyInToken}");
         }
 
-        private void ValidateAuthorizedParty(SecurityToken token)
+        private void ValidateClientId(SecurityToken token)
         {
             if (!(token is JwtSecurityToken jwtToken)) return;
 
-            string authorizedPartyInToken = jwtToken.Claims.Single(c => c.Type == AuthorizedPartyClaimType).Value;
+            string clientIdInToken = jwtToken.Claims.Single(c => c.Type == ClientIdClaimType).Value;
 
-            var validationResult = authorizedPartyInToken == _validAuthorizedPartyValue;
+            var validationResult = clientIdInToken == _validClientIdValue;
 
             if (!validationResult)
                 throw new SecurityTokenException(
-                    $"AuthorizeParty claim is invalid. Expected: {_validAuthorizedPartyValue}, Got: {authorizedPartyInToken}");
+                    $"client_id claim is invalid. Expected: {_validClientIdValue}, Got: {clientIdInToken}");
         }
 
         private TokenValidationParameters GetValidationParameters(string rsaKeyId)
