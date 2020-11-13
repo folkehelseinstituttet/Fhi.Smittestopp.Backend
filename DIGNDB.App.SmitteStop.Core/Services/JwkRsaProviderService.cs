@@ -58,8 +58,8 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         {
             _rsaSecurityKey = new RsaSecurityKey(new RSAParameters
             {
-                Exponent = Convert.FromBase64String(jsonWebKey.E),
-                Modulus = Convert.FromBase64String(jsonWebKey.N),
+                Exponent = Base64UrlEncoder.DecodeBytes(jsonWebKey.E),
+                Modulus = Base64UrlEncoder.DecodeBytes(jsonWebKey.N),
             }) {KeyId = jsonWebKey.Kid};
 
             return _rsaSecurityKey;
