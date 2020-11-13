@@ -95,7 +95,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
 
             var translationRepositoryMock = new Mock<IGenericRepository<Translation>>();
 
-            IOriginSpecificSettings config = new AppSettingsConfig() { OriginCuntryCode = ExampleCountryCodeDk};
+            IOriginSpecificSettings config = new AppSettingsConfig() { OriginCountryCode = ExampleCountryCodeDk};
             return new CountryRepository(context, translationRepositoryMock.Object, config);
         }
 

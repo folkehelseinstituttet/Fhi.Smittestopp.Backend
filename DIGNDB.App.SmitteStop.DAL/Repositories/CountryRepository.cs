@@ -64,7 +64,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
         {
             if(_originCountryCached == null)
             {
-                string originCode = _originSpecificSettings.OriginCuntryCode;
+                string originCode = _originSpecificSettings.OriginCountryCode;
                 _originCountryCached = FindByIsoCode(originCode) ?? throw new System.ArgumentException($"Invalid Origin country code: {originCode}. Configuration is wrong!");
             }
             return _originCountryCached;

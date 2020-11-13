@@ -102,7 +102,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             dbContext.Database.EnsureDeleted();
             var translationsRepositoryMock = new Mock<IGenericRepository<Translation>>(MockBehavior.Strict);
 
-            var originSpecificSettings = new AppSettingsConfig() { OriginCuntryCode = "dk" };
+            var originSpecificSettings = new AppSettingsConfig() { OriginCountryCode = "dk" };
             var countryRepository = new CountryRepository(dbContext, translationsRepositoryMock.Object, originSpecificSettings);
             var keysRepository = new TemporaryExposureKeyRepository(dbContext, countryRepository);
 

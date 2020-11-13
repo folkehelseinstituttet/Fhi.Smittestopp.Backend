@@ -3,6 +3,6 @@
     public interface IOriginSpecificSettings
 
     {
-        public string OriginCuntryCode { get; }
+        public string OriginCountryCode { get; }
     }
 }

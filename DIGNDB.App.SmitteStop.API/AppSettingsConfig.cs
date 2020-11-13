@@ -8,7 +8,7 @@ namespace DIGNDB.App.SmitteStop.API
     public class AppSettingsConfig : IOriginSpecificSettings, IPackageBuilderConfig
     {
         [Required(AllowEmptyStrings = false)]
-        public string OriginCuntryCode { get; set; }
+        public string OriginCountryCode { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         public string AppleQueryBitsUrl { get; set; }

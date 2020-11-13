@@ -379,7 +379,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         {
             var translationsRepositoryMock = new Mock<IGenericRepository<Translation>>(MockBehavior.Strict);
 
-            IOriginSpecificSettings originConfig = new AppSettingsConfig() { OriginCuntryCode = _originCountry.Code.ToUpper() };
+            IOriginSpecificSettings originConfig = new AppSettingsConfig() { OriginCountryCode = _originCountry.Code.ToUpper() };
             var countryRepository = new CountryRepository(_dbContext, translationsRepositoryMock.Object, originConfig);
             var keysRepository = new TemporaryExposureKeyRepository(_dbContext, countryRepository);
 
