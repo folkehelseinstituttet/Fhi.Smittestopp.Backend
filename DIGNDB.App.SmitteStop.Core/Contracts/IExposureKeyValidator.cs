@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Domain.Configuration;
+﻿using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.Core.Contracts
 {

@@ -26,7 +26,9 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             var expiredTokens = Get(token => token.ExpirationTime <= DateTime.Now).ToList();
 
             foreach (var expiredToken in expiredTokens)
+            {
                 Delete(expiredToken);
+            }
 
             if (expiredTokens.Any())
                 Save();

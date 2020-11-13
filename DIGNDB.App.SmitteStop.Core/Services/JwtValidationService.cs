@@ -3,7 +3,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
@@ -22,14 +21,14 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         public JwtValidationService(
             IRsaProviderService rsaProviderService,
             IJwtTokenReplyAttackService jwtTokenReplyAttackService,
-            IConfiguration configuration)
+            JwtAuthorization jwtAuthorizationConfiguration)
         {
             _rsaProviderService = rsaProviderService;
             _jwtTokenReplyAttackService = jwtTokenReplyAttackService;
 
-            _validClientIdValue = configuration[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.ClientId)}"];
-            _supportedAlgorithm = configuration[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.SupportedAlgorithm)}"];
-            _validIssuer = configuration[$"{nameof(JwtValidationRules)}:{nameof(JwtValidationRules.Issuer)}"];
+            _validClientIdValue = jwtAuthorizationConfiguration.JwtValidationRules.ClientId;
+            _supportedAlgorithm = jwtAuthorizationConfiguration.JwtValidationRules.SupportedAlgorithm;
+            _validIssuer = jwtAuthorizationConfiguration.JwtValidationRules.Issuer;
         }
 
         public bool IsTokenValid(string token)

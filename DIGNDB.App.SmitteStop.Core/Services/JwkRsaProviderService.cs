@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -8,7 +7,6 @@ using System.Threading.Tasks;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Exceptions;
 using DIGNDB.App.SmitteStop.Domain;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
@@ -22,12 +20,12 @@ namespace DIGNDB.App.SmitteStop.Core.Services
 
         public JwkRsaProviderService(
             HttpMessageHandler httpClientHandler,
-            IConfiguration configuration)
+            JwtAuthorization jwtAuthorizationConfiguration)
         {
             _httpClient = new HttpClient(httpClientHandler);
             _httpClient.DefaultRequestHeaders.Add("accept", "application/json");
 
-            _jwkUrl = new Uri(configuration["JwkUrl"]);
+            _jwkUrl = new Uri(jwtAuthorizationConfiguration.JwkUrl);
         }
 
         public RsaSecurityKey GetRsaSecurityKey(string keyId)
