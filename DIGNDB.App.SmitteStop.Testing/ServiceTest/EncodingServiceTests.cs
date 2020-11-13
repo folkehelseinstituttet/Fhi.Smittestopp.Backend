@@ -1,5 +1,4 @@
-﻿using DIGNDB.App.SmitteStop.API.Services;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Services;
 using NUnit.Framework;
 

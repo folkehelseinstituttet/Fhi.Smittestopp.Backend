@@ -1,7 +1,6 @@
-﻿using DIGNDB.App.SmitteStop.Core.Models;
+﻿using DIGNDB.App.SmitteStop.Domain;
 using NUnit.Framework;
 using System;
-using DIGNDB.App.SmitteStop.Domain;
 
 namespace DIGNDB.App.SmitteStop.Testing.ModelTest
 {

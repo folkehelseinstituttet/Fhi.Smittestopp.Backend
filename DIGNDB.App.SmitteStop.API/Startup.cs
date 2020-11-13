@@ -87,21 +87,8 @@ namespace DIGNDB.App.SmitteStop.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-            var appsettingsConfig = Configuration.GetSection("AppSettings").Get<AppSettingsConfig>();
-            ModelValidator.ValidateContract(appsettingsConfig);
 
-            var logValidationRulesConfig = Configuration.GetSection("LogValidationRules").Get<LogValidationRulesConfig>();
-            ModelValidator.ValidateContract(logValidationRulesConfig);
-
-            var keyValidationRulesConfig = Configuration.GetSection("KeyValidationRules").Get<KeyValidationConfiguration>();
-            ModelValidator.ValidateContract(logValidationRulesConfig);
-
-            services.AddSingleton(appsettingsConfig);
-            services.AddSingleton<IOriginSpecificSettings>(appsettingsConfig);
-            services.AddSingleton<IPackageBuilderConfig>(appsettingsConfig);
-            
-            services.AddSingleton(logValidationRulesConfig);
-            services.AddSingleton(keyValidationRulesConfig);
+            RegisterConfigutartionDtos(services);            
 
             services.AddAutoMapper(typeof(CountryMapper));
             services.AddSingleton(new AuthOptions(_env.IsDevelopment()));
@@ -138,10 +125,6 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped(typeof(IDataAccessLoggingService<>), typeof(DataAccessLoggingService<>));
             services.AddScoped<ICountryRepository, CountryRepository>();
 
-
-            services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
-            services.AddSingleton<IExportKeyConfigurationService, ExportKeyConfigurationService>();
-
             services.AddScoped<IKeyValidator, KeyValidator>();
             services.AddScoped<IEpochConverter, EpochConverter>();
             services.AddScoped<IRiskCalculator, RiskCalculator>();
@@ -152,6 +135,25 @@ namespace DIGNDB.App.SmitteStop.API
                 .Where(type => typeof(ControllerBase).IsAssignableFrom(type))
                 .ToList();
             InjectionChecker.CheckIfAreAnyDependenciesAreMissing(services, controllers);
+        }
+
+        private void RegisterConfigutartionDtos(IServiceCollection services)
+        {
+            var appsettingsConfig = Configuration.GetSection("AppSettings").Get<AppSettingsConfig>();
+            ModelValidator.ValidateContract(appsettingsConfig);
+            services.AddSingleton(appsettingsConfig);
+            services.AddSingleton<IOriginSpecificSettings>(appsettingsConfig);
+            services.AddSingleton<IPackageBuilderConfig>(appsettingsConfig);
+
+            var logValidationRulesConfig = Configuration.GetSection("LogValidationRules").Get<LogValidationRulesConfig>();
+            ModelValidator.ValidateContract(logValidationRulesConfig);
+            services.AddSingleton(logValidationRulesConfig);
+
+            var keyValidationRulesConfig = Configuration.GetSection("KeyValidationRules").Get<KeyValidationConfiguration>();
+            ModelValidator.ValidateContract(keyValidationRulesConfig);
+            services.AddSingleton(keyValidationRulesConfig);
+
+            services.AddSingleton<IExposureConfigurationService>(new ExposureConfigurationService(Configuration));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -187,18 +189,10 @@ namespace DIGNDB.App.SmitteStop.API
             app.UseAuthorization();
             app.UseAuthentication();
 
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-            var exposureConfigurationService = app.ApplicationServices.GetService<IExposureConfigurationService>();
-            exposureConfigurationService.SetConfiguration(Configuration);
-
-            var exportKeyConfigurationService = app.ApplicationServices.GetService<IExportKeyConfigurationService>();
-            exportKeyConfigurationService.SetConfiguration(Configuration);
-
         }
     }
 }
