@@ -1,20 +1,19 @@
-﻿using System;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Enums;
+using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
+using DIGNDB.App.SmitteStop.Domain.Db;
+using DIGNDB.App.SmitteStop.Domain.Dto;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Enums;
-using DIGNDB.App.SmitteStop.DAL.Repositories;
-using DIGNDB.App.SmitteStop.Domain.Db;
-using DIGNDB.App.SmitteStop.Domain.Dto;
-using Microsoft.Extensions.Configuration;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
 {
     public class PackageBuilderService : IPackageBuilderService
     {
-        public int MaxKeysPerFile => _maxKeysPerFile;
-        private readonly IConfiguration _configuration;
+  
         private readonly ITemporaryExposureKeyRepository _temporaryExposureKeyRepository;
         private readonly IDatabaseKeysToBinaryStreamMapperService _databaseKeysToBinaryStreamMapperService;
         IKeysListToMemoryStreamConverter _keysListToMemoryStreamConverter;
@@ -23,18 +22,15 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         private readonly int _fetchCommandTimeout = 0;//set default value to 0 so the timeout is not changed unless a value is given in the config
 
 
-        public PackageBuilderService(IDatabaseKeysToBinaryStreamMapperService databaseKeysToBinaryStreamMapperService, IConfiguration configuration, ITemporaryExposureKeyRepository temporaryExposureKeyRepository,
+        public PackageBuilderService(IDatabaseKeysToBinaryStreamMapperService databaseKeysToBinaryStreamMapperService, IPackageBuilderConfig configuration, ITemporaryExposureKeyRepository temporaryExposureKeyRepository,
             IKeysListToMemoryStreamConverter keysListToMemoryStreamConverter)
         {
             _databaseKeysToBinaryStreamMapperService = databaseKeysToBinaryStreamMapperService;
-            _configuration = configuration;
             _temporaryExposureKeyRepository = temporaryExposureKeyRepository;
             _keysListToMemoryStreamConverter = keysListToMemoryStreamConverter;
-            if (!int.TryParse(_configuration["AppSettings:MaxKeysPerFile"], out _maxKeysPerFile))
-            {
-                _maxKeysPerFile = 750000;
-            }
-            int.TryParse(_configuration["AppSettings:FetchCommandTimeout"], out _fetchCommandTimeout);
+
+            _maxKeysPerFile = configuration.MaxKeysPerFile;
+            _fetchCommandTimeout = configuration.FetchCommandTimeout;
         }
 
         public CacheResult BuildPackage(DateTime packageDate)
@@ -42,7 +38,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             List<byte[]> streamBytesList = new List<byte[]>();
 
             //create file and store in cache if file does not exist in cache
-            var keys = _temporaryExposureKeyRepository.GetTemporaryExposureKeysWithDkOrigin(packageDate, _fetchCommandTimeout);
+            var keys = _temporaryExposureKeyRepository.GetKeysOnlyFromApiOriginCountry(packageDate, _fetchCommandTimeout);
 
             int skip = 0;
             while (keys.Count > skip)
@@ -96,7 +92,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             }
             else
             {
-                return _temporaryExposureKeyRepository.GetDkTemporaryExposureKeysForPeriodNextBatch(startDate, numberOfRecordsToSkip, _maxKeysPerFile);
+                return _temporaryExposureKeyRepository.GetOriginCountryKeysForPeriodNextBatch(startDate, numberOfRecordsToSkip, _maxKeysPerFile);
             }
         }
     }

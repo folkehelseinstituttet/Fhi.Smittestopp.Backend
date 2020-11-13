@@ -10,11 +10,13 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
 {
     public class AuthorizationAttribute : ActionFilterAttribute
     {
+        private readonly AppSettingsConfig _appSettingsConfig;
         private readonly AuthOptions _authOptions;
         private readonly IJwtValidationService _jwtValidationService;
 
-        public AuthorizationAttribute(AuthOptions authOptions, IJwtValidationService jwtValidationService)
+        public AuthorizationAttribute(AppSettingsConfig appSettingsConfig, AuthOptions authOptions, IJwtValidationService jwtValidationService)
         {
+            _appSettingsConfig = appSettingsConfig;
             _authOptions = authOptions;
             _jwtValidationService = jwtValidationService;
         }

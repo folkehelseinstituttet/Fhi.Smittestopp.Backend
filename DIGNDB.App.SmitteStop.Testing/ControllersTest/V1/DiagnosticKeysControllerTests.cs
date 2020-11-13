@@ -23,6 +23,7 @@ using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Enums;
 using FluentAssertions;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
 
 namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
 {
@@ -38,14 +39,14 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
         private Mock<IExposureKeyValidator> _exposureKeyValidator;
         private Mock<ILogger<DiagnosticKeysController>> _logger;
         private Mock<IExposureConfigurationService> _exposureConfigurationService;
-        private Mock<IKeyValidationConfigurationService> _keyValidationConfigurationService;
+
         private Mock<IExportKeyConfigurationService> _exportKeyConfigurationService;
         private Mock<ICountryService> _countryServiceMock;
         private Mock<ICountryRepository> _countryRepository;
-        private Mock<IAppSettingsConfig> _appSettingsConfigMock;
+        private AppSettingsConfig _appSettingsConfig;
         private Mock<IAddTemporaryExposureKeyService> _addTemporaryExposureKeyService;
         private DiagnosticKeysController _controller;
-
+        private KeyValidationConfiguration _keyValidationConfiguration;
         private readonly List<TemporaryExposureKey> _exampleKeys = new List<TemporaryExposureKey>()
         {
             new TemporaryExposureKey(),
@@ -60,7 +61,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             _controller = new DiagnosticKeysController(_cacheOperation.Object,
                 _logger.Object, _appleService.Object, _temporaryExposureKeyRepository.Object, _exposureKeyMapper.Object, _configuration.Object,
                 _exposureKeyValidator.Object, _exposureConfigurationService.Object,
-                _keyValidationConfigurationService.Object, _countryRepository.Object, _countryServiceMock.Object, _appSettingsConfigMock.Object, _addTemporaryExposureKeyService.Object)
+                _keyValidationConfiguration, _countryRepository.Object, _countryServiceMock.Object, _appSettingsConfig, _addTemporaryExposureKeyService.Object)
             {
                 ControllerContext = new ControllerContext() { HttpContext = MakeFakeContext(true).Object }
             };
@@ -85,33 +86,40 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             _exposureKeyValidator = new Mock<IExposureKeyValidator>();
             _addTemporaryExposureKeyService = new Mock<IAddTemporaryExposureKeyService>(MockBehavior.Strict);
             _exposureConfigurationService = new Mock<IExposureConfigurationService>(MockBehavior.Strict);
-            _keyValidationConfigurationService = new Mock<IKeyValidationConfigurationService>();
             _cacheOperation = new Mock<ICacheOperations>(MockBehavior.Strict);
             _exportKeyConfigurationService = new Mock<IExportKeyConfigurationService>(MockBehavior.Strict);
             _countryServiceMock = new Mock<ICountryService>();
             _countryRepository = new Mock<ICountryRepository>();
-            _appSettingsConfigMock = new Mock<IAppSettingsConfig>();
-            _appSettingsConfigMock.Setup(mock => mock.Configuration)
-                .Returns(_configuration.Object);
+
+
+            _appSettingsConfig = new AppSettingsConfig()
+            {
+                DeviceVerificationEnabled = false,
+                CacheMonitorTimeout = 100,
+                FetchCommandTimeout = 0,
+                EnableCacheOverride = true
+            };
+
+            var packageNames = new PackageNameConfig()
+            {
+                Apple = "com.netcompany.smittestop - exposure - notification",
+                Google = "com.netcompany.smittestop_exposure_notification"
+            };
+
+            _keyValidationConfiguration = new KeyValidationConfiguration()
+            {
+                PackageNames = packageNames
+            };
+
             _addTemporaryExposureKeyService.Setup(x => x.GetFilteredKeysEntitiesFromDTO(It.IsAny<TemporaryExposureKeyBatchDto>()))
                 .ReturnsAsync(new List<TemporaryExposureKey>()
                 {
                     new TemporaryExposureKey()
                 });
-            SetupMockConfiguration();
+
             SetupMockExposureConfiugrationService();
             setupMockExportKeyConfigurationService();
             SetupMockCacheOperation(1);
-        }
-
-        private void SetupMockConfiguration()
-        {
-            _configuration.Setup(config => config["AppSettings:deviceVerificationEnabled"]).Returns("false");
-            _configuration.Setup(config => config["KeyValidationRules:PackageNames:ios"]).Returns("com.netcompany.smittestop-exposure-notification");
-            _configuration.Setup(config => config["KeyValidationRules:PackageNames:android"]).Returns("com.netcompany.smittestop_exposure_notification");
-            _configuration.Setup(config => config["AppSettings:CacheMonitorTimeout"]).Returns("100");
-            _configuration.Setup(config => config["AppSettings:fetchCommandTimeout"]).Returns("0");
-            _configuration.Setup(config => config["AppSettings:enableCacheOverride"]).Returns("true");
         }
 
         private void SetupMockExposureConfiugrationService()

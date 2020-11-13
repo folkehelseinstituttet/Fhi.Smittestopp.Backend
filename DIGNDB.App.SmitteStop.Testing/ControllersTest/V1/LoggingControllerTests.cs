@@ -1,4 +1,5 @@
 ﻿using DIGNDB.App.SmitteStop.API;
+using DIGNDB.App.SmitteStop.API.Controllers;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -26,14 +25,27 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
         public void Init()
         {
             SetupMockServices();
-            SetupMockConfiguration();
-            _controller = new LoggingController(_logMessageValidator.Object, _logger.Object, _configuration.Object)
+
+            var appSettingsConfig = new AppSettingsConfig()
+            {
+                LogEndpointOverride = false
+            };
+
+            var logValidationRulesConfig = new LogValidationRulesConfig()
+            {
+                SeverityRegex = "^(ERROR|INFO|WARNING)$",
+                PositiveNumbersRegex = "^[0-9]\\d*$",
+                BuildVersionRegex = "^[1-9]{1}[0-9]*([.][0-9]*){1,2}?$",
+                OperationSystemRegex = "^(IOS|Android-Google|Android-Huawei|Unknown)$",
+                DeviceOSVersionRegex = "[1-9]{1}[0-9]{0,2}([.][0-9]{1,3}){1,2}?$",
+                MaxTextFieldLength = 500,
+            };
+
+            _controller = new LoggingController(_logMessageValidator.Object, _logger.Object, logValidationRulesConfig, appSettingsConfig)
 
             {
                 ControllerContext = new ControllerContext() { HttpContext = MakeFakeContext(true).Object }
-            };
-            
-
+            };    
         }
 
         private void SetupMockServices()
@@ -41,18 +53,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             _logger = new Mock<ILogger<LoggingController>>();
             _logMessageValidator = new Mock<ILogMessageValidator>(MockBehavior.Strict);
             _configuration = new Mock<IConfiguration>(MockBehavior.Strict);
-
-        }
-
-        private void SetupMockConfiguration()
-        {
-            _configuration.Setup(config => config["LogValidationRules:severityRegex"]).Returns("^(ERROR|INFO|WARNING)$");
-            _configuration.Setup(config => config["LogValidationRules:positiveNumbersRegex"]).Returns("^[0-9]\\d*$");
-            _configuration.Setup(config => config["LogValidationRules:buildVersionRegex"]).Returns("^[1-9]{1}[0-9]*([.][0-9]*){1,2}?$");
-            _configuration.Setup(config => config["LogValidationRules:operationSystemRegex"]).Returns("^(IOS|Android-Google|Android-Huawei|Unknown)$");
-            _configuration.Setup(config => config["LogValidationRules:deviceOSVersionRegex"]).Returns("[1-9]{1}[0-9]{0,2}([.][0-9]{1,3}){1,2}?$");
-            _configuration.Setup(config => config["LogValidationRules:maxTextFieldLength"]).Returns("500");
-            _configuration.Setup(config => config["AppSettings:logEndpointOverride"]).Returns("false");
 
         }
 
@@ -72,12 +72,8 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             mockContext.Setup(c => c.Request).Returns(mockRequest.Object);
             mockContext.Setup(c => c.Response).Returns(mockResponse.Object);
             return mockContext;
-
            
         }
-
-        
-
 
         [Test]
         public void ReturnBadRequest_When_RequestBodyIsNotParsable()

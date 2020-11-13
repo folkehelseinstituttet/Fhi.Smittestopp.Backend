@@ -1,18 +1,15 @@
 ﻿using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
+using DIGNDB.App.SmitteStop.Domain.Db;
+using DIGNDB.App.SmitteStop.Domain.Dto;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Linq.Expressions;
-using DIGNDB.App.SmitteStop.Domain;
-using DIGNDB.App.SmitteStop.Domain.Configuration;
-using DIGNDB.App.SmitteStop.Domain.Db;
-using DIGNDB.App.SmitteStop.Domain.Dto;
-using Microsoft.Extensions.Logging;
 
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
@@ -63,7 +60,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             {
                 OutdatedKeysDayOffset = 14,
                 PackageNames = new PackageNameConfig() { Apple = "com.netcompany.smittestop-exposure-notification", Google = "com.netcompany.smittestop-exposure-notification" },
-                Regions = new List<string>() { "dk" }
             };
         }
 
@@ -71,6 +67,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         {
             countryRepositoryMock = new Mock<ICountryRepository>();
             countryRepositoryMock.Setup(countryRepo => countryRepo.FindByIsoCode(It.IsAny<string>())).Returns(new Country() { Code = "AT", VisitedCountriesEnabled = true });
+            countryRepositoryMock.Setup(countryRepo => countryRepo.GetApiOriginCountry()).Returns(new Country() { Code = "DK", VisitedCountriesEnabled = false });
             logger = new Mock<ILogger>();
         }
 

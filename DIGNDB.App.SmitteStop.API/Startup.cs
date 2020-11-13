@@ -89,6 +89,21 @@ namespace DIGNDB.App.SmitteStop.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+            var appsettingsConfig = Configuration.GetSection("AppSettings").Get<AppSettingsConfig>();
+            ModelValidator.ValidateContract(appsettingsConfig);
+
+            var logValidationRulesConfig = Configuration.GetSection("LogValidationRules").Get<LogValidationRulesConfig>();
+            ModelValidator.ValidateContract(logValidationRulesConfig);
+
+            var keyValidationRulesConfig = Configuration.GetSection("KeyValidationRules").Get<KeyValidationConfiguration>();
+            ModelValidator.ValidateContract(logValidationRulesConfig);
+
+            services.AddSingleton(appsettingsConfig);
+            services.AddSingleton<IOriginSpecificSettings>(appsettingsConfig);
+            services.AddSingleton<IPackageBuilderConfig>(appsettingsConfig);
+            
+            services.AddSingleton(logValidationRulesConfig);
+            services.AddSingleton(keyValidationRulesConfig);
 
             var jwtAuthorizationConfig = Configuration.GetSection(nameof(JwtAuthorization)).Get<JwtAuthorization>();
             ModelValidator.ValidateContract(jwtAuthorizationConfig);
@@ -96,7 +111,6 @@ namespace DIGNDB.App.SmitteStop.API
 
             services.AddAutoMapper(typeof(CountryMapper));
             services.AddSingleton(new AuthOptions(_env.IsDevelopment()));
-            services.AddSingleton<IAppSettingsConfig, AppSettingsConfig>();
             services.AddSingleton(Configuration);
             services.AddScoped<MobileAuthorizationAttribute>();
             services.AddScoped<DeprecatedCheckAttribute>();
@@ -133,7 +147,6 @@ namespace DIGNDB.App.SmitteStop.API
 
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
             services.AddSingleton<IExportKeyConfigurationService, ExportKeyConfigurationService>();
-            services.AddSingleton<IKeyValidationConfigurationService, KeyValidationConfigurationService>();
 
             services.AddScoped<IKeyValidator, KeyValidator>();
             services.AddScoped<IEpochConverter, EpochConverter>();
@@ -151,15 +164,14 @@ namespace DIGNDB.App.SmitteStop.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, AppSettingsConfig appSettingsConfig)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            loggerFactory.AddFile(@"" + Configuration.GetSection(AppSettingsConfig.AppSettingsSectionName)
-                .GetValue<string>("logsApiPath"));
+            loggerFactory.AddFile(appSettingsConfig.LogsApiPath);
 
             app.UseHttpsRedirection();
 
@@ -195,8 +207,7 @@ namespace DIGNDB.App.SmitteStop.API
 
             var exportKeyConfigurationService = app.ApplicationServices.GetService<IExportKeyConfigurationService>();
             exportKeyConfigurationService.SetConfiguration(Configuration);
-            var keyValidationConfigurationService = app.ApplicationServices.GetService<IKeyValidationConfigurationService>();
-            keyValidationConfigurationService.SetConfiguration(Configuration);
+
         }
     }
 }
