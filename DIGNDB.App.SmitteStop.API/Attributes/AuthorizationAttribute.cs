@@ -1,13 +1,10 @@
-﻿using System;
-using System.Security.Cryptography.X509Certificates;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
-using JWT.Algorithms;
-using JWT.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace DIGNDB.App.SmitteStop.API.Attributes
 {
@@ -15,11 +12,13 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
     {
         private readonly AppSettingsConfig _appSettingsConfig;
         private readonly AuthOptions _authOptions;
+        private readonly IJwtValidationService _jwtValidationService;
 
-        public AuthorizationAttribute(AppSettingsConfig appSettingsConfig, AuthOptions authOptions)
+        public AuthorizationAttribute(AppSettingsConfig appSettingsConfig, AuthOptions authOptions, IJwtValidationService jwtValidationService)
         {
             _appSettingsConfig = appSettingsConfig;
             _authOptions = authOptions;
+            _jwtValidationService = jwtValidationService;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -32,13 +31,9 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 string authHeader = context.HttpContext.Request.Headers["Authorization"];
                 if (authHeader != null && authHeader.Contains("Bearer"))
                 {
-                    var secret = _appSettingsConfig.AuthJWTPublicKey;
-                    byte[] publicKeyDecoded = Convert.FromBase64String(secret);
                     var token = authHeader.Replace("Bearer", "");
-                    string jsonPayload = new JwtBuilder()
-                        .WithAlgorithm(new RS256Algorithm(new X509Certificate2(publicKeyDecoded)))
-                        .MustVerifySignature()
-                        .Decode(token.Trim());
+
+                    _jwtValidationService.IsTokenValid(token);
                     return;
 
                 }

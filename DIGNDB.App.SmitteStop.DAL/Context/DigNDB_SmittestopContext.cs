@@ -28,6 +28,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Context
         public virtual DbSet<Setting> Setting { get; set; }
         public virtual DbSet<Translation> Translation { get; set; }
         public virtual DbSet<TemporaryExposureKeyCountry> TemporaryExposureKeyCountry { get; set; }
+        public virtual DbSet<JwtToken> JwtToken { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -56,7 +57,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Context
                     .IsRequired()
                     .HasMaxLength(255);
                 entity.Property(e => e.ReportType);
-                    
+
             });
             modelBuilder.Entity<TemporaryExposureKey>()
                 .HasOne(t => t.Origin)
