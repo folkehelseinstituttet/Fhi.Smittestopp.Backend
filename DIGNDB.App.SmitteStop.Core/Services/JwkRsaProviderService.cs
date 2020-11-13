@@ -19,9 +19,11 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         private RsaSecurityKey _rsaSecurityKey;
 
         public JwkRsaProviderService(
-            HttpMessageHandler httpClientHandler,
-            JwtAuthorization jwtAuthorizationConfiguration)
+            JwtAuthorization jwtAuthorizationConfiguration,
+            HttpClientHandler? httpClientHandler = null)
         {
+            httpClientHandler ??= new HttpClientHandler();
+
             _httpClient = new HttpClient(httpClientHandler);
             _httpClient.DefaultRequestHeaders.Add("accept", "application/json");
 
