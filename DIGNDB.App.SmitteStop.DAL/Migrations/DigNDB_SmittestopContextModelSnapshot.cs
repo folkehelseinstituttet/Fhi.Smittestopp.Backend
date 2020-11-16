@@ -231,6 +231,13 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
+                            Id = 29L,
+                            Code = "NO",
+                            PullingFromGatewayEnabled = false,
+                            VisitedCountriesEnabled = false
+                        },
+                        new
+                        {
                             Id = 28L,
                             Code = "EN",
                             PullingFromGatewayEnabled = false,
