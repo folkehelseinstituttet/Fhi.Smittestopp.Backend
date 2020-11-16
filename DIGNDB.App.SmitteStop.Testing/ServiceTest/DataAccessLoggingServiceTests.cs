@@ -5,6 +5,7 @@ using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Enums;
 using DIGNDB.App.SmitteStop.Core.Models;
+using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.Domain;
 using Microsoft.Extensions.Logging;
 using Moq;

@@ -1,13 +1,12 @@
-﻿using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
-using DIGNDB.App.SmitteStop.DAL.Repositories;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using DIGNDB.App.SmitteStop.Domain.Db;
+﻿using System.Collections.Generic;
 using System.Linq;
+using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain.Db;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace DIGNDB.App.SmitteStop.API.Services
+namespace DIGNDB.APP.SmitteStop.Jobs.Services
 {
     public class DatabaseKeysValidationService : IDatabaseKeysValidationService
     {
@@ -31,7 +30,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
             {
                 databaseKeys = _repository.GetAllKeysNextBatch(numberOfRecordsToSkip, batchSize).ToList();
                 foreach (var key in databaseKeys)
-                {                 
+                {
                     if (!_keyValidator.ValidateKeyAPI(key, out errorMessage))
                     {
                         wrongKeys.Add(key);

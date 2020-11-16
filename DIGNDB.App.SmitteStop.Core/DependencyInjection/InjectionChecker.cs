@@ -1,16 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using DIGNDB.App.SmitteStop.Core.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DIGNDB.App.SmitteStop.Core.DependencyInjection
 {
     public class InjectionChecker
     {
-        public static void CheckIfAreAnyDependenciesAreMissing(IServiceCollection services, IEnumerable<Type> controllers)
+        public static void CheckIfAreAnyDependenciesAreMissing(
+            IServiceCollection services,
+            Assembly executingAssembly,
+            Type baseType)
         {
+            var servicesToBeCreated = executingAssembly.GetTypes()
+                .Where(baseType.IsAssignableFrom)
+                .ToList();
+
             var serviceProvider = services.BuildServiceProvider();
-            foreach (var controllerType in controllers)
+            foreach (var controllerType in servicesToBeCreated)
             {
                 try
                 {
