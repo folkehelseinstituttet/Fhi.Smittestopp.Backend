@@ -1,8 +1,9 @@
-﻿using DIGNDB.App.SmitteStop.Core.Services;
+﻿using DIGNDB.App.SmitteStop.API;
+using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -15,9 +16,9 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     [TestFixture]
     public class DiagnosisKeysServiceTests
     {
-        private Mock<IConfiguration> _configuration;
+        public AppSettingsConfig _appSettingsConfig;
+
         private ExposureKeyMapper _mapper;
-        private Mock<ITemporaryExposureKeyRepository> _temporaryExposureKeyRepository;
 
         private readonly string _pemKeyFromGoogle = @"-----BEGIN EC PRIVATE KEY-----
 MHcCAQEEIE7yE32GaV/+qZ2tlOpdZRIXc9SJsyT5QhDJd9njZ+kcoAoGCCqGSM49
@@ -32,7 +33,6 @@ nfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
         {
             CreatePemFile();
             _mapper = new ExposureKeyMapper();
-            _temporaryExposureKeyRepository = new Mock<ITemporaryExposureKeyRepository>();
             SetupMockConfiguration();
 
         }
@@ -44,10 +44,7 @@ nfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
 
         private void SetupMockConfiguration()
         {
-            _configuration = new Mock<IConfiguration>();
-            _configuration.Setup(config => config["KeyValidationRules:PackageNames:android"]).Returns("com.netcompany.smittestop_exposure_notification");
-            _configuration.Setup(config => config["KeyValidationRules:PackageNames:ios"]).Returns("com.netcompany.smittestop-exposure-notification");
-            _configuration.Setup(config => config["AppSettings:certificateThumbprint"]).Returns(_pemFilePath);
+            _appSettingsConfig = new AppSettingsConfig() { CertificateThumbprint = _pemFilePath };
         }
 
         private IList<TemporaryExposureKey> CreateMockedListExposureKeys(DateTime expectDate)
@@ -74,7 +71,7 @@ nfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
         [Test]
         public void ExportDiagnosisKeys_HaveKeys_ShouldReturnStream()
         {
-            DatabaseKeysToBinaryStreamMapperService toBinaryStreamMapperService = new DatabaseKeysToBinaryStreamMapperService(_mapper, _configuration.Object);
+            DatabaseKeysToBinaryStreamMapperService toBinaryStreamMapperService = new DatabaseKeysToBinaryStreamMapperService(_mapper, _appSettingsConfig);
             var expectDate = DateTime.UtcNow;
             var data = CreateMockedListExposureKeys(expectDate);
             var streamResult = toBinaryStreamMapperService.ExportDiagnosisKeys(data);
@@ -84,7 +81,7 @@ nfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
         [Test]
         public void ExportDiagnosisKeys_HaveNoKey_ShouldThrowException()
         {
-            DatabaseKeysToBinaryStreamMapperService toBinaryStreamMapperService = new DatabaseKeysToBinaryStreamMapperService(_mapper, _configuration.Object);
+            DatabaseKeysToBinaryStreamMapperService toBinaryStreamMapperService = new DatabaseKeysToBinaryStreamMapperService(_mapper, _appSettingsConfig);
             var data = new List<TemporaryExposureKey> {};
             var exception = Assert.Throws<InvalidOperationException>(() => toBinaryStreamMapperService.ExportDiagnosisKeys(data));
             Assert.AreEqual(exception.Message, "Sequence contains no elements");

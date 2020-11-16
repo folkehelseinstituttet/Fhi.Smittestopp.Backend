@@ -1,28 +1,29 @@
-﻿using DIGNDB.App.SmitteStop.Core.Helpers;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Helpers;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
+using DIGNDB.App.SmitteStop.Domain.Db;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Configuration;
-using DIGNDB.App.SmitteStop.Domain.Db;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
 {
     public class DatabaseKeysToBinaryStreamMapperService : IDatabaseKeysToBinaryStreamMapperService
     {
         private readonly IExposureKeyMapper _exposureKeyMapper;
+        private readonly IZipPackageBuilderConfig _appSettingsConfig;
         private readonly IConfiguration _configuration;
 
-        public DatabaseKeysToBinaryStreamMapperService(IExposureKeyMapper exposureKeyMapper, IConfiguration configuration)
+        public DatabaseKeysToBinaryStreamMapperService(IExposureKeyMapper exposureKeyMapper, IZipPackageBuilderConfig appSettingsConfig)
         {
             _exposureKeyMapper = exposureKeyMapper;
-            _configuration = configuration;
+            _appSettingsConfig = appSettingsConfig;
         }
 
         public Stream ExportDiagnosisKeys(IList<TemporaryExposureKey> keys)
         {
             var exportBatch = _exposureKeyMapper.FromEntityToProtoBatch(keys);
-            var exportUtil = new ExposureBatchFileUtil(_configuration["AppSettings:certificateThumbprint"]);
+            var exportUtil = new ExposureBatchFileUtil(_appSettingsConfig.CertificateThumbprint);
             var task = exportUtil.CreateSignedFileAsync(exportBatch);
             task.Wait();
             return task.Result;

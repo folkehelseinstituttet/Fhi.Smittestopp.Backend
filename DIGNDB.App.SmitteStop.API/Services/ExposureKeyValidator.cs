@@ -4,15 +4,11 @@ using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
@@ -97,41 +93,6 @@ namespace DIGNDB.App.SmitteStop.API.Services
             }
         }
 
-        public async Task ValidateDeviceVerificationPayload(TemporaryExposureKeyBatchDto parameter, IAppleService appleService, ILogger logger)
-        {
-            if (parameter.platform.ToLowerInvariant() == "ios")
-            {
-                AppleResponseDto apple = await appleService.ExecuteQueryBitsRequest(parameter.deviceVerificationPayload);
-                if (apple.ResponseCode == HttpStatusCode.OK && !IsValidJson(apple.Content))
-                {
-                    apple = await appleService.ExecuteUpdateBitsRequest(parameter.deviceVerificationPayload);
-                    if (apple.ResponseCode != HttpStatusCode.OK)
-                        throw new ArgumentException("DeviceVerificationPayload invalid");
-                    apple = await appleService.ExecuteQueryBitsRequest(parameter.deviceVerificationPayload);
-                    if (apple.ResponseCode != HttpStatusCode.OK)
-                        throw new ArgumentException("DeviceVerificationPayload invalid");
-                }
-                else if (apple.ResponseCode != HttpStatusCode.OK)
-                    throw new ArgumentException("DeviceVerificationPayload invalid");
-            }
-
-            if (parameter.platform.ToLowerInvariant() == "android")
-            {
-                try
-                {
-                    var attestationStatement = GoogleTokenValidator.ParseAndVerify(parameter.deviceVerificationPayload, logger);
-                    if (attestationStatement == null)
-                    {
-                        throw new Exception("Attestation statement empty.");
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException("DeviceVerificationPayload invalid. " + e);
-                }
-            }
-        }
-
         private List<TemporaryExposureKeyDto> GetKeysWithValidSize(List<TemporaryExposureKeyDto> keys, ILogger logger)
         {
             List<TemporaryExposureKeyDto> newNonValidExposureKeys = new List<TemporaryExposureKeyDto>();
@@ -165,32 +126,6 @@ namespace DIGNDB.App.SmitteStop.API.Services
                         return false;
             }
             return true;
-        }
-
-        private bool IsValidJson(string strInput)
-        {
-            strInput = strInput.Trim();
-            if ((strInput.StartsWith("{") && strInput.EndsWith("}")) ||
-                (strInput.StartsWith("[") && strInput.EndsWith("]")))
-            {
-                try
-                {
-                    var obj = JToken.Parse(strInput);
-                    return true;
-                }
-                catch (JsonReaderException)
-                {
-                    return false;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
         }
     }
 }

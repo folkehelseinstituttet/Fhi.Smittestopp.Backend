@@ -1,5 +1,4 @@
 ﻿using DIGNDB.App.SmitteStop.API.Attributes;
-using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
@@ -18,13 +17,12 @@ using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 namespace DIGNDB.App.SmitteStop.API.V3.Controllers
 {
     [ApiController]
-    [ApiVersion(_apiVersion)]
+    [ApiVersion(ApiVersion)]
     [Route("v{version:apiVersion}/diagnostickeys")]
     public class DiagnosticKeyControllerV3 : ControllerBase
     {
-        private const string _apiVersion = "3";
+        private const string ApiVersion = "3";
 
-        private readonly IAppleService _appleService;
         private readonly IAddTemporaryExposureKeyService _addTemporaryExposureKeyService;
         private readonly IConfiguration _configuration;
         private readonly IExposureKeyValidator _exposureKeyValidator;
@@ -32,12 +30,10 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
         private readonly IExposureConfigurationService _exposureConfigurationService;
         private readonly KeyValidationConfiguration _keyValidationConfig;
         private readonly IZipFileInfoService _zipFileInfoService;
-        private readonly AppSettingsConfig _appSettingsConfig;
 
 
         public DiagnosticKeyControllerV3(
             ILogger<DiagnosticKeyControllerV3> logger,
-            IAppleService appleService,
             IConfiguration configuration,
             IExposureKeyValidator exposureKeyValidator,
             IExposureConfigurationService exposureConfigurationService,
@@ -50,8 +46,6 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
             _exposureKeyValidator = exposureKeyValidator;
             _logger = logger;
             _zipFileInfoService = zipFileInfoService;
-            _appSettingsConfig = appSettingsConfig;
-            _appleService = appleService;
             _exposureConfigurationService = exposureConfigurationService;
             _keyValidationConfig = keyValidationConfig;
             _addTemporaryExposureKeyService = addTemporaryExposureKeyService;
@@ -206,10 +200,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
 
             var parameters = JsonSerializer.Deserialize<TemporaryExposureKeyBatchDto>(requestBody);
             _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameters, _keyValidationConfig, _logger);
-            if (_appSettingsConfig.DeviceVerificationEnabled)
-            {
-                await _exposureKeyValidator.ValidateDeviceVerificationPayload(parameters, _appleService, _logger);
-            }
+
             return parameters;
         }
     }

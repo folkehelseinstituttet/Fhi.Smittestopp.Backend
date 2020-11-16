@@ -139,7 +139,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             Assert.AreEqual(result[1], secondPackageContent);
         }
 
-        private void ConstructPackageBuilderService(IPackageBuilderConfig configuration)
+        private void ConstructPackageBuilderService(IZipPackageBuilderConfig configuration)
         {
             _packageBuilderService = new PackageBuilderService(
                 _dbToBinaryService.Object,

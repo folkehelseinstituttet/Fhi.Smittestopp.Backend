@@ -116,7 +116,6 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<IExposureKeyMapper, ExposureKeyMapper>();
             services.AddScoped<IExposureKeyValidator, ExposureKeyValidator>();
             services.AddScoped<ILogMessageValidator, LogMessageValidator>();
-            services.AddScoped<IAppleService, AppleService>();
             services.AddScoped<IKeysListToMemoryStreamConverter, KeysListToMemoryStreamConverter>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IPackageBuilderService, PackageBuilderService>();
@@ -152,7 +151,7 @@ namespace DIGNDB.App.SmitteStop.API
             ModelValidator.ValidateContract(appsettingsConfig);
             services.AddSingleton(appsettingsConfig);
             services.AddSingleton<IOriginSpecificSettings>(appsettingsConfig);
-            services.AddSingleton<IPackageBuilderConfig>(appsettingsConfig);
+            services.AddSingleton<IZipPackageBuilderConfig>(appsettingsConfig);
 
             var logValidationRulesConfig = Configuration.GetSection("LogValidationRules").Get<LogValidationRulesConfig>();
             ModelValidator.ValidateContract(logValidationRulesConfig);
