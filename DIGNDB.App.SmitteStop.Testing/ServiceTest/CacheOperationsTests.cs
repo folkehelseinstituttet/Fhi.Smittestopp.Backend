@@ -10,6 +10,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using System.Threading;
+using Microsoft.Extensions.Configuration;
+using Moq;
+using System.Threading.Tasks;
+using DIGNDB.App.SmitteStop.API.Services;
+using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Domain.Dto;
+using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
+
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {
     [TestFixture]
@@ -17,6 +27,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     {
         private AppSettingsConfig _appSettingsConfig;
         private Mock<IPackageBuilderService> _cachePackageBuilder;
+        private Mock<ILogger<CacheOperations>> _logger;
         CacheOperations _cacheService;
         MemoryCache _memoryCache;
         private DateTime dateAsKey;
@@ -26,9 +37,10 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         {
             SetupMockConfiguration();
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
+            _logger = new Mock<ILogger<CacheOperations>>();
             dateAsKey = DateTime.UtcNow.AddDays(-1).Date;
             _memoryCache.Set(dateAsKey, mockCacheResult);
-            _cacheService = new CacheOperations(_memoryCache, _appSettingsConfig, _cachePackageBuilder.Object);
+            _cacheService = new CacheOperations(_memoryCache, _appSettingsConfig, _cachePackageBuilder.Object, _logger.Object);
         }
 
         private CacheResult mockCacheResult =>

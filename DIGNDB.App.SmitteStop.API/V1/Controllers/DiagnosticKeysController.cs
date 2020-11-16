@@ -215,13 +215,12 @@ namespace DIGNDB.App.SmitteStop.API
                 Response.Headers.Add("FinalForTheDay", finalForTheDay.ToString());
 
                 //case where no keys for the day exists (yet)
-                if (!cacheResult?.FileBytesList?.Any() ?? false)
+                if(cacheResult != null && cacheResult.FileBytesList != null && !cacheResult.FileBytesList.Any())
                 {
                     return NoContent();
                 }
 
-                //gets actual batch from todays batch-list
-                if (packageNumber > cacheResult.FileBytesList.Count - 1)
+                if (cacheResult?.FileBytesList == null || packageNumber > cacheResult.FileBytesList.Count - 1)
                 {
                     return NotFound();
                 }

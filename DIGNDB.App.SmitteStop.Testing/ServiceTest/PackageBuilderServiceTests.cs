@@ -72,7 +72,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             Assert.That(actualPackage.FileBytesList, Is.Not.Empty);
             Assert.That(actualPackage.FinalForTheDay, Is.EqualTo(false));
             Assert.That(actualPackage.NewerFilesExist, Is.EqualTo(false));
-            Assert.That(actualPackage.CouldNotGetLock, Is.EqualTo(false));
         }
 
         [Test]
@@ -90,7 +89,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             Assert.That(actualPackage.FileBytesList, Is.Empty);
             Assert.That(actualPackage.FinalForTheDay, Is.EqualTo(false));
             Assert.That(actualPackage.NewerFilesExist, Is.EqualTo(false));
-            Assert.That(actualPackage.CouldNotGetLock, Is.EqualTo(false));
         }
 
         [Test]
