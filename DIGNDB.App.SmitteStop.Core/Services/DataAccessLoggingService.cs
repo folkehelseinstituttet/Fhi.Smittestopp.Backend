@@ -4,11 +4,10 @@ using System.Security.Principal;
 using System.Text;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Enums;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.Domain;
 using Microsoft.Extensions.Logging;
 
-namespace DIGNDB.App.SmitteStop.API.Services
+namespace DIGNDB.App.SmitteStop.Core.Services
 {
     /// <summary>
     /// Class used to log who and when was accessing specific data.
