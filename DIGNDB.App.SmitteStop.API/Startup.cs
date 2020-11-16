@@ -88,7 +88,7 @@ namespace DIGNDB.App.SmitteStop.API
                 c.IncludeXmlComments(xmlPath);
             });
 
-            RegisterConfigutartionDtos(services);            
+            RegisterConfigurationDtos(services);
 
             services.AddAutoMapper(typeof(CountryMapper));
             services.AddSingleton(new AuthOptions(_env.IsDevelopment()));
@@ -137,7 +137,7 @@ namespace DIGNDB.App.SmitteStop.API
             InjectionChecker.CheckIfAreAnyDependenciesAreMissing(services, controllers);
         }
 
-        private void RegisterConfigutartionDtos(IServiceCollection services)
+        private void RegisterConfigurationDtos(IServiceCollection services)
         {
             var appsettingsConfig = Configuration.GetSection("AppSettings").Get<AppSettingsConfig>();
             ModelValidator.ValidateContract(appsettingsConfig);
