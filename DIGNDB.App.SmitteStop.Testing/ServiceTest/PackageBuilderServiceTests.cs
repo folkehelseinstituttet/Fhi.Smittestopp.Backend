@@ -5,7 +5,6 @@ using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using NUnit.Framework;
 using System;
