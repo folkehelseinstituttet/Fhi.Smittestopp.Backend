@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DIGNDB.App.SmitteStop.Core.Models
 {
     public class AttenuationBucketsParams
     {
-        public double ExposureTimeThreshold { get; set; }
-        public double LowAttenuationBucketMultiplier { get; set; }
-        public double MiddleAttenuationBucketMultiplier { get; set; }
-        public double HighAttenuationBucketMultiplier { get; set; }
+        [Required]
+        public double? ExposureTimeThreshold { get; set; }
+
+        [Required]
+        public double? LowAttenuationBucketMultiplier { get; set; }
+
+        [Required]
+        public double? MiddleAttenuationBucketMultiplier { get; set; }
+
+        [Required]
+        public double? HighAttenuationBucketMultiplier { get; set; }
     }
 }

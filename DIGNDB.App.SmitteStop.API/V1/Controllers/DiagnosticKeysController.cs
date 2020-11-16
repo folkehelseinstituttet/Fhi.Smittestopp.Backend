@@ -40,7 +40,6 @@ namespace DIGNDB.App.SmitteStop.API
         private readonly ILogger _logger;
         private readonly IExposureConfigurationService _exposureConfigurationService;
         private readonly KeyValidationConfiguration _keyValidationRulesConfig;
-        private readonly bool _enableCacheOverride;
         private readonly ICountryService _countryService;
         private readonly ICountryRepository _countryRepository;
         private readonly AppSettingsConfig _appSettingsConfig;
@@ -63,7 +62,6 @@ namespace DIGNDB.App.SmitteStop.API
             _countryService = countryService;
             _appSettingsConfig = appSettingsConfig;
             _countryRepository = countryRepository;
-            bool.TryParse(_configuration["AppSettings:enableCacheOverride"], out _enableCacheOverride);
         }
 
         [HttpGet]
@@ -200,7 +198,7 @@ namespace DIGNDB.App.SmitteStop.API
                     return BadRequest("Package Date is invalid");
                 }
                 CacheResult cacheResult = null;
-                if (_enableCacheOverride && Request.Headers.ContainsKey("Cache-Control") && Request.Headers["Cache-Control"] == "no-cache")
+                if (_appSettingsConfig.EnableCacheOverride && Request.Headers.ContainsKey("Cache-Control") && Request.Headers["Cache-Control"] == "no-cache")
                 {
                     cacheResult = await _cacheOperations.GetCacheValue(packageDate, true);
                 }

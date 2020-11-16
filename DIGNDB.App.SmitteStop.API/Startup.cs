@@ -60,6 +60,25 @@ namespace DIGNDB.App.SmitteStop.API
             InjectionChecker.CheckIfAreAnyDependenciesAreMissing(services, Assembly.GetExecutingAssembly(), typeof(ControllerBase));
         }
 
+        private void RegisterConfigurationDtos(IServiceCollection services)
+        {
+            var appsettingsConfig = Configuration.GetSection("AppSettings").Get<AppSettingsConfig>();
+            ModelValidator.ValidateContract(appsettingsConfig);
+            services.AddSingleton(appsettingsConfig);
+            services.AddSingleton<IOriginSpecificSettings>(appsettingsConfig);
+            services.AddSingleton<IPackageBuilderConfig>(appsettingsConfig);
+
+            var logValidationRulesConfig = Configuration.GetSection("LogValidationRules").Get<LogValidationRulesConfig>();
+            ModelValidator.ValidateContract(logValidationRulesConfig);
+            services.AddSingleton(logValidationRulesConfig);
+
+            var keyValidationRulesConfig = Configuration.GetSection("KeyValidationRules").Get<KeyValidationConfiguration>();
+            ModelValidator.ValidateContract(keyValidationRulesConfig);
+            services.AddSingleton(keyValidationRulesConfig);
+
+            services.AddSingleton<IExposureConfigurationService>(new ExposureConfigurationService(Configuration));
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, AppSettingsConfig appSettingsConfig)
         {
@@ -93,18 +112,10 @@ namespace DIGNDB.App.SmitteStop.API
             app.UseAuthorization();
             app.UseAuthentication();
 
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-            var exposureConfigurationService = app.ApplicationServices.GetService<IExposureConfigurationService>();
-            exposureConfigurationService.SetConfiguration(Configuration);
-
-            var exportKeyConfigurationService = app.ApplicationServices.GetService<IExportKeyConfigurationService>();
-            exportKeyConfigurationService.SetConfiguration(Configuration);
-
         }
     }
 }

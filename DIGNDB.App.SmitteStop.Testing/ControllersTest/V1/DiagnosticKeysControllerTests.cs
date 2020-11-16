@@ -1,29 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DIGNDB.App.SmitteStop.API;
+using DIGNDB.App.SmitteStop.API.Services;
+using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Models;
+using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
+using DIGNDB.App.SmitteStop.Domain.Db;
+using DIGNDB.App.SmitteStop.Domain.Dto;
+using DIGNDB.App.SmitteStop.Domain.Enums;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using Microsoft.Extensions.Logging;
-using DIGNDB.App.SmitteStop.DAL.Repositories;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using DIGNDB.App.SmitteStop.API.Services;
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
-using DIGNDB.App.SmitteStop.Core.Models;
-using DIGNDB.App.SmitteStop.Domain;
-using DIGNDB.App.SmitteStop.Domain.Dto;
-using DIGNDB.App.SmitteStop.Core.Services;
-using DIGNDB.App.SmitteStop.Domain.Db;
-using DIGNDB.App.SmitteStop.Domain.Enums;
-using FluentAssertions;
-using DIGNDB.App.SmitteStop.Domain.Configuration;
+using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
 {
@@ -40,7 +38,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
         private Mock<ILogger<DiagnosticKeysController>> _logger;
         private Mock<IExposureConfigurationService> _exposureConfigurationService;
 
-        private Mock<IExportKeyConfigurationService> _exportKeyConfigurationService;
         private Mock<ICountryService> _countryServiceMock;
         private Mock<ICountryRepository> _countryRepository;
         private AppSettingsConfig _appSettingsConfig;
@@ -87,7 +84,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             _addTemporaryExposureKeyService = new Mock<IAddTemporaryExposureKeyService>(MockBehavior.Strict);
             _exposureConfigurationService = new Mock<IExposureConfigurationService>(MockBehavior.Strict);
             _cacheOperation = new Mock<ICacheOperations>(MockBehavior.Strict);
-            _exportKeyConfigurationService = new Mock<IExportKeyConfigurationService>(MockBehavior.Strict);
             _countryServiceMock = new Mock<ICountryService>();
             _countryRepository = new Mock<ICountryRepository>();
 
@@ -118,7 +114,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
                 });
 
             SetupMockExposureConfiugrationService();
-            setupMockExportKeyConfigurationService();
             SetupMockCacheOperation(1);
         }
 
@@ -144,16 +139,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
                 {
                     FileBytesList = mockCacheResult(count)
                 }));
-        }
-
-        private void setupMockExportKeyConfigurationService()
-        {
-            _exportKeyConfigurationService.Setup(k => k.GetConfiguration()).Returns(new ExportKeyConfiguration()
-            {
-                CurrentDayFileCaching = TimeSpan.Parse("02:00:00.000"),
-                PreviousDayFileCaching = TimeSpan.Parse("15.00:00:00.000"),
-                MaxKeysPerFile = 750000
-            });
         }
 
         public static IEnumerable<string> InvalidDate {
