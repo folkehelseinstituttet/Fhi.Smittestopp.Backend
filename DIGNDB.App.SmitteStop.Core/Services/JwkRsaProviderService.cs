@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -20,11 +21,11 @@ namespace DIGNDB.App.SmitteStop.Core.Services
 
         public JwkRsaProviderService(
             JwtAuthorization jwtAuthorizationConfiguration,
-            HttpClientHandler? httpClientHandler = null)
+            HttpMessageHandler? httpMessageHandler = null)
         {
-            httpClientHandler ??= new HttpClientHandler();
+            httpMessageHandler ??= new HttpClientHandler();
 
-            _httpClient = new HttpClient(httpClientHandler);
+            _httpClient = new HttpClient(httpMessageHandler);
             _httpClient.DefaultRequestHeaders.Add("accept", "application/json");
 
             _jwkUrl = new Uri(jwtAuthorizationConfiguration.JwkUrl);
