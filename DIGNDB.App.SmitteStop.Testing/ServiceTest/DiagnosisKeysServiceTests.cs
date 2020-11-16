@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Moq;
-using NUnit.Framework;
-using DIGNDB.App.SmitteStop.API.Services;
-using Microsoft.Extensions.Configuration;
+﻿using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
-using System.IO;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
-using DIGNDB.App.SmitteStop.Core.Services;
+using Microsoft.Extensions.Configuration;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {
@@ -18,7 +17,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     {
         private Mock<IConfiguration> _configuration;
         private ExposureKeyMapper _mapper;
-        private ExportKeyConfigurationService _exportKeyConfigurationService;
         private Mock<ITemporaryExposureKeyRepository> _temporaryExposureKeyRepository;
 
         private readonly string _pemKeyFromGoogle = @"-----BEGIN EC PRIVATE KEY-----
@@ -34,7 +32,6 @@ nfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
         {
             CreatePemFile();
             _mapper = new ExposureKeyMapper();
-            _exportKeyConfigurationService = new ExportKeyConfigurationService();
             _temporaryExposureKeyRepository = new Mock<ITemporaryExposureKeyRepository>();
             SetupMockConfiguration();
 
