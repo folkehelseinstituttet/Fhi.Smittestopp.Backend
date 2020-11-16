@@ -21,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.EventLog;
 using System.Linq;
 using System.Reflection;
 
@@ -43,6 +44,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             _hangfireConfig = _configuration.Get<HangfireConfig>();
             ModelValidator.ValidateContract(_hangfireConfig);
             var gateWayConfig = _hangfireConfig.EuGateway;
+
+            var _eventLogConfig = _hangfireConfig.Logging.EventLog;
+            services.Configure<EventLogSettings>(config =>
+            {
+                config.SourceName = _eventLogConfig.SourceName;
+                config.LogName = _eventLogConfig.LogName;
+                config.MachineName = _eventLogConfig.MachineName;
+            });
 
             services.AddControllers().AddControllersAsServices();
             services.AddLogging();

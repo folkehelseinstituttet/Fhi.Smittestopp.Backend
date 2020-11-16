@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace DIGNDB.App.SmitteStop.API.Services
+﻿namespace DIGNDB.App.SmitteStop.Core.Contracts
 {
     public interface IDatabaseKeysValidationService
     {

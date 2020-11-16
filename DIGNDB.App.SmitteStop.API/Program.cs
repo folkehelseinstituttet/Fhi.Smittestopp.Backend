@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.EventLog;
 
 namespace DIGNDB.App.SmitteStop.API
 {
@@ -19,6 +20,14 @@ namespace DIGNDB.App.SmitteStop.API
                     logBuilder.ClearProviders();
                     logBuilder.AddConsole();
                     logBuilder.AddTraceSource("Information, ActivityTracing");
+                    // because framework is not  using settings from appsettings.json
+                    var eventLogSettings = new EventLogSettings()
+                    {
+                        SourceName = hostingContext.Configuration["Logging:EventLog:SourceName"],
+                        LogName = hostingContext.Configuration["Logging:EventLog:LogName"],
+                        MachineName = hostingContext.Configuration["Logging:EventLog:MachineName"]
+                    };
+                    logBuilder.AddEventLog(eventLogSettings);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

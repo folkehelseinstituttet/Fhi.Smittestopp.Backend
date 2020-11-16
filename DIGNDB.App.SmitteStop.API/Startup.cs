@@ -6,23 +6,25 @@ using DIGNDB.App.SmitteStop.Core.DependencyInjection;
 using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Context;
+using DIGNDB.App.SmitteStop.DAL.DependencyInjection;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using FederationGatewayApi.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System;
+using DIGNDB.App.SmitteStop.Domain;
 
 namespace DIGNDB.App.SmitteStop.API
 {
@@ -90,6 +92,10 @@ namespace DIGNDB.App.SmitteStop.API
 
             RegisterConfigurationDtos(services);
 
+            var jwtAuthorizationConfig = Configuration.GetSection(nameof(JwtAuthorization)).Get<JwtAuthorization>();
+            ModelValidator.ValidateContract(jwtAuthorizationConfig);
+            services.AddSingleton(jwtAuthorizationConfig);
+
             services.AddAutoMapper(typeof(CountryMapper));
             services.AddSingleton(new AuthOptions(_env.IsDevelopment()));
             services.AddSingleton(Configuration);
@@ -128,6 +134,9 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<IKeyValidator, KeyValidator>();
             services.AddScoped<IEpochConverter, EpochConverter>();
             services.AddScoped<IRiskCalculator, RiskCalculator>();
+
+            services.AddCoreDependencies();
+            services.AddDALDependencies();
 
             services.AddMemoryCache();
 

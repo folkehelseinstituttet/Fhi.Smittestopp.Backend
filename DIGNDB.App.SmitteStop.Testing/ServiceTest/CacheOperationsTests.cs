@@ -1,17 +1,14 @@
-﻿using NUnit.Framework;
-using Microsoft.Extensions.Caching.Memory;
-using DIGNDB.App.SmitteStop.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using Microsoft.Extensions.Configuration;
-using Moq;
-using System.Threading.Tasks;
+﻿using DIGNDB.App.SmitteStop.API;
 using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Dto;
-using DIGNDB.App.SmitteStop.API;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {
