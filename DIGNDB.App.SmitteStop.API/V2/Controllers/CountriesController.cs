@@ -12,7 +12,7 @@ namespace DIGNDB.App.SmitteStop.API.V2.Controllers
 {
     [ApiController]
     [ApiVersion("2")]
-    [Route("v{version:apiVersion}/countries")]
+    [Route("api/v{version:apiVersion}/countries")]
     public class CountriesController : ControllerBase
     {
         private readonly ICountryService _countryService;

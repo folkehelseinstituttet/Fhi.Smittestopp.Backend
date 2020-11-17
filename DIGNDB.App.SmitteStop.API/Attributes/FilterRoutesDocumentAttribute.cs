@@ -9,7 +9,7 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             List<KeyValuePair<string, OpenApiPathItem>> pathList =
-                swaggerDoc.Paths.Where((x) => !x.Key.StartsWith("/v")).ToList();
+                swaggerDoc.Paths.Where((x) => !x.Key.StartsWith("/api/v")).ToList();
 
             if (pathList.Count > 0)
             {
