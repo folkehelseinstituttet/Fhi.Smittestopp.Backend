@@ -22,8 +22,8 @@ namespace DIGNDB.App.SmitteStop.API
 {
     [ApiController]
     [ApiVersion(ApiVersion)]
-    [Route("v{version:apiVersion}/diagnostickeys")]
-    [Route("diagnostickeys")]
+    [Route("api/v{version:apiVersion}/diagnostickeys")]
+    [Route("api/diagnostickeys")]
     public class DiagnosticKeysController : ControllerBase
     {
     	private const string ApiVersion = "1";
