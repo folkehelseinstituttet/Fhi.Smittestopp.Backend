@@ -24,8 +24,10 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
         public void RemoveOldZipFiles(HangfireConfig hangfireConfig)
         {
             _daysToInvalidateZipFile = hangfireConfig.DaysToInvalidateZipFile;
-            var zipFilesFolder = hangfireConfig.ZipFilesFolder;
-            RemoveOldZipFilesFromFolder(zipFilesFolder);
+            foreach (var zipFilesFolder in hangfireConfig.ZipFilesFolders)
+            {
+                RemoveOldZipFilesFromFolder(zipFilesFolder);
+            }
         }
 
         private void RemoveOldZipFilesFromFolder(string zipFilesFolder)

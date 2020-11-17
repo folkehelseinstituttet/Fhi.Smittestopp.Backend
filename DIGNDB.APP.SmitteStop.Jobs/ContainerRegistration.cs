@@ -48,6 +48,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             services.AddScoped<IGatewayWebContextReader, GatewayWebContextReader>();
             services.AddScoped<ISettingsService, SettingsService>();
             services.AddScoped<IDatabaseKeysValidationService, DatabaseKeysValidationService>();
+            services.AddScoped<IZipFileService, ZipFileService>();
 
             return services;
         }

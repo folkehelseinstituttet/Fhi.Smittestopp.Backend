@@ -1,10 +1,13 @@
-﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using Microsoft.Extensions.Configuration;
 
-namespace DIGNDB.App.SmitteStop.API.Services
+namespace DIGNDB.App.SmitteStop.Core.Services
 {
     public class ExposureConfigurationService : IExposureConfigurationService
     {

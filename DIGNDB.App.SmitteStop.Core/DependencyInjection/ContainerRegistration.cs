@@ -22,7 +22,6 @@ namespace DIGNDB.App.SmitteStop.Core.DependencyInjection
             services.AddScoped<IPackageBuilderService, PackageBuilderService>();
             services.AddScoped<IKeysListToMemoryStreamConverter, KeysListToMemoryStreamConverter>();
             services.AddScoped<IDatabaseKeysToBinaryStreamMapperService, DatabaseKeysToBinaryStreamMapperService>();
-            services.AddScoped<IZipFileService, ZipFileService>();
             services.AddScoped<IDateTimeNowWrapper, DateTimeNowWrapper>();
             services.AddScoped<IEncodingService, EncodingService>();
 
