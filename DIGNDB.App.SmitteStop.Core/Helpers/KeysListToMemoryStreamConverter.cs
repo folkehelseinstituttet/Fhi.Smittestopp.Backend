@@ -1,11 +1,8 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.Domain.Db;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace DIGNDB.App.SmitteStop.Core.Helpers
 {

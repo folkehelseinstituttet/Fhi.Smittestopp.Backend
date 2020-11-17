@@ -56,21 +56,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         }
 
         [Test]
-        public void KeysShouldBeStoredProperly()
-        {
-            IList<string> errorMessageList = new List<string>();
-            IList<TemporaryExposureKeyGatewayDto> keys = _exposureKeyMock.MockListOfTemporaryExposureKeyDto();
-            var filteredKeys = _keyStoreService.FilterAndSaveKeys(keys);
-            // TODO this is only verify if some method has been called. It is not verify if keys are properly filtered and saved
-            /*
-            _webContextReader.Verify(mock => mock.GetItemsFromRequest(It.IsAny<string>()));
-            _keyFilter.Verify(mock => mock.MapKeys(It.IsAny<IList<TemporaryExposureKeyGatewayDto>>()));
-            _keyFilter.Verify(mock => mock.ValidateKeys(It.IsAny<IList<TemporaryExposureKey>>(), out errorMessageList));
-            _keyFilter.Verify(mock => mock.RemoveKeyDuplicates(It.IsAny<IList<TemporaryExposureKey>>()));
-            _tempKeyRepository.Verify(mock => mock.AddTemporaryExposureKeys(It.IsAny<IList<TemporaryExposureKey>>()));*/
-        }
-
-        [Test]
         public void KeysAreNotStoredProperlyWhenTheWebContextIsInvalid()
         {
             IList<string> errorMessageList = new List<string>();

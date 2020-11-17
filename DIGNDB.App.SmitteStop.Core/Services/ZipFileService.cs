@@ -1,11 +1,8 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Enums;
-using DIGNDB.App.SmitteStop.DAL.Repositories;
-using DIGNDB.App.SmitteStop.Domain;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Security;
 
 namespace DIGNDB.App.SmitteStop.Core.Services

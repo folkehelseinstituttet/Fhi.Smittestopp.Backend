@@ -5,34 +5,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DIGNDB.App.SmitteStop.API
 {
-    public class AppSettingsConfig : IOriginSpecificSettings, IPackageBuilderConfig
+    public class AppSettingsConfig : IOriginSpecificSettings, IZipPackageBuilderConfig
     {
         [Required(AllowEmptyStrings = false)]
         public string OriginCountryCode { get; set; }
-
-        [Required(AllowEmptyStrings = false)]
-        public string AppleQueryBitsUrl { get; set; }
-
-        [Required(AllowEmptyStrings = false)]
-        public string AppleUpdateBitsUrl { get; set; }
-
-        // [Required(AllowEmptyStrings = false)] //TODO uncomment when will be provided by mobile team
-        public string PrivateKey { get; set; }
-
-        // [Required(AllowEmptyStrings = false)] //TODO uncomment when will be provided by mobile team
-        public string AppleKeyID { get; set; }
-
-        // [Required(AllowEmptyStrings = false)] //TODO uncomment when will be provided by mobile team
-        public string AppleDeveloperAccount { get; set; }
-
-        // [Required(AllowEmptyStrings = false)] //TODO uncomment when will be provided by mobile team
-        public string AuthJWTPublicKey { get; set; }
 
         // [Required(AllowEmptyStrings = false)] //TODO uncomment when will be provided by mobile team
         public string AuthorizationMobile { get; set; }
 
         // [Required(AllowEmptyStrings = false)] //TODO uncomment when will be provided by mobile team
-        public string CertificateThumbprint { get; set; }
+        public string ZipCertificatePath { get; set; }
 
         [Required]
         public TimeSpan PreviousDayFileCaching { get; set; }
