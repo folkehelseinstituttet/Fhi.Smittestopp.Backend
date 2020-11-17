@@ -37,8 +37,12 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
             }
             catch (Exception e)
             {
-                string inner = (e.InnerException != null) ? (e.InnerException.Message + " : ") : String.Empty;
-                _logger.LogError($"Updating of zip files failed. {inner}{e.Message}");
+                var innerException =
+                    e.InnerException != null
+                        ? e.InnerException.Message + " : " + e.InnerException.StackTrace + " : "
+                        : string.Empty;
+
+                _logger.LogError($"Updating of zip files failed. {innerException}{e.Message}");
             }
         }
 

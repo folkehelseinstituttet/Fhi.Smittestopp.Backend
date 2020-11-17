@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using NUnit.Framework;
-using DIGNDB.App.SmitteStop.API.Utils;
-using System.IO.Compression;
+﻿using DIGNDB.App.SmitteStop.Core.Helpers;
+using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using DIGNDB.App.SmitteStop.Domain.Proto;
+using NUnit.Framework;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Security;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
 using TemporaryExposureKey = DIGNDB.App.SmitteStop.Domain.Db.TemporaryExposureKey;
-using DIGNDB.App.SmitteStop.Core.Services;
 
 namespace DIGNDB.App.SmitteStop.Testing.UtilTest
 {
@@ -69,8 +69,6 @@ YHc1cKvIIi6/H56AJS/kZEYQnfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
         [Test]
         public void CreateBinAsync_PassData_ShouldReturnStreamWithCorrectHeader()
         {
-            ExposureBatchFileUtil utils = new ExposureBatchFileUtil(_pemFilePath);
-
             var returnStream = ExposureBatchFileUtil.CreateBinAsync(_exportBatch);
             returnStream.Wait();
             var result = returnStream.Result;
@@ -85,7 +83,7 @@ YHc1cKvIIi6/H56AJS/kZEYQnfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
         [Test]
         public void CreateSignedFileAsync_HaveData_ShouldContainBinAndSigFiles()
         {
-            ExposureBatchFileUtil utils = new ExposureBatchFileUtil(_pemFilePath);
+            var utils = new ExposureBatchFileUtil(_pemFilePath);
             var returnStream = utils.CreateSignedFileAsync(_exportBatch);
             returnStream.Wait();
             var result = returnStream.Result;
