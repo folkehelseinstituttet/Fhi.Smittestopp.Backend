@@ -79,7 +79,6 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddAPIConfiguration(configuration);
 
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
-            services.AddScoped<IAppleService, AppleService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
             services.AddScoped<IAddTemporaryExposureKeyService, AddTemporaryExposureKeyService>();
@@ -107,7 +106,7 @@ namespace DIGNDB.App.SmitteStop.API
 
             services.AddSingleton(appsettingsConfig);
             services.AddSingleton<IOriginSpecificSettings>(appsettingsConfig);
-            services.AddSingleton<IPackageBuilderConfig>(appsettingsConfig);
+            services.AddSingleton<IZipPackageBuilderConfig>(appsettingsConfig);
             services.AddSingleton(logValidationRulesConfig);
             services.AddSingleton(keyValidationRulesConfig);
 

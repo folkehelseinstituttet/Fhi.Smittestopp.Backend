@@ -1,5 +1,4 @@
 ﻿using DIGNDB.App.SmitteStop.API.Attributes;
-using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
@@ -7,7 +6,6 @@ using DIGNDB.App.SmitteStop.Domain.Dto;
 using DIGNDB.App.SmitteStop.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -30,12 +28,9 @@ namespace DIGNDB.App.SmitteStop.API
     {
     	private const string ApiVersion = "1";
 
-        private readonly IAppleService _appleService;
         private readonly IAddTemporaryExposureKeyService _addTemporaryExposureKeyService;
         private readonly ICacheOperations _cacheOperations;
         private readonly ITemporaryExposureKeyRepository _temporaryExposureKeyRepository;
-        private readonly IExposureKeyMapper _exposureKeyMapper;
-        private readonly IConfiguration _configuration;
         private readonly IExposureKeyValidator _exposureKeyValidator;
         private readonly ILogger _logger;
         private readonly IExposureConfigurationService _exposureConfigurationService;
@@ -44,19 +39,16 @@ namespace DIGNDB.App.SmitteStop.API
         private readonly ICountryRepository _countryRepository;
         private readonly AppSettingsConfig _appSettingsConfig;
 
-        public DiagnosticKeysController(ICacheOperations cacheOperations, ILogger<DiagnosticKeysController> logger, IAppleService appleService,
-            ITemporaryExposureKeyRepository temporaryExposureKeyRepository, IExposureKeyMapper exposureKeyMapper, IConfiguration configuration, IExposureKeyValidator exposureKeyValidator,
+        public DiagnosticKeysController(ICacheOperations cacheOperations, ILogger<DiagnosticKeysController> logger,
+            ITemporaryExposureKeyRepository temporaryExposureKeyRepository, IExposureKeyValidator exposureKeyValidator,
             IExposureConfigurationService exposureConfigurationService, KeyValidationConfiguration keyValidationRulesConfig, 
             ICountryRepository countryRepository, ICountryService countryService, AppSettingsConfig appSettingsConfig, IAddTemporaryExposureKeyService addTemporaryExposureKeyService)
         {
             _addTemporaryExposureKeyService = addTemporaryExposureKeyService;
             _cacheOperations = cacheOperations;
             _temporaryExposureKeyRepository = temporaryExposureKeyRepository;
-            _exposureKeyMapper = exposureKeyMapper;
-            _configuration = configuration;
             _exposureKeyValidator = exposureKeyValidator;
             _logger = logger;
-            _appleService = appleService;
             _exposureConfigurationService = exposureConfigurationService;
             _keyValidationRulesConfig = keyValidationRulesConfig;
             _countryService = countryService;
@@ -116,8 +108,7 @@ namespace DIGNDB.App.SmitteStop.API
 
                 var parameter = JsonSerializer.Deserialize<TemporaryExposureKeyBatchDto>(requestBody);
                 _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameter, _keyValidationRulesConfig, _logger);
-                if (_appSettingsConfig.DeviceVerificationEnabled)
-                    await _exposureKeyValidator.ValidateDeviceVerificationPayload(parameter, _appleService, _logger);
+           
                 var newTemporaryExposureKeys = await _addTemporaryExposureKeyService.GetFilteredKeysEntitiesFromDTO(parameter);
                 if (newTemporaryExposureKeys.Any())
                 {

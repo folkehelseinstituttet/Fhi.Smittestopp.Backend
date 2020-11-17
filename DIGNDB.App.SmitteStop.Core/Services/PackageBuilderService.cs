@@ -22,7 +22,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         private readonly int _fetchCommandTimeout = 0;//set default value to 0 so the timeout is not changed unless a value is given in the config
 
 
-        public PackageBuilderService(IDatabaseKeysToBinaryStreamMapperService databaseKeysToBinaryStreamMapperService, IPackageBuilderConfig configuration, ITemporaryExposureKeyRepository temporaryExposureKeyRepository,
+        public PackageBuilderService(IDatabaseKeysToBinaryStreamMapperService databaseKeysToBinaryStreamMapperService, IZipPackageBuilderConfig configuration, ITemporaryExposureKeyRepository temporaryExposureKeyRepository,
             IKeysListToMemoryStreamConverter keysListToMemoryStreamConverter)
         {
             _databaseKeysToBinaryStreamMapperService = databaseKeysToBinaryStreamMapperService;

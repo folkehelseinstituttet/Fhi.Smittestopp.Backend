@@ -29,7 +29,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
     [TestFixture]
     public class DiagnosticKeysControllerTests
     {
-        private Mock<IAppleService> _appleService;
         private Mock<ICacheOperations> _cacheOperation;
         private Mock<ITemporaryExposureKeyRepository> _temporaryExposureKeyRepository;
         private Mock<IExposureKeyMapper> _exposureKeyMapper;
@@ -55,10 +54,16 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
         public void Init()
         {
             SetupMockServices();
-            _controller = new DiagnosticKeysController(_cacheOperation.Object,
-                _logger.Object, _appleService.Object, _temporaryExposureKeyRepository.Object, _exposureKeyMapper.Object, _configuration.Object,
-                _exposureKeyValidator.Object, _exposureConfigurationService.Object,
-                _keyValidationConfiguration, _countryRepository.Object, _countryServiceMock.Object, _appSettingsConfig, _addTemporaryExposureKeyService.Object)
+            _controller = new DiagnosticKeysController(
+                _cacheOperation.Object,
+                _logger.Object,
+                _temporaryExposureKeyRepository.Object,
+                _exposureKeyValidator.Object,
+                _exposureConfigurationService.Object,
+                _keyValidationConfiguration, 
+                _countryRepository.Object, _countryServiceMock.Object,
+                _appSettingsConfig,
+                _addTemporaryExposureKeyService.Object)
             {
                 ControllerContext = new ControllerContext() { HttpContext = MakeFakeContext(true).Object }
             };
@@ -67,7 +72,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
         private void SetupMockServices()
         {
             _logger = new Mock<ILogger<DiagnosticKeysController>>();
-            _appleService = new Mock<IAppleService>(MockBehavior.Strict);
             _temporaryExposureKeyRepository = new Mock<ITemporaryExposureKeyRepository>();
             _configuration = new Mock<IConfiguration>();
             _exposureKeyMapper = new Mock<IExposureKeyMapper>();
@@ -122,7 +126,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             _exposureConfigurationService.Setup(s => s.GetConfiguration()).Returns(new ExposureConfiguration());
         }
 
-        private List<byte[]> mockCacheResult(int count)
+        private List<byte[]> MockCacheResult(int count)
         {
             List<byte[]> files = new List<byte[]>();
             for (int i = 0; i < count; i++)
@@ -137,7 +141,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             _cacheOperation.Setup(c => c.GetCacheValue(It.IsAny<DateTime>(), It.IsAny<bool>()))
                 .Returns(Task.FromResult(new CacheResult()
                 {
-                    FileBytesList = mockCacheResult(count)
+                    FileBytesList = MockCacheResult(count)
                 }));
         }
 

@@ -66,7 +66,7 @@ namespace DIGNDB.App.SmitteStop.API
             ModelValidator.ValidateContract(appsettingsConfig);
             services.AddSingleton(appsettingsConfig);
             services.AddSingleton<IOriginSpecificSettings>(appsettingsConfig);
-            services.AddSingleton<IPackageBuilderConfig>(appsettingsConfig);
+            services.AddSingleton<IZipPackageBuilderConfig>(appsettingsConfig);
 
             var logValidationRulesConfig = Configuration.GetSection("LogValidationRules").Get<LogValidationRulesConfig>();
             ModelValidator.ValidateContract(logValidationRulesConfig);
