@@ -23,7 +23,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         public Stream ExportDiagnosisKeys(IList<TemporaryExposureKey> keys)
         {
             var exportBatch = _exposureKeyMapper.FromEntityToProtoBatch(keys);
-            var exportUtil = new ExposureBatchFileUtil(_appSettingsConfig.CertificateThumbprint);
+            var exportUtil = new ExposureBatchFileUtil(_appSettingsConfig.ZipCertificatePath);
             var task = exportUtil.CreateSignedFileAsync(exportBatch);
             task.Wait();
             return task.Result;

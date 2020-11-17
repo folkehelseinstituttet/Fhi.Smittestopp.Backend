@@ -1,6 +1,5 @@
 ﻿using DIGNDB.App.SmitteStop.Domain;
 using FederationGatewayApi.Models.Proto;
-using System.Security.Cryptography.X509Certificates;
 
 namespace FederationGatewayApi.Services
 {

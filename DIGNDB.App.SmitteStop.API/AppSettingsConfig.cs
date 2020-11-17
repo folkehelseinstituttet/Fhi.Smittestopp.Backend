@@ -13,9 +13,8 @@ namespace DIGNDB.App.SmitteStop.API
         // [Required(AllowEmptyStrings = false)] //TODO uncomment when will be provided by mobile team
         public string AuthorizationMobile { get; set; }
 
-        // TODO Rename
         // [Required(AllowEmptyStrings = false)] //TODO uncomment when will be provided by mobile team
-        public string CertificateThumbprint { get; set; }
+        public string ZipCertificatePath { get; set; }
 
         [Required]
         public TimeSpan PreviousDayFileCaching { get; set; }

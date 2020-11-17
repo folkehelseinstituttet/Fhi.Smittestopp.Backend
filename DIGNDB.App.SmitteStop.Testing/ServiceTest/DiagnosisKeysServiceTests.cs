@@ -44,7 +44,7 @@ nfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
 
         private void SetupMockConfiguration()
         {
-            _appSettingsConfig = new AppSettingsConfig() { CertificateThumbprint = _pemFilePath };
+            _appSettingsConfig = new AppSettingsConfig() { ZipCertificatePath = _pemFilePath };
         }
 
         private IList<TemporaryExposureKey> CreateMockedListExposureKeys(DateTime expectDate)

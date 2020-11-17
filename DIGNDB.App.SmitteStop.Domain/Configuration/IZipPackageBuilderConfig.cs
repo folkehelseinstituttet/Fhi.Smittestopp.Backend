@@ -6,6 +6,6 @@
 
         int FetchCommandTimeout { get; }
 
-        string CertificateThumbprint { get; }
+        string ZipCertificatePath { get; }
     }
 }
