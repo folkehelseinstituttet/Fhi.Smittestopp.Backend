@@ -1,7 +1,7 @@
 # Smittestopp Mobile Application
 ![.NET Core](https://github.com/folkehelseinstituttet/Fhi.Smittestopp.Backend/workflows/.NET%20Core/badge.svg)
 
-## Licence
+## License
 Copyright (c) 2020 Agency for Digitisation (Denmark), 2020 Norwegian Institute of Public Health (Norway), 2020 Netcompany Group AS
 
 This program is free software; you can redistribute it and/or modify
