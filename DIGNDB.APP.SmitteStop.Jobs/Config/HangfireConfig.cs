@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using DIGNDB.App.SmitteStop.Domain.Configuration;
 using FederationGatewayApi.Config;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DIGNDB.APP.SmitteStop.Jobs.Config
 {
-    public class HangfireConfig
+    public class HangfireConfig : IOriginSpecificSettings, IZipPackageBuilderConfig
     {
         [Required(AllowEmptyStrings = false)]
         public string HangFireConnectionString { get; set; }
@@ -14,6 +15,9 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Config
 
         [Required]
         public List<string> ZipFilesFolders { get; set; }
+
+        [Required]
+        public string OriginCountryCode { get; set; }
 
         [Required]
         public int DaysToInvalidateZipFile { get; set; }
@@ -29,18 +33,18 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Config
 
         [Required(AllowEmptyStrings = false)]
         public string LogsPath { get; set; }
+
+        public int MaxKeysPerFile { get; set; }
+
+        public int FetchCommandTimeout { get; set; }
+
+        public string ZipCertificatePath { get; set; }
     }
 
     public class JobsConfig
     {
         [Required]
         public PeriodicJobBaseConfig UpdateZipFiles { get; set; }
-
-        [Required]
-        public UploadKeysToGatewayJobConfig UploadKeysToTheGateway { get; set; }
-
-        [Required]
-        public DownloadKeysFromGatewayJobConfig DownloadKeysFromTheGateway { get; set; }
 
         [Required]
         public PeriodicJobBaseConfig RemoveOldZipFiles { get; set; }

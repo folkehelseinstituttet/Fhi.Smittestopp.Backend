@@ -108,7 +108,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 
             ConstructPackageBuilderService(new AppSettingsConfig() { MaxKeysPerFile = maxKeysPerFile });
 
-            var result = _packageBuilderService.BuildPackageContentV2(startDate, ZipFileOrigin.All);
+            var result = _packageBuilderService.BuildPackageContentV2(startDate, ZipFileOrigin.All.ToString());
             Assert.AreEqual(result.Count, 2);
             Assert.AreEqual(result[0], firstPackageContent);
             Assert.AreEqual(result[1], secondPackageContent);
@@ -131,7 +131,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 
             ConstructPackageBuilderService( new AppSettingsConfig() { MaxKeysPerFile = maxKeysPerFile } );
 
-            var result = _packageBuilderService.BuildPackageContentV2(startDate, ZipFileOrigin.Dk);
+            var result = _packageBuilderService.BuildPackageContentV2(startDate, "dk");
             Assert.AreEqual(result.Count, 2);
             Assert.AreEqual(result[0], firstPackageContent);
             Assert.AreEqual(result[1], secondPackageContent);

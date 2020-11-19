@@ -1,6 +1,5 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Enums;
-using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.APP.SmitteStop.Jobs.Config;
 using DIGNDB.APP.SmitteStop.Jobs.Jobs.Interfaces;
 using System;
@@ -11,7 +10,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
 {
     public class RemoveOldZipFilesJob : IRemoveOldZipFilesJob
     {
-        private int _daysToInvalidateZipFile;
         private readonly IZipFileInfoService _zipFileInfoService;
         private readonly IFileSystem _fileSystem;
 
@@ -23,22 +21,23 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
 
         public void RemoveOldZipFiles(HangfireConfig hangfireConfig)
         {
-            _daysToInvalidateZipFile = hangfireConfig.DaysToInvalidateZipFile;
+            var daysToInvalidateZipFile = hangfireConfig.DaysToInvalidateZipFile;
+            var originCountyCode = hangfireConfig.OriginCountryCode;
             foreach (var zipFilesFolder in hangfireConfig.ZipFilesFolders)
             {
-                RemoveOldZipFilesFromFolder(zipFilesFolder);
+                RemoveOldZipFilesFromFolder(zipFilesFolder, originCountyCode, daysToInvalidateZipFile);
             }
         }
 
-        private void RemoveOldZipFilesFromFolder(string zipFilesFolder)
+        private void RemoveOldZipFilesFromFolder(string zipFilesFolder, string originCountyCode, int daysToInvalidateZipFile)
         {
-            RemoveOldZipFilesFromSubfolder(_fileSystem.JoinPaths(zipFilesFolder,ZipFileOrigin.All.ToString().ToLower()));
-            RemoveOldZipFilesFromSubfolder(_fileSystem.JoinPaths(zipFilesFolder, ZipFileOrigin.Dk.ToString().ToLower()));
+            RemoveOldZipFilesFromSubfolder(_fileSystem.JoinPaths(zipFilesFolder,ZipFileOrigin.All.ToString().ToLower()), daysToInvalidateZipFile);
+            RemoveOldZipFilesFromSubfolder(_fileSystem.JoinPaths(zipFilesFolder, originCountyCode.ToLower()), daysToInvalidateZipFile);
         }
 
-        private void RemoveOldZipFilesFromSubfolder(string path)
+        private void RemoveOldZipFilesFromSubfolder(string path, int daysToInvalidateZipFile)
         {
-            var deleteFilesOlderThanDate = DateTime.UtcNow.Date.AddDays(-_daysToInvalidateZipFile);
+            var deleteFilesOlderThanDate = DateTime.UtcNow.Date.AddDays(-daysToInvalidateZipFile);
             var allFilenames = _fileSystem.GetFilenamesFromDirectory(path);
             var oldZipFilenames = allFilenames.Where(x => _zipFileInfoService.CreateZipFileInfoFromPackageName(new FileInfo(x).Name).PackageDate < deleteFilesOlderThanDate);
             foreach (var filename in oldZipFilenames)

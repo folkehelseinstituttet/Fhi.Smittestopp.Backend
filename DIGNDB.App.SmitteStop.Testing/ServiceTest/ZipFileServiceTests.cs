@@ -1,16 +1,13 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Enums;
-using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.Testing.Mocks;
+using DIGNDB.APP.SmitteStop.Jobs.Config;
 using DIGNDB.APP.SmitteStop.Jobs.Services;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using DIGNDB.APP.SmitteStop.Jobs.Config;
-using Microsoft.Extensions.Options;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {
@@ -19,7 +16,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     {
         private IZipFileService _zipFileService;
         private Mock<IFileSystem> _fileSystem;
-        private IOptions<HangfireConfig> _configuration = Options.Create(new HangfireConfig() { ZipFilesFolders = new List<string>() {"zipfolder"}});
+        private HangfireConfig _configuration = new HangfireConfig() { ZipFilesFolders = new List<string>() {"zipfolder"}};
         private Mock<IZipFileInfoService> _zipFileInfoService;
         private Mock<IPackageBuilderService> _packageBuilder;
         private string _zipFilesFolder = "ZipsFolder";
@@ -64,11 +61,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         {
             if (value == "dk")
             {
-                _packageBuilder.Setup(x => x.BuildPackageContentV2(It.IsAny<DateTime>(), ZipFileOrigin.Dk)).Returns(new List<byte[]>());
+                _packageBuilder.Setup(x => x.BuildPackageContentV2(It.IsAny<DateTime>(), "dk")).Returns(new List<byte[]>());
             }
             if (value == "all")
             {
-                _packageBuilder.Setup(x => x.BuildPackageContentV2(It.IsAny<DateTime>(), ZipFileOrigin.All)).Returns(new List<byte[]>());
+                _packageBuilder.Setup(x => x.BuildPackageContentV2(It.IsAny<DateTime>(), ZipFileOrigin.All.ToString())).Returns(new List<byte[]>());
             }
             _zipFileService = new ZipFileService(_configuration, _packageBuilder.Object, _zipFileInfoService.Object, _fileSystem.Object);
             _zipFileService.UpdateZipFiles(DateTime.Now.AddDays(-1), DateTime.Now);
@@ -78,7 +75,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         [Test]
         public void UpdateZipFilesTestShouldNotCreateBatches()
         {
-            _packageBuilder.Setup(x => x.BuildPackageContentV2(It.IsAny<DateTime>(), It.IsAny<ZipFileOrigin>())).Returns(new List<byte[]>());
+            _packageBuilder.Setup(x => x.BuildPackageContentV2(It.IsAny<DateTime>(), It.IsAny<string>())).Returns(new List<byte[]>());
             _zipFileService = new ZipFileService(_configuration, _packageBuilder.Object, _zipFileInfoService.Object, _fileSystem.Object);
             _zipFileService.UpdateZipFiles(DateTime.Now.AddDays(-1), DateTime.Now);
             _fileSystem.Verify(x => x.WriteAllBytes(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Never());

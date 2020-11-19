@@ -89,6 +89,9 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<DeprecatedCheckAttribute>();
             services.AddScoped<AuthorizationAttribute>();
 
+            services.AddScoped<IJwtValidationService, JwtValidationService>();
+            services.AddSingleton<IRsaProviderService, JwkRsaProviderService>();
+            services.AddScoped<IJwtTokenReplyAttackService, JwtTokenReplyAttackService>();
             return services;
         }
 

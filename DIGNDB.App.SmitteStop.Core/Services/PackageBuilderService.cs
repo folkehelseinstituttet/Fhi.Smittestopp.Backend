@@ -21,7 +21,6 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         private readonly int _maxKeysPerFile;
         private readonly int _fetchCommandTimeout = 0;//set default value to 0 so the timeout is not changed unless a value is given in the config
 
-
         public PackageBuilderService(IDatabaseKeysToBinaryStreamMapperService databaseKeysToBinaryStreamMapperService, IZipPackageBuilderConfig configuration, ITemporaryExposureKeyRepository temporaryExposureKeyRepository,
             IKeysListToMemoryStreamConverter keysListToMemoryStreamConverter)
         {
@@ -61,7 +60,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
                 { FileBytesList = streamBytesList };
         }
 
-        public List<byte[]> BuildPackageContentV2(DateTime startDate, ZipFileOrigin origin)
+        public List<byte[]> BuildPackageContentV2(DateTime startDate, string originPostfix)
         {
             List<byte[]> streamBytesList = new List<byte[]>();
 
@@ -70,7 +69,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             int numberOfRecordsToSkip = 0;
             while (!allPackagesCreated)
             {
-                var keys = GetNextKeysBatch(origin, startDate, numberOfRecordsToSkip);
+                var keys = GetNextKeysBatch(originPostfix, startDate, numberOfRecordsToSkip);
                 numberOfRecordsToSkip += keys.Count();
                 if (keys.Count != 0)
                 {
@@ -84,9 +83,9 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             return streamBytesList;
         }
 
-        private IList<TemporaryExposureKey> GetNextKeysBatch(ZipFileOrigin origin, DateTime startDate, int numberOfRecordsToSkip)
+        private IList<TemporaryExposureKey> GetNextKeysBatch(string originPostfix, DateTime startDate, int numberOfRecordsToSkip)
         {
-            if (origin == ZipFileOrigin.All)
+            if (originPostfix.ToLower() == ZipFileOrigin.All.ToString().ToLower())
             {
                 return _temporaryExposureKeyRepository.GetAllTemporaryExposureKeysForPeriodNextBatch(startDate, numberOfRecordsToSkip, _maxKeysPerFile);
             }

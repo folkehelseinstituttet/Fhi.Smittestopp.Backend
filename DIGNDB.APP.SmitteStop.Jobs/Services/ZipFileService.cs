@@ -1,20 +1,17 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Enums;
-using Microsoft.Extensions.Configuration;
+using DIGNDB.APP.SmitteStop.Jobs.Config;
 using System;
 using System.Collections.Generic;
 using System.Security;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Enums;
-using DIGNDB.APP.SmitteStop.Jobs.Config;
-using Microsoft.AspNetCore.Routing.Constraints;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace DIGNDB.APP.SmitteStop.Jobs.Services
 {
     public class ZipFileService : IZipFileService
     {
+        private readonly string _allKeysFilePostfix = ZipFileOrigin.All.ToString();
+        private readonly string _originCountryCode;
+
         private IPackageBuilderService _packageBuilder;
         private IZipFileInfoService _zipFileInfoService;
         private readonly IFileSystem _fileSystem;
@@ -23,11 +20,13 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Services
         DateTime _currentDateTime;
         private string _currentZipFilesFolder;
         private const char _temporaryFileMarker = '.';
-        public ZipFileService(IOptions<HangfireConfig> configuration, IPackageBuilderService packageBuilder,
+
+        public ZipFileService(HangfireConfig hangfireConfig, IPackageBuilderService packageBuilder,
             IZipFileInfoService zipFileInfoService, IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
-            _rootZipFilesFolders = configuration.Value.ZipFilesFolders;
+            _rootZipFilesFolders = hangfireConfig.ZipFilesFolders;
+            _originCountryCode = hangfireConfig.OriginCountryCode;
             _packageBuilder = packageBuilder;
             _zipFileInfoService = zipFileInfoService;
         }
@@ -35,12 +34,13 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Services
         public void UpdateZipFiles(DateTime lastCreationDate, DateTime currentDateTime)
         {
             _currentDateTime = currentDateTime;
+
             foreach (var folderPath in _rootZipFilesFolders)
             {
-                CreateZipFilesDirectoriesIfNotExists(folderPath);
+                CreateZipFilesDirectoriesIfNotExists(folderPath, originCountryKeysDirectoryName: _originCountryCode, allKeysDirectoryName: _allKeysFilePostfix);
             }
-            HandleZipFilesForOrigin(ZipFileOrigin.Dk, lastCreationDate);
-            HandleZipFilesForOrigin(ZipFileOrigin.All, lastCreationDate);
+            HandleZipFilesForOrigin(originPostfix: _originCountryCode, packageBeginDateTime: lastCreationDate);
+            HandleZipFilesForOrigin(originPostfix: _allKeysFilePostfix, packageBeginDateTime: lastCreationDate);
             CommitFiles();
         }
 
@@ -62,19 +62,19 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Services
             _fileSystem.Rename(filePath, newFilePath);
         }
 
-        private void HandleZipFilesForOrigin(ZipFileOrigin origin, DateTime packageBeginDateTime)
+        private void HandleZipFilesForOrigin(string originPostfix, DateTime packageBeginDateTime)
         {
             try
             {
                 foreach (var _rootZipFilesFolder in _rootZipFilesFolders)
                 {
-                    _currentZipFilesFolder = _fileSystem.JoinPaths(_rootZipFilesFolder, origin.ToString());
-                    //We get rid of any files that has been created but not renamed. This would be the case if any exception occured during creation of any zip file
+                    _currentZipFilesFolder = _fileSystem.JoinPaths(_rootZipFilesFolder, originPostfix.ToString());
+                    //We get rid of any files that has been created but not renamed. This would be the case if any exception occurred during creation of any zip file
                     ClearTemporaryFiles(_currentZipFilesFolder);
                     string[] paths = _fileSystem.GetFilenamesFromDirectory(_currentZipFilesFolder);
                     int nextBatchNumber = _zipFileInfoService.GetNextBatchNumberForGivenDay(paths, _currentDateTime);
-                    var zipFilesContents = _packageBuilder.BuildPackageContentV2(packageBeginDateTime, origin);
-                    CreateZipFiles(origin, zipFilesContents, nextBatchNumber);
+                    var zipFilesContents = _packageBuilder.BuildPackageContentV2(packageBeginDateTime, originPostfix);
+                    CreateZipFiles(originPostfix, zipFilesContents, nextBatchNumber);
                 }
             }
             catch (SecurityException e)
@@ -83,7 +83,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Services
             }
             catch (Exception e)
             {
-                throw new Exception($"Failed to create zip files for origin: {origin} and date: {packageBeginDateTime}", innerException: e);
+                throw new Exception($"Failed to create zip files for origin: {originPostfix} and date: {packageBeginDateTime}", innerException: e);
             }
         }
 
@@ -93,19 +93,19 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Services
             _fileSystem.DeleteFiles(temporaryFileList);
         }
 
-        private void CreateZipFiles(ZipFileOrigin origin, List<byte[]> zipFilesContents, int nextBatchNumber)
+        private void CreateZipFiles(string originPostfix, List<byte[]> zipFilesContents, int nextBatchNumber)
         {
             foreach (var zipFileContent in zipFilesContents)
             {
-                var zipFilePath = GetZipFilePath(origin, nextBatchNumber);
+                var zipFilePath = GetZipFilePath(originPostfix, nextBatchNumber);
                 CreateZipFileSingleBatch(zipFileContent, zipFilePath);
                 nextBatchNumber++;
             }
         }
 
-        private string GetZipFilePath(ZipFileOrigin origin, int nextBatchNumber)
+        private string GetZipFilePath(string originPostfix, int nextBatchNumber)
         {
-            return _fileSystem.JoinPaths(_currentZipFilesFolder, $".{_currentDateTime.Date:yyyy-MM-dd}_{nextBatchNumber}_{origin.ToString().ToLower()}.zip");
+            return _fileSystem.JoinPaths(_currentZipFilesFolder, $".{_currentDateTime.Date:yyyy-MM-dd}_{nextBatchNumber}_{originPostfix.ToLower()}.zip");
         }
 
         private void CreateZipFileSingleBatch(byte[] zipFileContent, string zipFilePath)
@@ -114,14 +114,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Services
             _fileSystem.WriteAllBytes(zipFilePath, zipFileContent);
         }
 
-        private void CreateZipFilesDirectoriesIfNotExists(string zipFilesFolder)
+        private void CreateZipFilesDirectoriesIfNotExists(string zipFilesFolder, string originCountryKeysDirectoryName, string allKeysDirectoryName)
         {
             try
             {
                 _fileSystem.CreateDirectory(zipFilesFolder);
-                var dkZipFilesDirectory = _fileSystem.JoinPaths(zipFilesFolder, ZipFileOrigin.Dk.ToString().ToLower());
+                var dkZipFilesDirectory = _fileSystem.JoinPaths(zipFilesFolder, originCountryKeysDirectoryName.ToLower());
                 _fileSystem.CreateDirectory(dkZipFilesDirectory);
-                var allZipFilesDirectory = _fileSystem.JoinPaths(zipFilesFolder, ZipFileOrigin.All.ToString().ToLower());
+                var allZipFilesDirectory = _fileSystem.JoinPaths(zipFilesFolder, allKeysDirectoryName.ToLower());
                 _fileSystem.CreateDirectory(allZipFilesDirectory);
             }
             catch (Exception e)

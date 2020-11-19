@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
 {
-    internal class JwkRsaProviderService : IRsaProviderService, IDisposable
+    public class JwkRsaProviderService : IRsaProviderService, IDisposable
     {
         private readonly HttpClient _httpClient;
         private readonly Uri _jwkUrl;

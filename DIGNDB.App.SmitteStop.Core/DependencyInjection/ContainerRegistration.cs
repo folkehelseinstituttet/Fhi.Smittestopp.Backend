@@ -9,9 +9,6 @@ namespace DIGNDB.App.SmitteStop.Core.DependencyInjection
     {
         public static IServiceCollection AddCoreDependencies(this IServiceCollection services)
         {
-            services.AddScoped<IJwtValidationService, JwtValidationService>();
-            services.AddSingleton<IRsaProviderService, JwkRsaProviderService>();
-            services.AddScoped<IJwtTokenReplyAttackService, JwtTokenReplyAttackService>();
             services.AddScoped<IKeyValidator, KeyValidator>();
             services.AddScoped<IRiskCalculator, RiskCalculator>();
             services.AddScoped<IEpochConverter, EpochConverter>();
