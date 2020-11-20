@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using DIGNDB.App.SmitteStop.API.Attributes;
+using DIGNDB.App.SmitteStop.API.Contracts;
 using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
@@ -78,6 +79,11 @@ namespace DIGNDB.App.SmitteStop.API
 
             services.AddAPIConfiguration(configuration);
 
+            return services;
+        }
+
+        public static IServiceCollection AddApiServiceCollectionDependencies(this IServiceCollection services)
+        {
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
@@ -92,6 +98,7 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<IJwtValidationService, JwtValidationService>();
             services.AddSingleton<IRsaProviderService, JwkRsaProviderService>();
             services.AddScoped<IJwtTokenReplyAttackService, JwtTokenReplyAttackService>();
+
             return services;
         }
 

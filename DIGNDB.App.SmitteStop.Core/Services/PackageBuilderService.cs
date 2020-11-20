@@ -13,7 +13,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
 {
     public class PackageBuilderService : IPackageBuilderService
     {
-  
+
         private readonly ITemporaryExposureKeyRepository _temporaryExposureKeyRepository;
         private readonly IDatabaseKeysToBinaryStreamMapperService _databaseKeysToBinaryStreamMapperService;
         IKeysListToMemoryStreamConverter _keysListToMemoryStreamConverter;
@@ -85,7 +85,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
 
         private IList<TemporaryExposureKey> GetNextKeysBatch(string originPostfix, DateTime startDate, int numberOfRecordsToSkip)
         {
-            if (originPostfix.ToLower() == ZipFileOrigin.All.ToString().ToLower())
+            if (string.Equals(originPostfix, ZipFileOrigin.All.ToString(), StringComparison.CurrentCultureIgnoreCase))
             {
                 return _temporaryExposureKeyRepository.GetAllTemporaryExposureKeysForPeriodNextBatch(startDate, numberOfRecordsToSkip, _maxKeysPerFile);
             }

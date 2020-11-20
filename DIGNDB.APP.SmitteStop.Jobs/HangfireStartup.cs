@@ -43,7 +43,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             }
             app.UseHangfireDashboard();
 
-            // app.UseHttpsRedirection(); // TODO test
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 

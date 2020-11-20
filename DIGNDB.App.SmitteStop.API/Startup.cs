@@ -53,6 +53,7 @@ namespace DIGNDB.App.SmitteStop.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAPIDependencies(Configuration, _env);
+            services.AddApiServiceCollectionDependencies();
 
             services.AddCoreDependencies();
             services.AddDALDependencies();

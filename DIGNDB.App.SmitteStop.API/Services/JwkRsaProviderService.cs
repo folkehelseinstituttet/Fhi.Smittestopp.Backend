@@ -5,14 +5,14 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.API.Contracts;
 using DIGNDB.App.SmitteStop.Core.Exceptions;
 using DIGNDB.App.SmitteStop.Domain;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DIGNDB.App.SmitteStop.Core.Services
+namespace DIGNDB.App.SmitteStop.API.Services
 {
-    public class JwkRsaProviderService : IRsaProviderService, IDisposable
+    internal class JwkRsaProviderService : IRsaProviderService, IDisposable
     {
         private readonly HttpClient _httpClient;
         private readonly Uri _jwkUrl;

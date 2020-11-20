@@ -1,4 +1,4 @@
-﻿namespace DIGNDB.App.SmitteStop.Core.Contracts
+﻿namespace DIGNDB.App.SmitteStop.API.Contracts
 {
     public interface IJwtValidationService
     {

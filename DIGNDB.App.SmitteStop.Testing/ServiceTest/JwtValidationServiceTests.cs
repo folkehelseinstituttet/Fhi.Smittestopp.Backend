@@ -17,6 +17,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using DIGNDB.App.SmitteStop.API;
+using DIGNDB.App.SmitteStop.API.Contracts;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {
@@ -31,6 +33,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddCoreDependencies();
             serviceCollection.AddDALDependencies();
+            serviceCollection.AddApiServiceCollectionDependencies();
 
             serviceCollection.AddScoped<HttpMessageHandler>(provider => CreateMockedHttpClientHandler());
 
