@@ -14,9 +14,14 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     [TestFixture]
     public class ZipFileServiceTests
     {
+        private const string OriginCountry = "dk"; 
+
         private IZipFileService _zipFileService;
         private Mock<IFileSystem> _fileSystem;
-        private HangfireConfig _configuration = new HangfireConfig() { ZipFilesFolders = new List<string>() {"zipfolder"}};
+        private HangfireConfig _configuration = new HangfireConfig() {
+            ZipFilesFolders = new List<string>() {"zipfolder"},
+            OriginCountryCode = OriginCountry
+        };
         private Mock<IZipFileInfoService> _zipFileInfoService;
         private Mock<IPackageBuilderService> _packageBuilder;
         private string _zipFilesFolder = "ZipsFolder";
@@ -55,18 +60,19 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             _fileSystem.Verify(x => x.WriteAllBytes(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Exactly(4));
         }
 
-        [TestCase("dk")]
+        [TestCase(OriginCountry)]
         [TestCase("all")]
         public void UpdateZipFilesTestShouldCreateTwoBatches(string value)
         {
-            if (value == "dk")
+            if (value == OriginCountry)
             {
-                _packageBuilder.Setup(x => x.BuildPackageContentV2(It.IsAny<DateTime>(), "dk")).Returns(new List<byte[]>());
+                _packageBuilder.Setup(x => x.BuildPackageContentV2(It.IsAny<DateTime>(), OriginCountry)).Returns(new List<byte[]>());
             }
             if (value == "all")
             {
                 _packageBuilder.Setup(x => x.BuildPackageContentV2(It.IsAny<DateTime>(), ZipFileOrigin.All.ToString())).Returns(new List<byte[]>());
             }
+
             _zipFileService = new ZipFileService(_configuration, _packageBuilder.Object, _zipFileInfoService.Object, _fileSystem.Object);
             _zipFileService.UpdateZipFiles(DateTime.Now.AddDays(-1), DateTime.Now);
             _fileSystem.Verify(x => x.WriteAllBytes(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Exactly(2));

@@ -20,8 +20,8 @@ namespace DIGNDB.App.SmitteStop.Testing.JobTests
 
         [SetUp]
         public void Init()
-        {
-            _hangfireConfig = new HangfireConfig();
+        { 
+            _hangfireConfig = new HangfireConfig() { OriginCountryCode  = "NO"};
             _hangfireConfig.ZipFilesFolders = new List<string>(){""};
             _hangfireConfig.DaysToInvalidateZipFile = 1;
             _fileSystem = new FileSystemMockFactory().GetMock();
