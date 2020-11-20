@@ -1,10 +1,11 @@
-﻿using DIGNDB.App.SmitteStop.DAL.Repositories;
+﻿using DIGNDB.App.SmitteStop.API.Contracts;
+using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DIGNDB.App.SmitteStop.Core.Services
+namespace DIGNDB.App.SmitteStop.API.Services
 {
-    public class JwtTokenReplyAttackService : IJwtTokenReplyAttackService
+    internal class JwtTokenReplyAttackService : IJwtTokenReplyAttackService
     {
         private readonly IJwtTokenRepository _jwtTokenRepository;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace DIGNDB.App.SmitteStop.Core.Services
+namespace DIGNDB.App.SmitteStop.API.Contracts
 {
     public interface IJwtTokenReplyAttackService
     {

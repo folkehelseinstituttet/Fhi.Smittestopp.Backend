@@ -30,8 +30,11 @@ namespace DIGNDB.App.SmitteStop.Testing.JobTests
             dateTimeNowWrapperMock.Setup(mock => mock.UtcNow)
                 .Returns(_exampleDatetime);
 
-            var generateZipFilesJob = new UpdateZipFilesJob(configurationMock.Object, zipFileServiceMock.Object,
-                settingRepositoryMock.Object, loggerMock.Object, dateTimeNowWrapperMock.Object);
+            var generateZipFilesJob = new UpdateZipFilesJob(
+                zipFileServiceMock.Object,
+                settingRepositoryMock.Object,
+                loggerMock.Object,
+                dateTimeNowWrapperMock.Object);
 
             var generateZipFilesAction = new Action(() => generateZipFilesJob.GenerateZipFiles());
 
@@ -54,7 +57,7 @@ namespace DIGNDB.App.SmitteStop.Testing.JobTests
             dateTimeNowWrapperMock.Setup(mock => mock.UtcNow)
                 .Returns(_exampleDatetime);
 
-            var generateZipFilesJob = new UpdateZipFilesJob(configurationMock.Object, zipFileServiceMock.Object,
+            var generateZipFilesJob = new UpdateZipFilesJob(zipFileServiceMock.Object,
                 settingRepositoryMock.Object, loggerMock.Object, dateTimeNowWrapperMock.Object);
 
             var generateZipFilesAction = new Action(() => generateZipFilesJob.GenerateZipFiles());

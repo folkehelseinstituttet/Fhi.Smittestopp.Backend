@@ -1,18 +1,17 @@
-﻿using System.Reflection;
-using AutoMapper;
+﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.DAL.Context;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.APP.SmitteStop.Jobs.Config;
 using DIGNDB.APP.SmitteStop.Jobs.Services;
-using FederationGatewayApi.Contracts;
 using FederationGatewayApi.Mappers;
-using FederationGatewayApi.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.EventLog;
+using System.Reflection;
 
 namespace DIGNDB.APP.SmitteStop.Jobs
 {
@@ -31,10 +30,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs
                 config.MachineName = eventLogConfig.MachineName;
             });
             services.AddSingleton(gateWayConfig);
-            services.AddSingleton(hangfireConfig.Jobs.UploadKeysToTheGateway);
-
-            services.AddSingleton<IGatewayKeyProvider>(
-                new GatewayKeyProvider(gateWayConfig.AuthenticationCertificateFingerprint, gateWayConfig.SigningCertificateFingerprint));
 
             services.AddHangfire(x => x.UseSqlServerStorage(hangfireConfig.HangFireConnectionString));
             services.AddDbContext<DigNDB_SmittestopContext>(opts =>
@@ -45,10 +40,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(typeof(CountryMapper));
 
-            services.AddScoped<IGatewayWebContextReader, GatewayWebContextReader>();
-            services.AddScoped<ISettingsService, SettingsService>();
             services.AddScoped<IDatabaseKeysValidationService, DatabaseKeysValidationService>();
             services.AddScoped<IZipFileService, ZipFileService>();
+
+            services.AddSingleton(hangfireConfig);
+            services.AddSingleton<IOriginSpecificSettings>(hangfireConfig);
+            services.AddSingleton<IZipPackageBuilderConfig>(hangfireConfig);
+
+            
 
             return services;
         }

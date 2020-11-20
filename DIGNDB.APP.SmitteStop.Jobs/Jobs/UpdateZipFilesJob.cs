@@ -1,7 +1,6 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.APP.SmitteStop.Jobs.Jobs.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -9,16 +8,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
 {
     public class UpdateZipFilesJob : IUpdateZipFilesJob
     {
-        private readonly IConfiguration _configuration;
         private readonly IZipFileService _zipFileService;
         private readonly ISettingRepository _settingRepository;
         private readonly string lastCreatedDateSettingKey = "ZipFilesLastCreatedDate";
         private readonly IDateTimeNowWrapper _dateTimeNowWrapper;
         private readonly ILogger<UpdateZipFilesJob> _logger;
 
-        public UpdateZipFilesJob(IConfiguration configuration, IZipFileService zipFileService, ISettingRepository settingRepository, ILogger<UpdateZipFilesJob> logger, IDateTimeNowWrapper dateTimeNowWrapper)
+        public UpdateZipFilesJob(IZipFileService zipFileService, ISettingRepository settingRepository, ILogger<UpdateZipFilesJob> logger, IDateTimeNowWrapper dateTimeNowWrapper)
         {
-            _configuration = configuration;
             _zipFileService = zipFileService;
             _settingRepository = settingRepository;
             _logger = logger;

@@ -1,9 +1,6 @@
 ﻿using DIGNDB.APP.SmitteStop.Jobs.Config;
 using DIGNDB.APP.SmitteStop.Jobs.Jobs;
-using FederationGatewayApi.Services;
 using Hangfire;
-using System;
-using System.Text.Json;
 
 namespace DIGNDB.APP.SmitteStop.Jobs
 {

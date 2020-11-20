@@ -2,7 +2,6 @@
 using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
-using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,7 +11,6 @@ namespace DIGNDB.App.SmitteStop.Core.Services
     {
         private readonly IExposureKeyMapper _exposureKeyMapper;
         private readonly IZipPackageBuilderConfig _appSettingsConfig;
-        private readonly IConfiguration _configuration;
 
         public DatabaseKeysToBinaryStreamMapperService(IExposureKeyMapper exposureKeyMapper, IZipPackageBuilderConfig appSettingsConfig)
         {
