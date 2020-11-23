@@ -32,7 +32,8 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 string authHeader = context.HttpContext.Request.Headers["Authorization"];
                 if (authHeader != null && authHeader.Contains("Bearer"))
                 {
-                    var token = authHeader.Replace("Bearer", "");
+                    var token = authHeader.Replace("Bearer", string.Empty);
+                    token = token.Trim();
 
                     _jwtValidationService.IsTokenValid(token);
                     return;
