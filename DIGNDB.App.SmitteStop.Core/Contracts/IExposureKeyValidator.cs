@@ -6,6 +6,6 @@ namespace DIGNDB.App.SmitteStop.Core.Contracts
 {
     public interface IExposureKeyValidator
     {
-        void ValidateParameterAndThrowIfIncorrect(TemporaryExposureKeyBatchDto parameter, KeyValidationConfiguration config, ILogger logger);
+        void ValidateParameterAndThrowIfIncorrect(TemporaryExposureKeyBatchDto parameter, KeyValidationConfiguration config);
     }
 }

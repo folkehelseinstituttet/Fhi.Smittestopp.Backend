@@ -199,7 +199,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
             string requestBody = (await ReadRequestBody());
 
             var parameters = JsonSerializer.Deserialize<TemporaryExposureKeyBatchDto>(requestBody);
-            _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameters, _keyValidationConfig, _logger);
+            _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameters, _keyValidationConfig);
 
             return parameters;
         }
