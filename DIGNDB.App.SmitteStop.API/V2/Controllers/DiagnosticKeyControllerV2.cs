@@ -39,7 +39,7 @@ namespace DIGNDB.App.SmitteStop.API
             IExposureKeyValidator exposureKeyValidator,
             IExposureConfigurationService exposureConfigurationService,
             KeyValidationConfiguration keyValidationConfig,
-            IAddTemporaryExposureKeyService addTemporaryExposureKeyService, 
+            IAddTemporaryExposureKeyService addTemporaryExposureKeyService,
             IZipFileInfoService zipFileInfoService)
         {
             _configuration = configuration;
@@ -201,8 +201,8 @@ namespace DIGNDB.App.SmitteStop.API
             string requestBody = (await ReadRequestBody());
 
             var parameters = JsonSerializer.Deserialize<TemporaryExposureKeyBatchDto>(requestBody);
-            _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameters, _keyValidationConfig, _logger);
-        
+            _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameters, _keyValidationConfig);
+
             return parameters;
         }
     }

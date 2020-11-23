@@ -41,7 +41,7 @@ namespace DIGNDB.App.SmitteStop.API
 
         public DiagnosticKeysController(ICacheOperations cacheOperations, ILogger<DiagnosticKeysController> logger,
             ITemporaryExposureKeyRepository temporaryExposureKeyRepository, IExposureKeyValidator exposureKeyValidator,
-            IExposureConfigurationService exposureConfigurationService, KeyValidationConfiguration keyValidationRulesConfig, 
+            IExposureConfigurationService exposureConfigurationService, KeyValidationConfiguration keyValidationRulesConfig,
             ICountryRepository countryRepository, ICountryService countryService, AppSettingsConfig appSettingsConfig, IAddTemporaryExposureKeyService addTemporaryExposureKeyService)
         {
             _addTemporaryExposureKeyService = addTemporaryExposureKeyService;
@@ -107,8 +107,8 @@ namespace DIGNDB.App.SmitteStop.API
                 }
 
                 var parameter = JsonSerializer.Deserialize<TemporaryExposureKeyBatchDto>(requestBody);
-                _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameter, _keyValidationRulesConfig, _logger);
-           
+                _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameter, _keyValidationRulesConfig);
+
                 var newTemporaryExposureKeys = await _addTemporaryExposureKeyService.GetFilteredKeysEntitiesFromDTO(parameter);
                 if (newTemporaryExposureKeys.Any())
                 {
