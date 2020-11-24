@@ -22,7 +22,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         TemporaryExposureKeyBatchDto parameterArgument;
         KeyValidationConfiguration configurationArgument;
 
-        private Mock<ILogger> logger;
+        private Mock<ILogger<ExposureKeyValidator>> logger;
 
 
         [SetUp]
@@ -70,7 +70,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             countryRepositoryMock.Setup(countryRepo => countryRepo.FindByIsoCode("FR")).Returns(new Country() { Code = "FR", VisitedCountriesEnabled = false });
             countryRepositoryMock.Setup(countryRepo => countryRepo.FindByIsoCode("PL")).Returns((Country) null);
             countryRepositoryMock.Setup(countryRepo => countryRepo.GetApiOriginCountry()).Returns(new Country() { Code = "DK", VisitedCountriesEnabled = false });
-            logger = new Mock<ILogger>();
+            logger = new Mock<ILogger<ExposureKeyValidator>>();
         }
 
         [Test]
