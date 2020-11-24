@@ -10,6 +10,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  hangfireProject: 'DIGNDB.APP.SmitteStop.Jobs\DIGNDB.APP.SmitteStop.Jobs.csproj'
+  buildPlatform: 'AnyCPU'
 
 steps:
 
@@ -28,14 +30,23 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:Threshold=58 /p:ThresholdStat=total /p:thresholdType=line'
   displayName: 'Running tests'
 
-# Create the deploy package
+# Create the deploy package for API
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
-  displayName: 'Build deployment package'
+  displayName: 'Build API deployment package'
+
+  #Create the deploy package for HangFire
+- task: VSBuild@1
+  inputs:
+    solution: '$(hangfireProject)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:SkipInvalidConfigurations=true /p:OutputPath="$(Build.ArtifactStagingDirectory)/HANGFIRE"'    
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+  displayName: 'Build HangFire deployment package'
 
 # this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
 - task: PublishBuildArtifacts@1
@@ -44,3 +55,16 @@ steps:
     artifactName: 'DIGNDB.App.SmitteStop.API'
   displayName: 'Publish build artifacts'
 
+# this uploads API package as an artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)/API'
+    artifactName: 'DIGNDB.App.SmitteStop.API'
+  displayName: 'Publish API build artifacts'
+
+#this uploads HangFire package as an artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)/HANGFIRE'
+    artifactName: 'DIGNDB.App.SmitteStop-HangFire'
+  displayName: 'Publish HangFire build artifact'
