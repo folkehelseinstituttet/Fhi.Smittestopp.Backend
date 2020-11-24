@@ -1,4 +1,4 @@
-# Smittestopp Mobile Application
+# Smittestopp Backend
 ![.NET Core](https://github.com/folkehelseinstituttet/Fhi.Smittestopp.Backend/workflows/.NET%20Core/badge.svg)
 
 ## License
