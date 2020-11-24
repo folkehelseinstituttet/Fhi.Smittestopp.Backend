@@ -16,9 +16,9 @@ namespace DIGNDB.App.SmitteStop.API.Services
     public class ExposureKeyValidator : IExposureKeyValidator
     {
         private readonly ICountryRepository _countryRepository;
-        private readonly ILogger _logger;
+        private readonly ILogger<ExposureKeyValidator> _logger;
 
-        public ExposureKeyValidator(ICountryRepository countryRepository, ILogger logger)
+        public ExposureKeyValidator(ICountryRepository countryRepository, ILogger<ExposureKeyValidator> logger)
         {
             _countryRepository = countryRepository;
             _logger = logger;
