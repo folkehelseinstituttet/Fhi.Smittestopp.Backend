@@ -46,7 +46,7 @@ steps:
     projects: '$(apiProject)'
     arguments: '--configuration $(BuildConfiguration) --output $(System.DefaultWorkingDirectory)/Deploy/API'
     zipAfterPublish: true
-    modifyOutputPath: false
+    modifyOutputPath: true
   displayName: 'Build API deployment package'
 
 #Create the deploy package for HangFire
@@ -57,7 +57,7 @@ steps:
     projects: '$(hangFireProject)'
     arguments: '--configuration $(BuildConfiguration) --output $(System.DefaultWorkingDirectory)/Deploy/HangFire'
     zipAfterPublish: true
-    modifyOutputPath: false
+    modifyOutputPath: true
   displayName: 'Build HangFire deployment package'
   
 # this uploads API as an artifact
