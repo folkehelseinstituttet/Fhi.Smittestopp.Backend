@@ -17,6 +17,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  apiProject: 'DIGNDB.App.SmitteStop.API\DIGNDB.App.SmitteStop.API.csproj'
   hangFireProject: 'DIGNDB.APP.SmitteStop.Jobs\DIGNDB.APP.SmitteStop.Jobs.csproj'
   buildPlatform: 'AnyCPU'
 
@@ -41,9 +42,11 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
-    publishWebProjects: True
+    publishWebProjects: false
+    projects: '$(apiProject)'
     arguments: '--configuration $(BuildConfiguration) --output $(System.DefaultWorkingDirectory)/Deploy/API'
-    zipAfterPublish: True
+    zipAfterPublish: true
+    modifyOutputPath: false
   displayName: 'Build API deployment package'
 
 #Create the deploy package for HangFire
@@ -54,7 +57,7 @@ steps:
     projects: '$(hangFireProject)'
     arguments: '--configuration $(BuildConfiguration) --output $(System.DefaultWorkingDirectory)/Deploy/HangFire'
     zipAfterPublish: true
-    modifyOutputPath: true
+    modifyOutputPath: false
   displayName: 'Build HangFire deployment package'
   
 # this uploads API as an artifact
