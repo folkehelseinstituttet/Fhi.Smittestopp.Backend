@@ -66,5 +66,5 @@ steps:
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(System.DefaultWorkingDirectory)/Deploy/HangFire'
-    artifactName: "$(DIGNDB.App.SmitteStop-HangFire)"
+    artifactName: "DIGNDB.App.SmitteStop-HangFire"
   displayName: 'Publish HangFire build artifact'
