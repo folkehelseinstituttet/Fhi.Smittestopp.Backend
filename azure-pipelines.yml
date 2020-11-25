@@ -2,7 +2,14 @@
 
 # execute on all branches
 trigger:
-- '*'
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - "*"
+    exclude:
+      - "azure-pipelines.yml"
 
 pool:
   name: Azure Pipelines
@@ -35,7 +42,7 @@ steps:
   inputs:
     command: publish
     publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    arguments: '--configuration $(BuildConfiguration) --output $(System.DefaultWorkingDirectory)/Deploy/API'
     zipAfterPublish: True
   displayName: 'Build API deployment package'
 
@@ -43,28 +50,21 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(hangfireProject)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:SkipInvalidConfigurations=true /p:OutputPath="$(Build.ArtifactStagingDirectory)/HANGFIRE"'    
+    msbuildArgs: '/p:DeployOnBuild=true /p:SkipInvalidConfigurations=true /p:OutputPath="$(System.DefaultWorkingDirectory)/Deploy/HangFire"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
   displayName: 'Build HangFire deployment package'
 
-# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
-- task: PublishBuildArtifacts@1
+# this uploads API as an artifact
+- task: PublishPipelineArtifact@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'DIGNDB.App.SmitteStop.API'
-  displayName: 'Publish build artifacts'
-
-# this uploads API package as an artifact
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: '$(Build.ArtifactStagingDirectory)/API'
+    targetPath: '$(System.DefaultWorkingDirectory)/Deploy/API'
     artifactName: 'DIGNDB.App.SmitteStop.API'
   displayName: 'Publish API build artifacts'
 
-#this uploads HangFire package as an artifact
-- task: PublishBuildArtifacts@1
+#this uploads HangFire as an artifact
+- task: PublishPipelineArtifact@1
   inputs:
-    pathToPublish: '$(Build.ArtifactStagingDirectory)/HANGFIRE'
-    artifactName: 'DIGNDB.App.SmitteStop-HangFire'
+    targetPath: '$(System.DefaultWorkingDirectory)/Deploy/HangFire'
+    artifactName: "$(DIGNDB.App.SmitteStop-HangFire)"
   displayName: 'Publish HangFire build artifact'
