@@ -1,6 +1,6 @@
 # .NET Core
 
-# execute on all branches
+# Execute only on masterbranches
 trigger:
   branches:
     include:
@@ -49,7 +49,7 @@ steps:
     modifyOutputPath: true
   displayName: 'Build API deployment package'
 
-#Create the deploy package for HangFire
+# Create the deploy package for HangFire
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
@@ -60,7 +60,7 @@ steps:
     modifyOutputPath: true
   displayName: 'Build HangFire deployment package'
   
-# this uploads API as an artifact
+# Publish API and HangFire as one artifact
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(System.DefaultWorkingDirectory)/Deploy'
