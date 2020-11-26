@@ -1,6 +1,6 @@
 # .NET Core
 
-# Execute only on masterbranches
+# Execute only on master branch
 trigger:
   branches:
     include:
