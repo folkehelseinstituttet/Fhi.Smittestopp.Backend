@@ -1,0 +1,68 @@
+# .NET Core
+
+# Execute only on masterbranches
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - "*"
+    exclude:
+      - "azure-pipelines.yml"
+
+pool:
+  name: Azure Pipelines
+  vmImage: windows-latest
+
+variables:
+  buildConfiguration: 'Release'
+  apiProject: 'DIGNDB.App.SmitteStop.API\DIGNDB.App.SmitteStop.API.csproj'
+  hangFireProject: 'DIGNDB.APP.SmitteStop.Jobs\DIGNDB.APP.SmitteStop.Jobs.csproj'
+  buildPlatform: 'AnyCPU'
+
+steps:
+
+# Build the project
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+  displayName: 'Building'
+
+# Run tests and collect code coverage
+- task: DotNetCoreCLI@2
+  inputs:
+    command: test
+    projects: '**/*Testing/*.csproj'
+    arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:Threshold=58 /p:ThresholdStat=total /p:thresholdType=line'
+  displayName: 'Running tests'
+
+# Create the deploy package for API
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: '$(apiProject)'
+    arguments: '--configuration $(BuildConfiguration) --output $(System.DefaultWorkingDirectory)/Deploy/API'
+    zipAfterPublish: true
+    modifyOutputPath: true
+  displayName: 'Build API deployment package'
+
+# Create the deploy package for HangFire
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: '$(hangFireProject)'
+    arguments: '--configuration $(BuildConfiguration) --output $(System.DefaultWorkingDirectory)/Deploy/HangFire'
+    zipAfterPublish: true
+    modifyOutputPath: true
+  displayName: 'Build HangFire deployment package'
+  
+# Publish API and HangFire as one artifact
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(System.DefaultWorkingDirectory)/Deploy'
+    artifactName: 'DIGNDB.App.SmitteStop'
+  displayName: 'Publish API and HangFire to one artifact'
