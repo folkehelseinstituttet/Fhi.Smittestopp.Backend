@@ -1,8 +1,15 @@
 # .NET Core
 
-# execute on all branches
+# Execute only on master branch
 trigger:
-- '*'
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - "*"
+    exclude:
+      - "azure-pipelines.yml"
 
 pool:
   name: Azure Pipelines
@@ -10,6 +17,9 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  apiProject: 'DIGNDB.App.SmitteStop.API\DIGNDB.App.SmitteStop.API.csproj'
+  hangFireProject: 'DIGNDB.APP.SmitteStop.Jobs\DIGNDB.APP.SmitteStop.Jobs.csproj'
+  buildPlatform: 'AnyCPU'
 
 steps:
 
@@ -28,19 +38,31 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:Threshold=58 /p:ThresholdStat=total /p:thresholdType=line'
   displayName: 'Running tests'
 
-# Create the deploy package
+# Create the deploy package for API
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
-  displayName: 'Build deployment package'
+    publishWebProjects: false
+    projects: '$(apiProject)'
+    arguments: '--configuration $(BuildConfiguration) --output $(System.DefaultWorkingDirectory)/Deploy/API'
+    zipAfterPublish: true
+    modifyOutputPath: true
+  displayName: 'Build API deployment package'
 
-# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
-- task: PublishBuildArtifacts@1
+# Create the deploy package for HangFire
+- task: DotNetCoreCLI@2
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'DIGNDB.App.SmitteStop.API'
-  displayName: 'Publish build artifacts'
-
+    command: publish
+    publishWebProjects: false
+    projects: '$(hangFireProject)'
+    arguments: '--configuration $(BuildConfiguration) --output $(System.DefaultWorkingDirectory)/Deploy/HangFire'
+    zipAfterPublish: true
+    modifyOutputPath: true
+  displayName: 'Build HangFire deployment package'
+  
+# Publish API and HangFire as one artifact
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(System.DefaultWorkingDirectory)/Deploy'
+    artifactName: 'DIGNDB.App.SmitteStop'
+  displayName: 'Publish API and HangFire to one artifact'
