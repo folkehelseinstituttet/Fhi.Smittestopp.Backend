@@ -36,7 +36,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
 
         private void RemoveOldZipFilesFromFolder(string zipFilesFolder, string originCountyCode, int daysToInvalidateZipFile)
         {
-            RemoveOldZipFilesFromSubfolder(_fileSystem.JoinPaths(zipFilesFolder,ZipFileOrigin.All.ToString().ToLower()), daysToInvalidateZipFile);
+            RemoveOldZipFilesFromSubfolder(_fileSystem.JoinPaths(zipFilesFolder, ZipFileOrigin.All.ToString().ToLower()), daysToInvalidateZipFile);
             RemoveOldZipFilesFromSubfolder(_fileSystem.JoinPaths(zipFilesFolder, originCountyCode.ToLower()), daysToInvalidateZipFile);
         }
 
