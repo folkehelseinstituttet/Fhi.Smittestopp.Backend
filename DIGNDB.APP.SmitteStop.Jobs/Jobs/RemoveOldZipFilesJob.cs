@@ -25,13 +25,18 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
             var originCountyCode = hangfireConfig.OriginCountryCode;
             foreach (var zipFilesFolder in hangfireConfig.ZipFilesFolders)
             {
+                if (string.IsNullOrEmpty(zipFilesFolder))
+                {
+                    continue;
+                }
+
                 RemoveOldZipFilesFromFolder(zipFilesFolder, originCountyCode, daysToInvalidateZipFile);
             }
         }
 
         private void RemoveOldZipFilesFromFolder(string zipFilesFolder, string originCountyCode, int daysToInvalidateZipFile)
         {
-            RemoveOldZipFilesFromSubfolder(_fileSystem.JoinPaths(zipFilesFolder,ZipFileOrigin.All.ToString().ToLower()), daysToInvalidateZipFile);
+            RemoveOldZipFilesFromSubfolder(_fileSystem.JoinPaths(zipFilesFolder, ZipFileOrigin.All.ToString().ToLower()), daysToInvalidateZipFile);
             RemoveOldZipFilesFromSubfolder(_fileSystem.JoinPaths(zipFilesFolder, originCountyCode.ToLower()), daysToInvalidateZipFile);
         }
 

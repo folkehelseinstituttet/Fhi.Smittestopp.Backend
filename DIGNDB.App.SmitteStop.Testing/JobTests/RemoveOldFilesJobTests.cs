@@ -22,7 +22,6 @@ namespace DIGNDB.App.SmitteStop.Testing.JobTests
         public void Init()
         { 
             _hangfireConfig = new HangfireConfig() { OriginCountryCode  = "NO"};
-            _hangfireConfig.ZipFilesFolders = new List<string>(){""};
             _hangfireConfig.DaysToInvalidateZipFile = 1;
             _fileSystem = new FileSystemMockFactory().GetMock();
             _zipFileInfo = new ZipFileInfoServiceMockFactory().GetMock();
@@ -31,18 +30,29 @@ namespace DIGNDB.App.SmitteStop.Testing.JobTests
         [Test]
         public void RemoveOldZipFilesTestShouldRemoveFiles()
         {
-            var filename = "test";
-            _zipFileInfo.Setup(x => x.CreateZipFileInfoFromPackageName(It.IsAny<string>())).Returns(new ZipFileInfo() { PackageDate = DateTime.UtcNow.AddDays(-2) });
+            _zipFileInfo.Setup(x => x.CreateZipFileInfoFromPackageName(It.IsAny<string>())).Returns(new ZipFileInfo { PackageDate = DateTime.UtcNow.AddDays(-2) });
             IRemoveOldZipFilesJob removeOldZipFilesJob = new RemoveOldZipFilesJob(_fileSystem.Object, _zipFileInfo.Object);
+            _hangfireConfig.ZipFilesFolders = new List<string> { "filePath", "" };
             removeOldZipFilesJob.RemoveOldZipFiles(_hangfireConfig);
             _fileSystem.Verify(x => x.DeleteFile(It.IsAny<string>()), Times.Exactly(4));
         }
 
         [Test]
+        public void RemoveOldZipFilesTestShouldNotRemoveFilesWhenZipFilesFoldersIsEmpty()
+        {
+            _zipFileInfo.Setup(x => x.CreateZipFileInfoFromPackageName(It.IsAny<string>())).Returns(new ZipFileInfo { PackageDate = DateTime.UtcNow.AddDays(-2) });
+            IRemoveOldZipFilesJob removeOldZipFilesJob = new RemoveOldZipFilesJob(_fileSystem.Object, _zipFileInfo.Object);
+            _hangfireConfig.ZipFilesFolders = new List<string> {""};
+            removeOldZipFilesJob.RemoveOldZipFiles(_hangfireConfig);
+            _fileSystem.Verify(x => x.DeleteFile(It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
         public void RemoveOldZipFilesTestShouldNotRemoveFiles()
         {
-            _zipFileInfo.Setup(x => x.CreateZipFileInfoFromPackageName(It.IsAny<string>())).Returns(new ZipFileInfo() { PackageDate = DateTime.UtcNow });
+            _zipFileInfo.Setup(x => x.CreateZipFileInfoFromPackageName(It.IsAny<string>())).Returns(new ZipFileInfo { PackageDate = DateTime.UtcNow });
             IRemoveOldZipFilesJob removeOldZipFilesJob = new RemoveOldZipFilesJob(_fileSystem.Object, _zipFileInfo.Object);
+            _hangfireConfig.ZipFilesFolders = new List<string> {""};
             removeOldZipFilesJob.RemoveOldZipFiles(_hangfireConfig);
             _fileSystem.Verify(x => x.DeleteFile(It.IsAny<string>()), Times.Never);
         }

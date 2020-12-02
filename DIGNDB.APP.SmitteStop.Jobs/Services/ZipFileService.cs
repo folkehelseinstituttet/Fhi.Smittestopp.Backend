@@ -37,8 +37,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Services
 
             foreach (var folderPath in _rootZipFilesFolders)
             {
+                if (string.IsNullOrEmpty(folderPath))
+                {
+                    continue;
+                }
+
                 CreateZipFilesDirectoriesIfNotExists(folderPath, originCountryKeysDirectoryName: _originCountryCode, allKeysDirectoryName: _allKeysFilePostfix);
             }
+
             HandleZipFilesForOrigin(originPostfix: _originCountryCode, packageBeginDateTime: lastCreationDate);
             HandleZipFilesForOrigin(originPostfix: _allKeysFilePostfix, packageBeginDateTime: lastCreationDate);
             CommitFiles();
