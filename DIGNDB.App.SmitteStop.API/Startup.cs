@@ -39,12 +39,11 @@ namespace DIGNDB.App.SmitteStop.API
             var combinedEnvironmentName = env.EnvironmentName.Split('.');
 
             var environmentName = combinedEnvironmentName.FirstOrDefault();
-            var serverName = combinedEnvironmentName.LastOrDefault();
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
+                .AddJsonFile($"appsettings.json", optional: true)
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
-                .AddJsonFile($"appsettings.{environmentName}.{serverName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
