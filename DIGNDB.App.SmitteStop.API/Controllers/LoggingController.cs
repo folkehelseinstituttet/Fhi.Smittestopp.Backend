@@ -19,7 +19,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
     [ApiVersion("1")]
     [ApiVersion("2")]
     [ApiVersion("3")]
-    [Route("v{version:apiVersion}/logging")]
+    [Route("api/v{version:apiVersion}/logging")]
     [Route("logging")]
     public class LoggingController : ControllerBase
     {
@@ -46,9 +46,8 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             _logEndpointOverride = appSettingsConfig.LogEndpointOverride;
         }
 
-        [HttpPost]
+        [HttpPost("logMessages")]
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
-        [Route("logMessages")]
         public async Task<IActionResult> UploadMobileLogs()
         {
             var requestBody = string.Empty;
