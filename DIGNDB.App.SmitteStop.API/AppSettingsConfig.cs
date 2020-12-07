@@ -27,6 +27,9 @@ namespace DIGNDB.App.SmitteStop.API
         [Required]
         public string LogsApiPath { get; set; }
 
+        [Range(minimum: 100, maximum: int.MaxValue)]
+        public long LogFileSizeLimitBytes { get; set; }
+
         [Range(minimum: 1, maximum: int.MaxValue)]
         public int MaxKeysPerFile { get; set; } = 750000;
 

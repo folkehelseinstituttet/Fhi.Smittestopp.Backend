@@ -86,9 +86,7 @@ namespace DIGNDB.App.SmitteStop.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            loggerFactory.AddFile(appSettingsConfig.LogsApiPath);
-
+            loggerFactory.AddFile(pathFormat:appSettingsConfig.LogsApiPath, fileSizeLimitBytes: appSettingsConfig.LogFileSizeLimitBytes);
             app.UseHttpsRedirection();
 
             app.UseHsts();
