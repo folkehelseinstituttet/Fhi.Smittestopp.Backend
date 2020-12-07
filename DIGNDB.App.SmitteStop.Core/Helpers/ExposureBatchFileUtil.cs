@@ -54,16 +54,16 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
             }
         }
 
-        public SignatureInfo[] Signatures => new SignatureInfo[]
+        public SignatureInfo[] Signatures => new []
         {
-    				new SignatureInfo
-    				{
-      					VerificationKeyId = "238",
-      					VerificationKeyVersion = "v1",
-      					SignatureAlgorithm = "1.2.840.10045.4.3.2",
-      					PrivateKey = _privateKey
-    				},
-  		};
+            new SignatureInfo
+            {
+                VerificationKeyId = "242",
+                VerificationKeyVersion = "v1",
+                SignatureAlgorithm = "1.2.840.10045.4.3.2",
+                PrivateKey = _privateKey
+            }
+        };
 
     	public  async Task<Stream> CreateSignedFileAsync(TemporaryExposureKeyExport export)
     	{
