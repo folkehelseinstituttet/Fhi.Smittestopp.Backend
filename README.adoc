@@ -1,0 +1,27 @@
+= Smittestopp Backend
+
+image:https://github.com/folkehelseinstituttet/Fhi.Smittestopp.Backend/workflows/.NET%20Core/badge.svg[]
+image:https://img.shields.io/github/languages/top/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
+image:https://img.shields.io/github/issues/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
+image:https://img.shields.io/github/issues-pr/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
+image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
+image:https://img.shields.io/github/license/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
+
+//TODO: describe what is the project about
+
+== Installation
+
+=== Requirements
+
+== Usage
+=== Swagger
+=== Configuration
+
+== Contributing
+
+//TODO: windows
+
+== License
+Copyright (c) 2020 Agency for Digitisation (Denmark), 2020 Norwegian Institute of Public Health (Norway), 2020 Netcompany Group AS
+
+Smittestopp is Open Source software released under the [MIT license](LICENSE.md)
