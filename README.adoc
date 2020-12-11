@@ -64,18 +64,18 @@ You can configure some JWT validation rules using the configuration below.
 {
   "JwtAuthorization" : {
     "JwtValidationRules": {
-      "ClientId": "To be replaced in Pipelines",  //<1>
-      "SupportedAlgorithm": "RS256",              //<2>
-      "Issuer": "To be replaced in Pipelines"     //<3>
+      "ClientId": "To be replaced in Pipelines",  
+      "SupportedAlgorithm": "RS256",
+      "Issuer": "To be replaced in Pipelines"
     },
-    "JwkUrl": "To be replaced in Pipelines"       //<4>
+    "JwkUrl": "To be replaced in Pipelines"
   }
 }
 ----
-<1> Client id from the token, which we consider valid.
-<2> Supported signature algorithm, which we consider valid.
-<3> Issuer from the token, which we consider valid.
-<4> Url from which the validator service will retrieve _the public key_.
+* `ClientId` - Client id from the token, which we consider valid.
+* `SupportedAlgorithm` - Supported signature algorithm, which we consider valid.
+* `Issuer` - Issuer from the token, which we consider valid.
+* `JwkUrl` - Url from which the validator service will retrieve _the public key_.
 
 ==== API version deprecation
 `AppSettings` section of `appsettings.json` configuration enables setting a specific version of API as deprecated.
