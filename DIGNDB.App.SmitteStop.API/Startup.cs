@@ -1,30 +1,19 @@
-using AutoMapper;
-using DIGNDB.App.SmitteStop.API.Attributes;
-using DIGNDB.App.SmitteStop.API.Services;
+using System;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.DependencyInjection;
 using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Services;
-using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.DAL.DependencyInjection;
-using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
-using FederationGatewayApi.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System;
-using DIGNDB.App.SmitteStop.Domain;
 
 namespace DIGNDB.App.SmitteStop.API
 {
@@ -89,7 +78,8 @@ namespace DIGNDB.App.SmitteStop.API
 
             var loggingConfig = Configuration.GetSection(nameof(Logging)).Get<Logging>();
             Enum.TryParse(loggingConfig.LogLevel.Default, out LogLevel logLevel);
-            loggerFactory.AddFile(appSettingsConfig.LogsApiPath, logLevel);
+            loggerFactory.AddFile(appSettingsConfig.LogsApiPath, logLevel,
+                fileSizeLimitBytes: appSettingsConfig.LogFileSizeLimitBytes);
 
             app.UseHttpsRedirection();
 
