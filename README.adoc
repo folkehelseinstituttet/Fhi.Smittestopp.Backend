@@ -31,6 +31,10 @@ image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smitte
 // mention swagger attributes
 
 === Configuration
+
+// appsetting managemetn
+// (https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1)
+
 // jwt endpoint
 
 ==== API version deprecation
@@ -73,23 +77,64 @@ This package uses `log4net.config` configuration file.
 
 == Contributing
 
-// mention Translation table is not used for now
+=== Unused code
 
-// mention gateway code is not used for now
+Don't feel surprised to find some portions of unused code.
+As an example, you won't find any logical usages of `Translation` table or whole `FederationGatewayApi` project.
+Development team removed the code using it because the project should not integrate with
+https://github.com/eu-federation-gateway-service/efgs-federation-gateway[EU Federation Gateway Service] for now.
 
-// ContainerRegistration pattern for unit tests
+=== Patterns used in the project
 
-// Generic repository pattern
+==== Generic repository
 
-// appsetting managemetn
-// (https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1)
+To access the database please use `GenericRepository<T>` class.
+Feel free to create a custom repository class based on the generic one if needed.
+
+==== Dependency registration
+
+Each module should have its dependencies registered in a separate extension method.
+
+For example in `DIGNDB.App.SmitteStop.DAL` module we have a method presented below.
+
+[source,c#]
+----
+public static class ContainerRegistration
+{
+    public static IServiceCollection AddDALDependencies(this IServiceCollection services)
+    {
+        services.AddScoped<IJwtTokenRepository, JwtTokenRepository>();
+        services.AddScoped<ICountryRepository, CountryRepository>();
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+        return services;
+    }
+}
+----
+
+This pattern provides a number of benefits.
+
+. It keeps all the registration calls in one place per module.
+. It enables marking some implementation classes as internal (encapsulation).
+. It the need for mocking in unit tests (see link:./DIGNDB.App.SmitteStop.Testing/ServiceTest/JwtValidationServiceTests.cs[JWT validation tests] as an example).
 
 === Database connection
-// mention
-//
-//## Migrations
-//### Command for creating a new migration
-//`DIGNDB.App.SmitteStop\DIGNDB.App.SmitteStop.API>dotnet ef migrations add <MigrationName> --project ../DIGNDB.App.SmitteStop.DAL`
+To develop the project you need a working `SQL Server` instance.
+You can either use a local instance or a `Docker` container.
+
+==== Entity Framework Code First
+The project utilizes `Code First` with Migrations approach when using `Entity Framework` package.
+
+Please pay attention when running `dotnet ef` commands.
+The database context lays in different project (`DIGNDB.App.SmitteStop.DAL`)
+than the `API` so you need to specify the context project each time.
+
+For example to create a new migration run the following command:
+
+[source]
+----
+DIGNDB.App.SmitteStop\DIGNDB.App.SmitteStop.API>dotnet ef migrations add <MigrationName> --project ../DIGNDB.App.SmitteStop.DAL
+----
 
 == License
 Copyright (c) 2020 Agency for Digitisation (Denmark), 2020 Norwegian Institute of Public Health (Norway), 2020 Netcompany Group AS
