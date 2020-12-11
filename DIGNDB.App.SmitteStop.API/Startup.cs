@@ -1,3 +1,4 @@
+using System;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.DependencyInjection;
 using DIGNDB.App.SmitteStop.Core.Helpers;
@@ -74,7 +75,12 @@ namespace DIGNDB.App.SmitteStop.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            loggerFactory.AddFile(pathFormat:appSettingsConfig.LogsApiPath, fileSizeLimitBytes: appSettingsConfig.LogFileSizeLimitBytes);
+
+            var loggingConfig = Configuration.GetSection(nameof(Logging)).Get<Logging>();
+            Enum.TryParse(loggingConfig.LogLevel.Default, out LogLevel logLevel);
+            loggerFactory.AddFile(appSettingsConfig.LogsApiPath, logLevel,
+                fileSizeLimitBytes: appSettingsConfig.LogFileSizeLimitBytes);
+
             app.UseHttpsRedirection();
 
             app.UseHsts();
