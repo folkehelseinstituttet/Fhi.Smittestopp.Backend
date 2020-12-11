@@ -64,11 +64,11 @@ You can configure some JWT validation rules using the configuration below.
 {
   "JwtAuthorization" : {
     "JwtValidationRules": {
-      "ClientId": "To be replaced in Pipelines",  <1>
-      "SupportedAlgorithm": "RS256",              <2>
-      "Issuer": "To be replaced in Pipelines"     <3>
+      "ClientId": "To be replaced in Pipelines",  //<1>
+      "SupportedAlgorithm": "RS256",              //<2>
+      "Issuer": "To be replaced in Pipelines"     //<3>
     },
-    "JwkUrl": "To be replaced in Pipelines"       <4>
+    "JwkUrl": "To be replaced in Pipelines"       //<4>
   }
 }
 ----
