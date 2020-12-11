@@ -20,8 +20,6 @@ image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smitte
 
 // links to EN API
 
-// gateway is not integrated for now
-
 // hangfire jobs
 // hangfire service
 
@@ -32,10 +30,52 @@ image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smitte
 
 === Configuration
 
-// appsetting managemetn
-// (https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1)
+The project uses the standard ASP`.NET Core` mechanism for splitting configuration for different environments.
+To get yourself familiar with the concept take a look at this article https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1[Use multiple environments in ASP.NET Core]
 
-// jwt endpoint
+==== Mobile token
+
+Some endpoints require a _mobile token_ because of `MobileAuthorizationAttribute` attribute.
+This token provides static authentication mechanism between the backend and the mobile app.
+
+You need to provide this token to `appsettings.json` configuration for all environments apart from `development`.
+
+.appsettings.json
+[source,json]
+----
+{
+  "AppSettings": {
+    "AuthorizationMobile": "To be replaced in Pipelines"
+  }
+}
+----
+
+To generate this token just pick a random string (treat it like a password, the longer and higher entropy the better), share it with the mobile team, encrypt it using `ConfigEncryptionHelper.ProtectString` and put it into `AuthorizationMobile` value.
+This method `ProtectString` uses `Data Protection API` under the hood, so you need to **repeat this encryption for each server**.
+
+==== JWT validation
+Endpoint `POST /diagnostickeys` uses JWT token to authenticate the client.
+
+You can configure some JWT validation rules using the configuration below.
+
+.appsettings.json
+[source,json]
+----
+{
+  "JwtAuthorization" : {
+    "JwtValidationRules": {
+      "ClientId": "To be replaced in Pipelines",  <1>
+      "SupportedAlgorithm": "RS256",              <2>
+      "Issuer": "To be replaced in Pipelines"     <3>
+    },
+    "JwkUrl": "To be replaced in Pipelines"       <4>
+  }
+}
+----
+<1> Client id from the token, which we consider valid.
+<2> Supported signature algorithm, which we consider valid.
+<3> Issuer from the token, which we consider valid.
+<4> Url from which the validator service will retrieve _the public key_.
 
 ==== API version deprecation
 `AppSettings` section of `appsettings.json` configuration enables setting a specific version of API as deprecated.
@@ -70,10 +110,6 @@ https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetco
 Application running on devices pushes its logs using `/logging/logMessages` endpoint.
 `LoggingController` receives those logs and saves them using `log4net` package.
 This package uses `log4net.config` configuration file.
-
-
-// mobile token
-
 
 == Contributing
 
