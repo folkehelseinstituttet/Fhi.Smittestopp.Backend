@@ -23,6 +23,9 @@ image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smitte
 // gateway is not integrated for now
 
 // hangfire jobs
+// hangfire service
+
+// mention sql job
 
 === Swagger
 // mention swagger attributes
@@ -31,6 +34,7 @@ image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smitte
 // jwt endpoint
 
 // api deprication
+// log4net.config
 // mobile token
 
 
@@ -42,6 +46,7 @@ image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smitte
 
 // ContainerRegistration pattern for unit tests
 
+// Generic repository pattern
 
 // appsetting managemetn
 // (https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1)
