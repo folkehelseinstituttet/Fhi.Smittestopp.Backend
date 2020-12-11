@@ -33,7 +33,27 @@ image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smitte
 === Configuration
 // jwt endpoint
 
-// api deprication
+==== API version deprecation
+`AppSettings` section of `appsettings.json` configuration enables setting a specific version of API as deprecated.
+
+To set version `1` and version `2` as deprecated put `"1"` and `"2"` strings into `DeprecatedVersions` array.
+Use example below for reference.
+
+.appsettings.json
+[source,json]
+----
+{
+  "AppSettings": {
+    "DeprecatedVersions": [
+      "1",
+      "2"
+    ]
+  }
+}
+----
+
+Calling an endpoint in deprecated version will result in getting a response with the code `410` and content `API is deprecated`.
+
 // log4net.config
 // mobile token
 
