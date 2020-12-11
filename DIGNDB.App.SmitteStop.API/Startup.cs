@@ -87,7 +87,9 @@ namespace DIGNDB.App.SmitteStop.API
                 app.UseDeveloperExceptionPage();
             }
 
-            loggerFactory.AddFile(appSettingsConfig.LogsApiPath);
+            var loggingConfig = Configuration.GetSection(nameof(Logging)).Get<Logging>();
+            Enum.TryParse(loggingConfig.LogLevel.Default, out LogLevel logLevel);
+            loggerFactory.AddFile(appSettingsConfig.LogsApiPath, logLevel);
 
             app.UseHttpsRedirection();
 
