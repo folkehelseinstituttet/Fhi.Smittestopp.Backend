@@ -54,7 +54,20 @@ Use example below for reference.
 
 Calling an endpoint in deprecated version will result in getting a response with the code `410` and content `API is deprecated`.
 
-// log4net.config
+==== Logging configuration
+The project uses different logging solutions when it comes to backend logs and mobile logs.
+
+===== Backend logs
+Backend uses solution provided by the framework, described in
+https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0[Logging in .NET Core and ASP.NET Core].
+`Startup` class calls `AddFile` extension method to also save logs to a file.
+
+===== Mobile logs
+Application running on devices pushes its logs using `/logging/logMessages` endpoint.
+`LoggingController` receives those logs and saves them using `log4net` package.
+This package uses `log4net.config` configuration file.
+
+
 // mobile token
 
 
