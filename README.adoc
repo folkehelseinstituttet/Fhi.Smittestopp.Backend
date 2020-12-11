@@ -1,27 +1,59 @@
 = Smittestopp Backend
 
 image:https://github.com/folkehelseinstituttet/Fhi.Smittestopp.Backend/workflows/.NET%20Core/badge.svg[]
-image:https://img.shields.io/github/languages/top/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
 image:https://img.shields.io/github/issues/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
 image:https://img.shields.io/github/issues-pr/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
 image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
-image:https://img.shields.io/github/license/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
 
 //TODO: describe what is the project about
 
 == Installation
 
+// event log registration
+
+// mention `Application Path` not having `api`.
+
 === Requirements
+// it needs windows
 
 == Usage
+
+// links to EN API
+
+// gateway is not integrated for now
+
+// hangfire jobs
+
 === Swagger
+// mention swagger attributes
+
 === Configuration
+// jwt endpoint
+
+// api deprication
+// mobile token
+
 
 == Contributing
 
-//TODO: windows
+// mention Translation table is not used for now
+
+// mention gateway code is not used for now
+
+// ContainerRegistration pattern for unit tests
+
+
+// appsetting managemetn
+// (https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1)
+
+=== Database connection
+// mention
+//
+//## Migrations
+//### Command for creating a new migration
+//`DIGNDB.App.SmitteStop\DIGNDB.App.SmitteStop.API>dotnet ef migrations add <MigrationName> --project ../DIGNDB.App.SmitteStop.DAL`
 
 == License
 Copyright (c) 2020 Agency for Digitisation (Denmark), 2020 Norwegian Institute of Public Health (Norway), 2020 Netcompany Group AS
 
-Smittestopp is Open Source software released under the [MIT license](LICENSE.md)
+Smittestopp is Open Source software released under the link:LICENSE.md[MIT license]
