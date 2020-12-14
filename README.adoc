@@ -14,11 +14,25 @@ image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smitte
 // mention `Application Path` not having `api`.
 
 === Requirements
-// it needs windows
+To run the project you need `ASP.NET Core Runtime`.
+Any version starting with `3.1` should work fine i.e., `3.1.10`.
+Choose `Hosting Bundle` when choosing runtime version.
+
+The project unfortunately has a couple of Windows dependencies and because of it, **you need to run it on Windows**.
+
+.Windows dependencies
+. It uses https://en.wikipedia.org/wiki/Data_Protection_API[Data Protection API] for encryption.
+. It runs
+Hangfirefootnote:hangfire[Package to perform background processing in .NET Core applications. More information at link: https://www.hangfire.io/] as a Windows service.
+. It writes logs to
+https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0#welog[Windows EventLog],
+if configured to do so.
 
 == Usage
 
 // links to EN API
+
+=== Hangfire
 
 // hangfire jobs
 // hangfire service
@@ -26,11 +40,23 @@ image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smitte
 // mention sql job
 
 === Swagger
-// mention swagger attributes
+To describe API endpoints, project makes use of Swagger.
+
+Request on root endpoint `/` will result in getting `Swagger UI` page, presented below.
+
+image::readme-images/swagger-demo.png[]
+
+Swagger along with the documentation also provides a functionality called _playground_.
+Click `Try it out` and then `Execute` to send an HTTP request without a need for any HTTP client.
+
+image::readme-images/swagger-try-it-out.png[]
+image::readme-images/swagger-execute.png[]
+
+_For security reasons, this functionality works only in `development` environments_.
 
 === Configuration
 
-The project uses the standard ASP`.NET Core` mechanism for splitting configuration for different environments.
+The project uses the standard `ASP.NET Core` mechanism for splitting configuration for different environments.
 To get yourself familiar with the concept take a look at this article https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1[Use multiple environments in ASP.NET Core]
 
 ==== Mobile token
@@ -64,7 +90,7 @@ You can configure some JWT validation rules using the configuration below.
 {
   "JwtAuthorization" : {
     "JwtValidationRules": {
-      "ClientId": "To be replaced in Pipelines",  
+      "ClientId": "To be replaced in Pipelines",
       "SupportedAlgorithm": "RS256",
       "Issuer": "To be replaced in Pipelines"
     },
@@ -119,6 +145,9 @@ Don't feel surprised to find some portions of unused code.
 As an example, you won't find any logical usages of `Translation` table or whole `FederationGatewayApi` project.
 Development team removed the code using it because the project should not integrate with
 https://github.com/eu-federation-gateway-service/efgs-federation-gateway[EU Federation Gateway Service] for now.
+
+=== Swagger attributes
+// mention that it's recommended to use swagger attributes
 
 === Patterns used in the project
 
