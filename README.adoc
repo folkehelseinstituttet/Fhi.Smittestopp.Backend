@@ -5,11 +5,21 @@ image:https://img.shields.io/github/issues/folkehelseinstituttet/Fhi.Smittestopp
 image:https://img.shields.io/github/issues-pr/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
 image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
 
-//TODO: describe what is the project about
+WebAPI project, which facilitates receiving, storing and distributing Temporary Exposure Keys
+footnote:[https://google.github.io/exposure-notifications-server/getting-started/publishing-temporary-exposure-keys.html[Temporary Exposure Key (TEK) Publishing Guide]].
+
+Mobile devices can use these keys to detect exposures and send notifications to the users.
+To do that, the devices utilize Exposure Notification API
+footnote:[https://developers.google.com/android/exposure-notifications/exposure-notifications-api[Exposure Notifications API documentation]] provided by Apple and Google.
+
 
 == Installation
 
 // event log registration
+
+// hangfire service
+
+// mention sql job
 
 // mention `Application Path` not having `api`.
 
@@ -30,14 +40,8 @@ if configured to do so.
 
 == Usage
 
-// links to EN API
-
-=== Hangfire
-
-// hangfire jobs
-// hangfire service
-
-// mention sql job
+To use this `WebAPI` project you need an HTTP Client.
+Both mobile devices and frontend frameworks can use some HTTP Client to consume the API.
 
 === Swagger
 To describe API endpoints, project makes use of Swagger.
@@ -53,6 +57,16 @@ image::readme-images/swagger-try-it-out.png[]
 image::readme-images/swagger-execute.png[]
 
 _For security reasons, this functionality works only in `development` environments_.
+
+=== Hangfire
+
+==== Jobs
+
+On 14.12.2020 Hangfire exposes 3 jobs, which you can execute.
+
+. `validate-keys-on-database` - removes invalid keys from the database.
+. `update-zip-files` - generates zip files from existing keys.
+. `remove-old-keys` - removes old zip files from the disk.
 
 === Configuration
 
