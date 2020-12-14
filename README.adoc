@@ -15,13 +15,13 @@ footnote:[https://developers.google.com/android/exposure-notifications/exposure-
 
 == Installation
 
-// event log registration
+Installation process goes in the same way as with any other WebAPI project.
+For example, you could use `Web Deploy` feature of IIS but other methods works fine as well.
 
-// hangfire service
+image::readme-images/web-deploy.png[]
 
-// mention sql job
-
-// mention `Application Path` not having `api`.
+Keep in mind that routes to all endpoint already have `api` prefix in them.
+_Remove the suggested `api` from `Application Path` when importing to not have this prefix duplicated_.
 
 === Requirements
 To run the project you need `ASP.NET Core Runtime`.
@@ -31,12 +31,37 @@ Choose `Hosting Bundle` when choosing runtime version.
 The project unfortunately has a couple of Windows dependencies and because of it, **you need to run it on Windows**.
 
 .Windows dependencies
-. It uses https://en.wikipedia.org/wiki/Data_Protection_API[Data Protection API] for encryption.
+. It uses
+Data Protection API
+footnote:[https://en.wikipedia.org/wiki/Data_Protection_API[Data Protection API]] for encryption.
 . It runs
 Hangfirefootnote:hangfire[Package to perform background processing in .NET Core applications. More information at link: https://www.hangfire.io/] as a Windows service.
-. It writes logs to
-https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0#welog[Windows EventLog],
+. It writes logs to Windows EventLog
+footnote:[https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0#welog[Windows EventLog]],
 if configured to do so.
+
+=== Registering EventLog
+To initiate EventLog for settings mentioned above you can run this PowerShell script with administrator rights:
+
+[source]
+----
+$file = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\EventLogMessages.dll"
+New-EventLog -ComputerName . -Source "SS-API-DIGNDB.App.SmitteStop" -LogName Application -MessageResourceFile $file -CategoryResourceFile $file
+New-EventLog -ComputerName . -Source "SS-Jobs-DIGNDB.App.SmitteStop" -LogName Application -MessageResourceFile $file -CategoryResourceFile $file
+----
+**Without this initialization no logs will appear in the Event Viewer.**
+
+=== Hangfire as a service
+To create a service, which will run Hangfire execute the command below.
+
+[source]
+----
+sc create "SmittestopHangfire" binpath="C:\SmittestopHangFire\DIGNDB.APP.SmitteStop.Jobs.exe"
+----
+
+=== Creating cleaning SQL job
+To ensure that keys older than 14 days won't clutter the database,
+run the SQL command from this file link:sql/create-cleaning-sql-job.sql[].
 
 == Usage
 
@@ -92,6 +117,9 @@ You need to provide this token to `appsettings.json` configuration for all envir
 
 To generate this token just pick a random string (treat it like a password, the longer and higher entropy the better), share it with the mobile team, encrypt it using `ConfigEncryptionHelper.ProtectString` and put it into `AuthorizationMobile` value.
 This method `ProtectString` uses `Data Protection API` under the hood, so you need to **repeat this encryption for each server**.
+
+**If the API application runs as `apppool` user then this user needs to perform the encryption (call to `ProtectString`).**
+**If user A performs the encryption and user B will try to decrypt the token then the decryption will fail.**
 
 ==== JWT validation
 Endpoint `POST /diagnostickeys` uses JWT token to authenticate the client.
@@ -151,6 +179,18 @@ Application running on devices pushes its logs using `/logging/logMessages` endp
 `LoggingController` receives those logs and saves them using `log4net` package.
 This package uses `log4net.config` configuration file.
 
+==== Shared folder for zips
+To accomplish failure resilience, configure `appsettings` configuration to have multiple record in `ZipFilesFolders` array.
+
+[source,json]
+----
+{
+  "ZipFilesFolders": [
+    "C:\\SmitteStopNO\\SmittestopTemporaryExposureKeyZipFiles"
+  ]
+}
+----
+
 == Contributing
 
 === Unused code
@@ -159,9 +199,6 @@ Don't feel surprised to find some portions of unused code.
 As an example, you won't find any logical usages of `Translation` table or whole `FederationGatewayApi` project.
 Development team removed the code using it because the project should not integrate with
 https://github.com/eu-federation-gateway-service/efgs-federation-gateway[EU Federation Gateway Service] for now.
-
-=== Swagger attributes
-// mention that it's recommended to use swagger attributes
 
 === Patterns used in the project
 
