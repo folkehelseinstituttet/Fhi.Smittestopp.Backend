@@ -16,7 +16,7 @@ footnote:[https://developers.google.com/android/exposure-notifications/exposure-
 == Installation
 
 Installation process goes in the same way as with any other WebAPI project.
-For example, you could use `Web Deploy` feature of IIS but other methods works fine as well.
+For example, you could use `Web Deploy` feature of IIS but other methods work fine as well.
 
 image::readme-images/web-deploy.png[]
 
@@ -35,7 +35,7 @@ The project unfortunately has a couple of Windows dependencies and because of it
 Data Protection API
 footnote:[https://en.wikipedia.org/wiki/Data_Protection_API[Data Protection API]] for encryption.
 . It runs
-Hangfirefootnote:hangfire[Package to perform background processing in .NET Core applications. More information at link: https://www.hangfire.io/] as a Windows service.
+Hangfire footnote:[https://www.hangfire.io/[Hangfire website]] as a Windows service.
 . It writes logs to Windows EventLog
 footnote:[https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0#welog[Windows EventLog]],
 if configured to do so.
@@ -52,7 +52,7 @@ New-EventLog -ComputerName . -Source "SS-Jobs-DIGNDB.App.SmitteStop" -LogName Ap
 **Without this initialization no logs will appear in the Event Viewer.**
 
 === Hangfire as a service
-To create a service, which will run Hangfire execute the command below.
+To create a service, which will run Hangfire execute the command below (in Command Prompt).
 
 [source]
 ----
@@ -115,7 +115,7 @@ You need to provide this token to `appsettings.json` configuration for all envir
 }
 ----
 
-To generate this token just pick a random string (treat it like a password, the longer and higher entropy the better), share it with the mobile team, encrypt it using `ConfigEncryptionHelper.ProtectString` and put it into `AuthorizationMobile` value.
+To generate this token just pick a random string (treat it like a password, the longer and higher the entropy the better), share it with the mobile team, encrypt it using `ConfigEncryptionHelper.ProtectString` and put it as `AuthorizationMobile` value.
 This method `ProtectString` uses `Data Protection API` under the hood, so you need to **repeat this encryption for each server**.
 
 **If the API application runs as `apppool` user then this user needs to perform the encryption (call to `ProtectString`).**
@@ -180,7 +180,7 @@ Application running on devices pushes its logs using `/logging/logMessages` endp
 This package uses `log4net.config` configuration file.
 
 ==== Shared folder for zips
-To accomplish failure resilience, configure `appsettings` configuration to have multiple record in `ZipFilesFolders` array.
+To accomplish failure resilience, configure `appsettings` configuration (of `Jobs` project) to have multiple record in `ZipFilesFolders` array.
 
 [source,json]
 ----
