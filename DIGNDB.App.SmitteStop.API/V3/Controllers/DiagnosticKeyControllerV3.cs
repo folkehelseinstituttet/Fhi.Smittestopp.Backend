@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
@@ -30,6 +31,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
         private readonly IExposureConfigurationService _exposureConfigurationService;
         private readonly KeyValidationConfiguration _keyValidationConfig;
         private readonly IZipFileInfoService _zipFileInfoService;
+        private readonly AppSettingsConfig _appSettingsConfig;
 
 
         public DiagnosticKeyControllerV3(
@@ -46,6 +48,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
             _exposureKeyValidator = exposureKeyValidator;
             _logger = logger;
             _zipFileInfoService = zipFileInfoService;
+            _appSettingsConfig = appSettingsConfig;
             _exposureConfigurationService = exposureConfigurationService;
             _keyValidationConfig = keyValidationConfig;
             _addTemporaryExposureKeyService = addTemporaryExposureKeyService;
@@ -125,6 +128,9 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
             _logger.LogInformation("DownloadDiagnosisKeysFile endpoint called");
             try
             {
+                if (packageName == "today")
+                    packageName = ReplacePackageNameWithToday();
+
                 ZipFileInfo packageInfo = _zipFileInfoService.CreateZipFileInfoFromPackageName(packageName);
                 string zipFilesFolder = _configuration["ZipFilesFolder"];
 
@@ -166,6 +172,18 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
                 _logger.LogError("Error when downloading package: " + e);
                 return StatusCode(500);
             }
+        }
+
+        private string ReplacePackageNameWithToday()
+        {
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.Append(DateTime.UtcNow.Date.ToString("yyyy-MM-dd"));
+            stringBuilder.Append("_1");
+            stringBuilder.Append($"_{_appSettingsConfig.OriginCountryCode.ToLower()}");
+            stringBuilder.Append(".zip");
+
+            return stringBuilder.ToString();
         }
 
         #endregion
