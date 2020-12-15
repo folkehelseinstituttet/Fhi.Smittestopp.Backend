@@ -20,7 +20,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
     [ApiVersion("2")]
     [ApiVersion("3")]
     [Route("api/v{version:apiVersion}/logging")]
-    [Route("logging")]
+    [Route("api/logging")]
     public class LoggingController : ControllerBase
     {
 
