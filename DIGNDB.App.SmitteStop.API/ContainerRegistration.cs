@@ -21,7 +21,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 
 namespace DIGNDB.App.SmitteStop.API
 {
@@ -67,7 +66,7 @@ namespace DIGNDB.App.SmitteStop.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-            services.AddSingleton(new AuthOptions(environment.IsDevelopment()));
+            services.AddSingleton(new AuthOptions());
             services.AddMemoryCache();
 
             var connectionString = configuration["SQLConnectionString"];
