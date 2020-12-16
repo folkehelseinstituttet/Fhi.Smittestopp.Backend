@@ -16,23 +16,17 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
 {
     public class UploadKeysAuthorizationAttribute : ActionFilterAttribute
     {
-        private readonly AppSettingsConfig _appSettingsConfig;
-        private readonly AuthOptions _authOptions;
         private readonly IJwtValidationService _jwtValidationService;
         private readonly ITokenVerifier _tokenVerifier = new TokenVerifier(new InMemorySeedStore());
         private readonly InMemoryPrivateKeyStore _privateKeyStore = new InMemoryPrivateKeyStore();
 
-        public UploadKeysAuthorizationAttribute(AppSettingsConfig appSettingsConfig, AuthOptions authOptions, IJwtValidationService jwtValidationService)
+        public UploadKeysAuthorizationAttribute(IJwtValidationService jwtValidationService)
         {
-            _appSettingsConfig = appSettingsConfig;
-            _authOptions = authOptions;
             _jwtValidationService = jwtValidationService;
         }
 
         public override async void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!_authOptions.AuthHeaderCheckEnabled) return;
-
             var logger = context.HttpContext.RequestServices.GetService<ILogger<DiagnosticKeysController>>();
             try
             {
@@ -48,15 +42,15 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 }
                 else if (authHeader != null && authHeader.StartsWith("Anonymous ")) 
                 {
-                    var _ecParameters = CustomNamedCurves.GetByOid(X9ObjectIdentifiers.Prime256v1);
+                    var ecParameters = CustomNamedCurves.GetByOid(X9ObjectIdentifiers.Prime256v1);
                     string[] anonymousToken = authHeader.Replace("Anonymous ", string.Empty).Split(".");
 
-                    var W = _ecParameters.Curve.DecodePoint(Convert.FromBase64String(anonymousToken[0]));
+                    var W = ecParameters.Curve.DecodePoint(Convert.FromBase64String(anonymousToken[0]));
                     var t = Convert.FromBase64String(anonymousToken[1]);
                     var k = await _privateKeyStore.GetAsync();
 
 
-                    var isValid = await _tokenVerifier.VerifyTokenAsync(k, _ecParameters.Curve, t, W);
+                    var isValid = await _tokenVerifier.VerifyTokenAsync(k, ecParameters.Curve, t, W);
                     if (!isValid)
                     {
                         context.Result = new UnauthorizedObjectResult("Invalid token");
