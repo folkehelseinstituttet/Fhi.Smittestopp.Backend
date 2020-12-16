@@ -87,12 +87,54 @@ New file will be created: `TemporaryExposureKeyGatewayBatchDto.cs`. You can chan
 
 
 ## Visited countries configuration
-<!---
-* Describe `/countries` endpoint
-* Describe `Country` table
-* Describe `Translation` table
-* Find deliverable in which `countries` are described and check if something is missing from this document
--->
+Endpoint with `/countries` routing returns a list of countries.
+Mobile application shows this list of countries to the user, so he can choose, which countries he visited.
+The application uses this list of visited countries when it pushes the keys.
+Backend associates each key with a country when it received them.
+
+Today (16 december 2020), only `version 2` supports this endpoint.
+In Norwegian adaptation, configuration marks this version as deprecated (using `DeprecatedVersions` in `appsettings.json`).
+Because of this, `version 4` should reintroduce usable `/countries` endpoint again.
+
+### `Country` table
+You can configure, which countries the endpoint will return.
+To make a certain country not present in the list just set `VisitedCountriesEnabled` column to `false` on `Country` table record.
+By default, country of origin (`Norway` in this case) should definitely not appear when choosing visited countries.
+
+You can also configure from which countries the keys will be pulled from EFGS.
+To have keys pulled from a specific country you need to set `PullingFromGatewayEnabled` to `true` on `Country` table record.
+
+### `Translation` table
+
+Translation system, implemented with country names translation, enables getting translated data from the API.
+
+As of today (16.12.2020) only `/countries` endpoint makes use of this system. 
+The screenshot presents an example of translated country names in Danish.
+
+![](../readme-images/translation-table.png)
+
+#### Translation table columns
+* `Id` - Primary key of the `Translation` table. 
+* `Value` - Translated string.
+* `EntityName` - Name of the database table, which we want to translate. ![](../readme-images/translation-entity-name.png)
+* `EntityId` - Id of a record, which we want to translate. ![](../readme-images/translation-entity-id.png)
+* `EntityPropertyName` - Name of the DTO property, in which we return the translation. ![](../readme-images/translation-entity-property-name.png)
+
+#### Adding new translation
+
+To add a new translation of for example country names in let’s say French, execute a following insert:
+```tsql
+INSERT INTO Translation (Value, EntityName, EntityId, EntityPropertyName, LanguageCountryId)
+VALUES
+       ('Pologne',      -- Poland translated to French
+        'Country',      -- Name of the database table
+        '21',           -- Id of Poland record in the Country table
+        'NameInFrench', -- Field in DTO Country
+        10);            -- Id of France record in the Country table
+
+```
+
+Don’t forget to extend the `CountryDto` class with a new field `NameInFrench`.
 
 ## Certificates
 
