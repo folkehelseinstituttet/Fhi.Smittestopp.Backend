@@ -54,6 +54,13 @@ And deserialize it in the Job
 var config = MaintenanceDailySummaryJob.FromJson(jsonString);
 ```
 
+#### 2. Hangfire is not handling async code properly 
+
+https://discuss.hangfire.io/t/async-task-jobs/73
+
+
+In Jobs please use synchronouse calls
+
 ##### ProtoBuffer usage
 
 "Proto" file describes contract between the national backend (Smittestopp) and the EFGS. 
