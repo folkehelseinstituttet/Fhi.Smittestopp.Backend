@@ -125,6 +125,8 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddSingleton(jwtAuthorizationConfig);
 
             services.AddSingleton(configuration);
+            var anonymousTokenKeyStoreConfig = configuration.GetSection("AnonymousTokenValidation").Get<AnonymousTokenKeyStoreConfiguration>();
+            services.AddSingleton<IAnonymousTokenKeySource>(new RollingKeyPairGeneratorWithLocalCertificate(anonymousTokenKeyStoreConfig.CertificateThumbPrint));
 
             return services;
         }
