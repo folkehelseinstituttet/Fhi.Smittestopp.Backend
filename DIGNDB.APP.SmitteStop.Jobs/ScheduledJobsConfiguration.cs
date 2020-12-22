@@ -1,5 +1,6 @@
 ﻿using DIGNDB.APP.SmitteStop.Jobs.Config;
 using DIGNDB.APP.SmitteStop.Jobs.Jobs;
+using DIGNDB.APP.SmitteStop.Jobs.EuGateway;
 using FederationGatewayApi.Services;
 using Hangfire;
 
@@ -19,10 +20,10 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             RecurringJob.AddOrUpdate<UpdateZipFilesJob>(recurringJobId: updateZipConfig.Name, methodCall: job => job.GenerateZipFiles(), updateZipConfig.CronExpression);
 
             var uploadConfig = jobsConfig.UploadKeysToTheGateway;
-            RecurringJob.AddOrUpdate<UploadTemporaryExposureKeysUeGatewayJob>(recurringJobId: uploadConfig.Name, methodCall: job => job.Invoke(), uploadConfig.CronExpression);
+            RecurringJob.AddOrUpdate<UploadTemporaryExposureKeyEuGatewayJob>(recurringJobId: uploadConfig.Name, methodCall: job => job.Invoke(), uploadConfig.CronExpression);
 
             var downloadConfig = jobsConfig.DownloadKeysFromTheGateway;
-            RecurringJob.AddOrUpdate<EuGatewayService>(recurringJobId: downloadConfig.Name, methodCall: job => job.DownloadKeysFromGateway(downloadConfig.MaximumNumberOfDaysBack), downloadConfig.CronExpression);
+            RecurringJob.AddOrUpdate<DownloadTemporaryExposureKeysEuGatewayJob>(recurringJobId: downloadConfig.Name, methodCall: job => job.Invoke(downloadConfig.MaximumNumberOfDaysBack), downloadConfig.CronExpression);
 
             var removeOldZipFilesConfig = jobsConfig.RemoveOldZipFiles;
             RecurringJob.AddOrUpdate<RemoveOldZipFilesJob>(recurringJobId: removeOldZipFilesConfig.Name, methodCall: job => job.RemoveOldZipFiles(hangfireConfig), removeOldZipFilesConfig.CronExpression);
