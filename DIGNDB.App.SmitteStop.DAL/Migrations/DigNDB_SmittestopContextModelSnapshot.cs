@@ -311,6 +311,9 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                     b.Property<long>("RollingStartNumber")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("SharingConsentGiven")
+                        .HasColumnType("bit");
+
                     b.Property<int>("TransmissionRiskLevel")
                         .HasColumnType("int");
 
