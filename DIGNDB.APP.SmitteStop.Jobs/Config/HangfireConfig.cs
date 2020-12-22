@@ -44,6 +44,12 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Config
     public class JobsConfig
     {
         [Required]
+        public UploadKeysToGatewayJobConfig UploadKeysToTheGateway { get; set; }
+
+        [Required]
+        public DownloadKeysFromGatewayJobConfig DownloadKeysFromTheGateway { get; set; }
+
+        [Required]
         public PeriodicJobBaseConfig UpdateZipFiles { get; set; }
 
         [Required]
