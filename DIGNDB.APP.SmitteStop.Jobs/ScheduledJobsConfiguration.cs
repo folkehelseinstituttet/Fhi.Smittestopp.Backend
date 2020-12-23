@@ -20,10 +20,10 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             RecurringJob.AddOrUpdate<UpdateZipFilesJob>(recurringJobId: updateZipConfig.Name, methodCall: job => job.GenerateZipFiles(), updateZipConfig.CronExpression);
 
             var uploadConfig = jobsConfig.UploadKeysToTheGateway;
-            RecurringJob.AddOrUpdate<UploadTemporaryExposureKeyEuGatewayJob>(recurringJobId: uploadConfig.Name, methodCall: job => job.Invoke(), uploadConfig.CronExpression);
+            RecurringJob.AddOrUpdate<UploadTemporaryExposureKeysEuGatewayJob>(recurringJobId: uploadConfig.Name, methodCall: job => job.Invoke(), uploadConfig.CronExpression);
 
             var downloadConfig = jobsConfig.DownloadKeysFromTheGateway;
-            RecurringJob.AddOrUpdate<DownloadTemporaryExposureKeysEuGatewayJob>(recurringJobId: downloadConfig.Name, methodCall: job => job.Invoke(downloadConfig.MaximumNumberOfDaysBack), downloadConfig.CronExpression);
+            RecurringJob.AddOrUpdate<DownloadTemporaryExposureKeysEuGatewayJob>(recurringJobId: downloadConfig.Name, methodCall: job => job.Invoke(), downloadConfig.CronExpression);
 
             var removeOldZipFilesConfig = jobsConfig.RemoveOldZipFiles;
             RecurringJob.AddOrUpdate<RemoveOldZipFilesJob>(recurringJobId: removeOldZipFilesConfig.Name, methodCall: job => job.RemoveOldZipFiles(hangfireConfig), removeOldZipFilesConfig.CronExpression);
