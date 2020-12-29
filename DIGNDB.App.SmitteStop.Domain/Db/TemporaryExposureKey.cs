@@ -55,5 +55,7 @@ namespace DIGNDB.App.SmitteStop.Domain.Db
         public virtual IEnumerable<TemporaryExposureKeyCountry> VisitedCountries { get; set; } = new List<TemporaryExposureKeyCountry>();
 
         public ReportType ReportType { get; set; }
+
+        public bool SharingConsentGiven { get; set; }
     }
 }

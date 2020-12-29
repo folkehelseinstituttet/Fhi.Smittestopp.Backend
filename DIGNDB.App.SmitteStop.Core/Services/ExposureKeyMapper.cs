@@ -25,7 +25,8 @@ namespace DIGNDB.App.SmitteStop.Core.Services
                 KeyData = key.key,
                 RollingPeriod = (long)(key.rollingDurationSpan.TotalMinutes / 10.0d),
                 TransmissionRiskLevel = key.transmissionRiskLevel,
-                DaysSinceOnsetOfSymptoms = key.daysSinceOnsetOfSymptoms
+                DaysSinceOnsetOfSymptoms = key.daysSinceOnsetOfSymptoms,
+                SharingConsentGiven = dto.sharingConsentGiven
             }).ToList();
         }
 

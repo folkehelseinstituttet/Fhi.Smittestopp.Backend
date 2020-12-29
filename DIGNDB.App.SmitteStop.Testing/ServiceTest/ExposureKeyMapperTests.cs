@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
@@ -220,6 +221,53 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 tuple.mapper.Map<TemporaryExposureKeyGatewayDto, TemporaryExposureKey>(tuple.sourceKey);
 
             mappingAction.Should().Throw<AutoMapperMappingException>();
+        }
+
+        [Test]
+        public void MapDto_ToEntity_ShouldHaveSharingAsFalse()
+        {
+            //Arrange
+            var dto = new TemporaryExposureKeyBatchDto() 
+            {
+                keys = new List<Core.Models.TemporaryExposureKeyDto>
+                {
+                    new Core.Models.TemporaryExposureKeyDto(){},
+                    new Core.Models.TemporaryExposureKeyDto(){}
+                }
+            };
+            IExposureKeyMapper mapper = new ExposureKeyMapper();
+
+            //Act
+            var entities = mapper.FromDtoToEntity(dto);
+
+            //Assert
+            entities.Should().NotBeNull();
+            entities.Should().NotBeEmpty();
+            entities.Select(ent => ent.SharingConsentGiven).Should().AllBeEquivalentTo(false);
+        }
+
+        [Test]
+        public void MapDtoWithSharingTrue_ToEntity_ShouldHaveSharingTrue()
+        {
+            //Arrange
+            var dto = new TemporaryExposureKeyBatchDto()
+            {
+                keys = new List<Core.Models.TemporaryExposureKeyDto>
+                {
+                    new Core.Models.TemporaryExposureKeyDto() { },
+                    new Core.Models.TemporaryExposureKeyDto() { }
+                },
+                sharingConsentGiven = true
+            };
+            IExposureKeyMapper mapper = new ExposureKeyMapper();
+
+            //Act
+            var entities = mapper.FromDtoToEntity(dto);
+
+            //Assert
+            entities.Should().NotBeNull();
+            entities.Should().NotBeEmpty();
+            entities.Select(ent => ent.SharingConsentGiven).Should().AllBeEquivalentTo(true);
         }
 
         private (IMapper mapper, TemporaryExposureKeyGatewayDto sourceKey, Country country) CreateMapperSourceKeyAndCountry()

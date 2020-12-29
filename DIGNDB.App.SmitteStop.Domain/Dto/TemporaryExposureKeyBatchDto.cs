@@ -11,5 +11,6 @@ namespace DIGNDB.App.SmitteStop.Domain.Dto
         public string appPackageName { get; set; }
         public string platform { get; set; }
         public string deviceVerificationPayload { get; set; }
+        public bool sharingConsentGiven { get; set; }
     }
 }
