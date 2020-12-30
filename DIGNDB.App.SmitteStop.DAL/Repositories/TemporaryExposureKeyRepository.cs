@@ -93,6 +93,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                .Where(k => k.Origin == apiOrigin)
                .Where(k => k.CreatedOn >= uploadedOnAndLater)
                .Where(k => sources.Contains(k.KeySource))
+               .Where(k => k.SharingConsentGiven)
                .OrderBy(c => c.CreatedOn)
                     .ThenBy(c => c.RollingStartNumber);
 
