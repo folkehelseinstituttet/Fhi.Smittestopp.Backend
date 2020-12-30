@@ -52,9 +52,12 @@ namespace DIGNDB.App.SmitteStop.Testing.Mocks
                 RollingStartNumber = rollingStartNumber,
                 TransmissionRiskLevel = Default.TransmissionRiskLevel,
                 VisitedCountries = new List<TemporaryExposureKeyCountry>(),
+                SharingConsentGiven = true
             };
             return new TestTemporaryExposureKeyBuilder(defaultPrototype);
         }
+
+
 
         public TestTemporaryExposureKeyBuilder Copy()
         {
@@ -97,6 +100,7 @@ namespace DIGNDB.App.SmitteStop.Testing.Mocks
                 RollingStartNumber = _prototype.RollingStartNumber,
                 TransmissionRiskLevel = _prototype.TransmissionRiskLevel,
                 DaysSinceOnsetOfSymptoms = _prototype.DaysSinceOnsetOfSymptoms,
+                SharingConsentGiven = _prototype.SharingConsentGiven
             };
 
             var allVisitedCountries = _prototype.VisitedCountries.Select(i => i.Country).ToList();

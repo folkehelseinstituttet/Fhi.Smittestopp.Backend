@@ -374,6 +374,84 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
                   });
         }
 
+        [TestCase(1)]
+        [TestCase(3)]
+        [TestCase(5)]
+        [TestCase(100000)]
+        [TestCase(750001)]
+        public void UploadKeysInOneBatch_shouldSendDkKeysOnlyWithConsent(int batchSize)
+        {
+            int keysNotOlderThenDays = 14;
+            // .: Setup - key data must be unique for verification methods
+            var dkApiV2DefaultBuilder = TestTemporaryExposureKeyBuilder.CreateDefault(_denmark)
+                .SetKeySource(KeySource.SmitteStopApiVersion2)
+                .SetRollingStartNumber(DateTime.UtcNow.AddDays(-1));
+
+            var otherKeysDefaultBuilder = TestTemporaryExposureKeyBuilder.CreateDefault(_poland)
+               .SetKeySource(KeySource.Gateway)
+               .SetRollingStartNumber(DateTime.UtcNow.AddDays(-3));
+
+            // data for upload 1
+            // it is not possible to have creation date exactly the same as before for data that appear in the db later
+            dkApiV2DefaultBuilder.SetCreatedOn(DateTime.Now);
+            var denmarkKeys_upload1 = dkApiV2DefaultBuilder.Copy()
+                .SetVisitedCountries(new[] { _germany, _poland })
+                .Build(new[] { "Dk_U1_1", "Dk_U1_2", "Dk_U1_3", "Dk_U1_4" });
+            for (int i = 0; i < denmarkKeys_upload1.Count; i++)
+            {
+                denmarkKeys_upload1[i].SharingConsentGiven = i % 2 == 0;//Set evenkly placed keys to not shared
+            }
+            var otherKeys_upload1 = otherKeysDefaultBuilder.Copy()
+                .SetOrigin(_poland)
+                .Build(new[] { "Other_U1_1", "Other_U1_2", "Other_U1_2", "Other_U1_3" });
+            // setup mock
+            var gatewayHttpClientMock = new Mock<IGatewayHttpClient>();
+
+            var expectedResponse = new HttpResponseMessage { StatusCode = HttpStatusCode.Created, Content = new StringContent("") };
+            gatewayHttpClientMock.Setup(client => client.PostAsync(It.IsAny<string>(), It.IsAny<HttpContent>()))
+            .ReturnsAsync(expectedResponse);
+
+            var service = CreateGatewayServiceAndDependencies(gatewayHttpClientMock.Object);
+
+            // .: Act
+            _dbContext.TemporaryExposureKey.AddRange(denmarkKeys_upload1);
+            _dbContext.TemporaryExposureKey.AddRange(otherKeys_upload1);
+            _dbContext.SaveChanges();
+
+            service.UploadKeysToTheGateway(keysNotOlderThenDays, batchSize);
+
+            // .: Verify
+            // get data
+            var requestArgInterceptor = new ArgumentInterceptor<HttpContent>();
+            gatewayHttpClientMock.Verify(c => c.PostAsync(It.IsAny<string>(), requestArgInterceptor.CreateCaptureAction()));
+
+            var allBatchesPassedToHttpClient = ParseRequestBodiesBatches(requestArgInterceptor);
+            var keysFromAllSentBatches = allBatchesPassedToHttpClient.SelectMany(batch => batch.Keys).ToList();
+            // assert
+            var expected_AllSentKeys = denmarkKeys_upload1.Where(key => key.SharingConsentGiven == true).ToList();
+            int expectedNumberOfBatchesInUpload1 = (int)Math.Ceiling(denmarkKeys_upload1.Where(key=> key.SharingConsentGiven).Count() / (decimal)batchSize);
+
+            keysFromAllSentBatches.Should()
+             .OnlyContain(key => key.Origin == _denmark.Code, because: "Only DK keys from APIV2 can be send to the UE Gateway.")
+             .And.HaveCount(expected_AllSentKeys.Count(), "Service need to send all keys valid for the sending.")
+             .And.HaveCountLessThan(denmarkKeys_upload1.Count, because: "Service should only send keys with consent.")
+             .And.OnlyHaveUniqueItems(key => key.KeyData.ToBase64(), because: "Service cannot send duplicates.")
+             .And.OnlyContain(key => expected_AllSentKeys.Any(keyApiv2 => EqualsKeyData(key.KeyData.ToByteArray(), keyApiv2.KeyData)));
+
+            allBatchesPassedToHttpClient.Should()
+               .NotBeNull()
+               .And.HaveCount(expectedNumberOfBatchesInUpload1, because: "Keys needed to be send in batches");
+
+            allBatchesPassedToHttpClient.ToList().ForEach(
+                  batch =>
+                  {
+                      batch.Keys.Should()
+                      .HaveCountGreaterThan(0, because: "Service cannot send empty requests.")
+                      .And.HaveCountLessOrEqualTo(batchSize, because: "Service cannot send batch with wrong size.")
+                      .And.OnlyHaveUniqueItems(key => key.KeyData, because: "Service cannot send duplicates.");
+                  });
+        }
+
         #region Helpers
         private EuGatewayService CreateGatewayServiceAndDependencies(IGatewayHttpClient httpClient)
         {
