@@ -51,7 +51,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             _mockSetup.SetupKeyFilterMock(_keyFilter);
             _mockSetup.SetupTemopraryExposureKeyRepositoryMock(_tempKeyRepository);
 
-            _keyStoreService = new EFGSKeyStoreService(_webContextReader.Object, _keyFilter.Object, _tempKeyRepository.Object, _logger.Object, _riskCalulator, _epochConverter, _onsetDaysDecoder);
+            _keyStoreService = new EFGSKeyStoreService(_keyFilter.Object, _tempKeyRepository.Object, _logger.Object, _riskCalulator, _epochConverter, _onsetDaysDecoder);
 
         }
 

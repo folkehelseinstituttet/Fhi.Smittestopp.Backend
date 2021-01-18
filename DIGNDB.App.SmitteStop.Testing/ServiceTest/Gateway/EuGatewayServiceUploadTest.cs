@@ -83,27 +83,27 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             // key data must be unique for verification methods
             var denmarkKeys_ApiV1 = TestTemporaryExposureKeyBuilder.CreateDefault(_denmark)
                 .SetVisitedCountries(new[] { _germany, _poland })
-                .SetKeySource(KeySource.SmitteStopApiVersion1)
+                .SetKeySource(KeySource.SmitteStopApiVersion2)
                 .SetRollingStartNumber(DateTime.UtcNow.AddDays(-1))
                 .Build(new[] { "Dk_V1_1", "Dk_V1_2", "Dk_V1_3", "Dk_V1_4" });
 
             var denmarkKeys_ApiV2 = TestTemporaryExposureKeyBuilder.CreateDefault(_denmark)
                 .SetVisitedCountries(new[] { _germany, _poland })
-                .SetKeySource(KeySource.SmitteStopApiVersion2)
+                .SetKeySource(KeySource.SmitteStopApiVersion3)
                 .SetRollingStartNumber(DateTime.UtcNow.AddDays(-1))
                 .SetDaysSinceOnsetOfSymptoms(10)
                 .Build(new[] { "Dk_V2_1", "Dk_V2_2", "Dk_V2_3", "Dk_V2_4" });
 
             var denmarkKeys_ApiV2_InvalidDaysSinceOnsetOfSymptoms = TestTemporaryExposureKeyBuilder.CreateDefault(_denmark)
                 .SetVisitedCountries(new[] { _germany, _poland })
-                .SetKeySource(KeySource.SmitteStopApiVersion2)
+                .SetKeySource(KeySource.SmitteStopApiVersion3)
                 .SetRollingStartNumber(DateTime.UtcNow.AddDays(-1))
                 .SetDaysSinceOnsetOfSymptoms(100)
                 .Build(new[] { "Dk_V2_5", "Dk_V2_6", "Dk_V2_7", "Dk_V2_8" });
 
             var denmarkKeys_ApiV2_Old = TestTemporaryExposureKeyBuilder.CreateDefault(_denmark)
                 .SetVisitedCountries(new[] { _germany, _poland })
-                .SetKeySource(KeySource.SmitteStopApiVersion2)
+                .SetKeySource(KeySource.SmitteStopApiVersion3)
                 .SetRollingStartNumber(DateTime.UtcNow.AddDays(-16))
                 .Build(new[] { "Dk_V2_Old_1", "Dk_V2_Old_2", "Dk_V2_Old_3", "Dk_V2_Old_4" });
 
@@ -172,13 +172,13 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             // .: Setup - key data must be unique for verification methods
             var keysThatShouldBeSent = TestTemporaryExposureKeyBuilder.CreateDefault(_denmark)
                 .SetVisitedCountries(new[] { _germany, _poland })
-                .SetKeySource(KeySource.SmitteStopApiVersion2)
+                .SetKeySource(KeySource.SmitteStopApiVersion3)
                 .SetRollingStartNumber(DateTime.UtcNow.AddDays(-1))
                 .Build(new[] { "Dk_V2_1", "Dk_V2_2", "Dk_V2_3", "Dk_V2_4" });
 
             var denmarkKeys_ApiV2_Old = TestTemporaryExposureKeyBuilder.CreateDefault(_denmark)
                 .SetVisitedCountries(new[] { _germany, _poland })
-                .SetKeySource(KeySource.SmitteStopApiVersion2)
+                .SetKeySource(KeySource.SmitteStopApiVersion3)
                 .SetRollingStartNumber(DateTime.UtcNow.AddDays(-16))
                 .Build(new[] { "Dk_V2_Old_1", "Dk_V2_Old_2", "Dk_V2_Old_3", "Dk_V2_Old_4" });
 
@@ -281,7 +281,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             int keysNotOlderThenDays = 14;
             // .: Setup - key data must be unique for verification methods
             var dkApiV2DefaultBuilder = TestTemporaryExposureKeyBuilder.CreateDefault(_denmark)
-                .SetKeySource(KeySource.SmitteStopApiVersion2)
+                .SetKeySource(KeySource.SmitteStopApiVersion3)
                 .SetRollingStartNumber(DateTime.UtcNow.AddDays(-1));
 
             var otherKeysDefaultBuilder = TestTemporaryExposureKeyBuilder.CreateDefault(_poland)
@@ -384,7 +384,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             int keysNotOlderThenDays = 14;
             // .: Setup - key data must be unique for verification methods
             var dkApiV2DefaultBuilder = TestTemporaryExposureKeyBuilder.CreateDefault(_denmark)
-                .SetKeySource(KeySource.SmitteStopApiVersion2)
+                .SetKeySource(KeySource.SmitteStopApiVersion3)
                 .SetRollingStartNumber(DateTime.UtcNow.AddDays(-1));
 
             var otherKeysDefaultBuilder = TestTemporaryExposureKeyBuilder.CreateDefault(_poland)
@@ -429,7 +429,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             var keysFromAllSentBatches = allBatchesPassedToHttpClient.SelectMany(batch => batch.Keys).ToList();
             // assert
             var expected_AllSentKeys = denmarkKeys_upload1.Where(key => key.SharingConsentGiven == true).ToList();
-            int expectedNumberOfBatchesInUpload1 = (int)Math.Ceiling(denmarkKeys_upload1.Where(key=> key.SharingConsentGiven).Count() / (decimal)batchSize);
+            int expectedNumberOfBatchesInUpload1 = (int)Math.Ceiling(denmarkKeys_upload1.Where(key => key.SharingConsentGiven).Count() / (decimal)batchSize);
 
             keysFromAllSentBatches.Should()
              .OnlyContain(key => key.Origin == _denmark.Code, because: "Only DK keys from APIV2 can be send to the UE Gateway.")
@@ -477,16 +477,22 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
                 autoMapper,
                 httpClient,
                 keyFilterMock.Object,
-                webContextReaderMock.Object, 
+                webContextReaderMock.Object,
                 storeService.Object,
                 loggerMock.Object,
                 _config
                 );
         }
 
-        private bool EqualsKeyData(ByteString protoKeyData, ByteString keyDataToCompare) => EqualsKeyData(protoKeyData.ToByteArray(), keyDataToCompare.ToByteArray());
+        private bool EqualsKeyData(ByteString protoKeyData, ByteString keyDataToCompare)
+        {
+            return EqualsKeyData(protoKeyData.ToByteArray(), keyDataToCompare.ToByteArray());
+        }
 
-        private bool EqualsKeyData(byte[] keyData1, byte[] keyData2) => StructuralComparisons.StructuralEqualityComparer.Equals(keyData1, keyData2);
+        private bool EqualsKeyData(byte[] keyData1, byte[] keyData2)
+        {
+            return StructuralComparisons.StructuralEqualityComparer.Equals(keyData1, keyData2);
+        }
 
         private IList<TemporaryExposureKeyGatewayBatchProtoDto> ParseRequestBodiesBatches(ArgumentInterceptor<HttpContent> requestArgInterceptor)
         {

@@ -5,7 +5,6 @@ using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using DIGNDB.App.SmitteStop.Domain.Enums;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -19,8 +18,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     {
         private readonly Mock<ITemporaryExposureKeyRepository> _temporaryExposureKeyRepositoryMock =
             new Mock<ITemporaryExposureKeyRepository>();
-
-        readonly List<TemporaryExposureKey> _exampleKeyList = new List<TemporaryExposureKey>
+        private readonly List<TemporaryExposureKey> _exampleKeyList = new List<TemporaryExposureKey>
         {
             new TemporaryExposureKey(),
             new TemporaryExposureKey(),
@@ -50,11 +48,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 
             _temporaryExposureKeyRepositoryMock.Verify(mock =>
                 mock.AddTemporaryExposureKeys(It.Is<IList<TemporaryExposureKey>>(keys =>
-                    keys.All(key => key.KeySource == KeySource.SmitteStopApiVersion2))));   
+                    keys.All(key => key.KeySource == KeySource.SmitteStopApiVersion3))));
 
             _temporaryExposureKeyRepositoryMock.Verify(mock =>
                mock.AddTemporaryExposureKeys(It.Is<IList<TemporaryExposureKey>>(keys =>
-                   keys.All(key => key.VisitedCountries.Any( country =>country.Country.Code.ToLower() == "dk" ) == false))));
+                   keys.All(key => key.VisitedCountries.Any(country => country.Country.Code.ToLower() == "dk") == false))));
         }
 
         public AddTemporaryExposureKeyService CreateTestObject()
