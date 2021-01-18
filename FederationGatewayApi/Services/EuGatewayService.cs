@@ -120,7 +120,7 @@ namespace FederationGatewayApi.Services
                   uploadedOnAndLater: uploadedOnAndAfter,
                   numberOfRecordToSkip: lastSyncState.NumberOfKeysProcessedFromTheLastCreationDate,
                   maxCount: batchSizePlusOne,
-                  new KeySource[] { KeySource.SmitteStopApiVersion2 });
+                  new KeySource[] { KeySource.SmitteStopApiVersion3 });
 
             // Take all record uploaded after the date.
             var currBatchStatus = new BatchStatus() { NextBatchExists = keyPackage.Count == batchSizePlusOne };

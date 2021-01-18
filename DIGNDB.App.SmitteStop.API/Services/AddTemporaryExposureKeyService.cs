@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using DIGNDB.App.SmitteStop.Domain.Enums;
-using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
@@ -65,7 +63,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
             long lowestRollingStartNumber = int.MaxValue;
             foreach (var key in incomingKeys)
             {
-                if (key.RollingStartNumber<lowestRollingStartNumber)
+                if (key.RollingStartNumber < lowestRollingStartNumber)
                 {
                     lowestRollingStartNumber = key.RollingStartNumber;
                 }
@@ -102,7 +100,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
             foreach (var key in newTemporaryExposureKeys)
             {
                 key.Origin = origin;
-                key.KeySource = KeySource.SmitteStopApiVersion2;
+                key.KeySource = KeySource.SmitteStopApiVersion3;
                 key.ReportType = ReportType.CONFIRMED_TEST;
             }
 
