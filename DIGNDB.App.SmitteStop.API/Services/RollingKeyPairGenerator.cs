@@ -46,9 +46,9 @@ namespace DIGNDB.App.SmitteStop.API.Services
             throw new NotSupportedException($"Unsupported private key for certificate {certificate.Thumbprint}");
         }
 
-        public BigInteger GetPrivateKey(string keyId)
+        public BigInteger GetPrivateKey(long keyId)
         {
-            return GeneratePrivateKey(_masterKeyBytes, long.Parse(keyId), ECParameters);
+            return GeneratePrivateKey(_masterKeyBytes, keyId, ECParameters);
         }
 
         public (BigInteger privateKey, ECPublicKeyParameters publicKey) GenerateKeyPairForInterval(long keyIntervalNumber)

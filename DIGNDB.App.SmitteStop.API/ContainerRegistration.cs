@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using AnonymousTokens.Core.Services;
 using AutoMapper;
 using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.API.Contracts;
@@ -99,6 +100,9 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddSingleton<IRsaProviderService, JwkRsaProviderService>();
             services.AddScoped<IJwtTokenReplyAttackService, JwtTokenReplyAttackService>();
 
+            services.AddScoped<ISeedStore, AnonymousTokenSeedStore>();
+            services.AddSingleton<IAnonymousTokenKeySource, AnonymousTokenKeySource>();
+
             return services;
         }
 
@@ -125,8 +129,8 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddSingleton(jwtAuthorizationConfig);
 
             services.AddSingleton(configuration);
-            var anonymousTokenKeyStoreConfig = configuration.GetSection("AnonymousTokenValidation").Get<AnonymousTokenKeyStoreConfiguration>();
-            services.AddSingleton<IAnonymousTokenKeySource>(new RollingKeyPairGeneratorWithLocalCertificate(anonymousTokenKeyStoreConfig.CertificateThumbPrint));
+
+            services.Configure<AnonymousTokenKeyStoreConfiguration>(configuration.GetSection("AnonymousTokenValidation"));
 
             return services;
         }

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using AnonymousTokens.Core.Services;
 using DIGNDB.App.SmitteStop.API.Contracts;
 using AnonymousTokens.Server.Protocol;
-using AnonymousTokens.Core.Services.InMemory;
 
 namespace DIGNDB.App.SmitteStop.API.Attributes
 {
@@ -13,12 +13,13 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
     {
         private readonly IJwtValidationService _jwtValidationService;
         private readonly IAnonymousTokenKeySource _anonymousTokenKeySource;
-        private readonly ITokenVerifier _tokenVerifier = new TokenVerifier(new InMemorySeedStore());
+        private readonly ITokenVerifier _tokenVerifier;
 
-        public UploadKeysAuthorizationAttribute(IJwtValidationService jwtValidationService, IAnonymousTokenKeySource anonymousTokenKeySource)
+        public UploadKeysAuthorizationAttribute(IJwtValidationService jwtValidationService, IAnonymousTokenKeySource anonymousTokenKeySource, ISeedStore seedStore)
         {
             _jwtValidationService = jwtValidationService;
             _anonymousTokenKeySource = anonymousTokenKeySource;
+            _tokenVerifier = new TokenVerifier(seedStore);
         }
 
         public override async void OnActionExecuting(ActionExecutingContext context)
