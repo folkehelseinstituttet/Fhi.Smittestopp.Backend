@@ -44,7 +44,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 },
             };
 
-            await addTemporaryExposureKeyService.CreateKeysInDatabase(parameters);
+            await addTemporaryExposureKeyService.CreateKeysInDatabase(parameters, KeySource.SmitteStopApiVersion3);
 
             _temporaryExposureKeyRepositoryMock.Verify(mock =>
                 mock.AddTemporaryExposureKeys(It.Is<IList<TemporaryExposureKey>>(keys =>

@@ -5,6 +5,6 @@
         SmitteStopApiVersion1 = 1,
         SmitteStopApiVersion2 = 2,
         SmitteStopApiVersion3 = 3,
-        Gateway = 999
+        Gateway = 1000
     }
 }

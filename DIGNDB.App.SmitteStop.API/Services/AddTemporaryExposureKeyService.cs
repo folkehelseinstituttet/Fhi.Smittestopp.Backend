@@ -27,12 +27,12 @@ namespace DIGNDB.App.SmitteStop.API.Services
             _appSettingsConfig = appSettingsConfig;
         }
 
-        public async Task CreateKeysInDatabase(TemporaryExposureKeyBatchDto parameters)
+        public async Task CreateKeysInDatabase(TemporaryExposureKeyBatchDto parameters, KeySource apiVersion)
         {
             var newTemporaryExposureKeys = await GetFilteredKeysEntitiesFromDTO(parameters);
             if (newTemporaryExposureKeys.Any())
             {
-                await CreateNewKeysInDatabase(parameters, newTemporaryExposureKeys);
+                await CreateNewKeysInDatabase(parameters, newTemporaryExposureKeys, apiVersion);
             }
         }
 
@@ -94,13 +94,13 @@ namespace DIGNDB.App.SmitteStop.API.Services
             await _temporaryExposureKeyCountryRepository.SaveAsync();
         }
 
-        private async Task CreateNewKeysInDatabase(TemporaryExposureKeyBatchDto parameters, IList<TemporaryExposureKey> newTemporaryExposureKeys)
+        private async Task CreateNewKeysInDatabase(TemporaryExposureKeyBatchDto parameters, IList<TemporaryExposureKey> newTemporaryExposureKeys, KeySource apiVersion)
         {
             var origin = _countryRepository.FindByIsoCode(parameters.regions[0]);
             foreach (var key in newTemporaryExposureKeys)
             {
                 key.Origin = origin;
-                key.KeySource = KeySource.SmitteStopApiVersion3;
+                key.KeySource = apiVersion;
                 key.ReportType = ReportType.CONFIRMED_TEST;
             }
 
