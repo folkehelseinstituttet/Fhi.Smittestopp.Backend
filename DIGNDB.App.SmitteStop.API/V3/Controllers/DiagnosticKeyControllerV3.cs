@@ -3,6 +3,7 @@ using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Dto;
+using DIGNDB.App.SmitteStop.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -88,7 +89,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
             {
                 _logger.LogInformation("UploadDiagnosisKeys endpoint called");
                 TemporaryExposureKeyBatchDto parameters = await GetRequestParameters();
-                await _addTemporaryExposureKeyService.CreateKeysInDatabase(parameters);
+                await _addTemporaryExposureKeyService.CreateKeysInDatabase(parameters, KeySource.SmitteStopApiVersion3);
 
                 _logger.LogInformation("Keys uploaded successfully");
                 return Ok();

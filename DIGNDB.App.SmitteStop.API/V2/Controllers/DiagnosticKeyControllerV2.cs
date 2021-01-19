@@ -3,6 +3,7 @@ using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Dto;
+using DIGNDB.App.SmitteStop.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -55,7 +56,7 @@ namespace DIGNDB.App.SmitteStop.API
         [HttpGet]
         [Route("exposureconfiguration")]
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
-        public  ActionResult GetExposureConfiguration()
+        public ActionResult GetExposureConfiguration()
         {
             try
             {
@@ -87,7 +88,7 @@ namespace DIGNDB.App.SmitteStop.API
             {
                 _logger.LogInformation("UploadDiagnosisKeys endpoint called");
                 TemporaryExposureKeyBatchDto parameters = await GetRequestParameters();
-                await _addTemporaryExposureKeyService.CreateKeysInDatabase(parameters);
+                await _addTemporaryExposureKeyService.CreateKeysInDatabase(parameters, KeySource.SmitteStopApiVersion2);
 
                 _logger.LogInformation("Keys uploaded successfully");
                 return Ok();

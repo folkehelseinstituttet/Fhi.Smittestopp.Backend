@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DIGNDB.App.SmitteStop.Core.Helpers;
 
 namespace FederationGatewayApi.Services
 {
@@ -18,20 +17,17 @@ namespace FederationGatewayApi.Services
         private readonly IRiskCalculator _riskCalculator;
         private readonly IEpochConverter _epochConverter;
         private readonly IDaysSinceOnsetOfSymptomsDecoder _daysSinceOnsetOfSymptomsDecoder;
-        private readonly IGatewayWebContextReader _webContextReader;
         private readonly IKeyFilter _keyFilter;
         private readonly ITemporaryExposureKeyRepository _tempKeyRepository;
         private readonly ILogger<EFGSKeyStoreService> _logger;
 
-        public EFGSKeyStoreService(IGatewayWebContextReader reader,
-                                    IKeyFilter filter,
+        public EFGSKeyStoreService(IKeyFilter filter,
                                    ITemporaryExposureKeyRepository repository,
                                    ILogger<EFGSKeyStoreService> logger,
                                    IRiskCalculator riskCalculator,
                                    IEpochConverter epochConverter,
                                    IDaysSinceOnsetOfSymptomsDecoder daysSinceOnsetOfSymptomsDecoder)
         {
-            _webContextReader = reader;
             _keyFilter = filter;
             _tempKeyRepository = repository;
             _logger = logger;
@@ -43,7 +39,7 @@ namespace FederationGatewayApi.Services
         public IList<TemporaryExposureKey> FilterAndSaveKeys(IList<TemporaryExposureKeyGatewayDto> keys)
         {
             StringBuilder logErrorPerBatchSB = new StringBuilder();
-            IList<TemporaryExposureKey> mappedKeys = null;
+            IList<TemporaryExposureKey> mappedKeys;
 
             IList<string> validationErrors = new List<string>();
             try

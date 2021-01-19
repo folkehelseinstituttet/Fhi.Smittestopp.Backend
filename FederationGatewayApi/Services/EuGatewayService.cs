@@ -30,7 +30,6 @@ namespace FederationGatewayApi.Services
         private readonly ITemporaryExposureKeyRepository _tempKeyRepository;
         private readonly ISignatureService _signatureService;
         public readonly IEncodingService _encodingService;
-        private readonly IKeyFilter _keyFilter;
         private readonly IGatewayWebContextReader _webContextReader;
         private readonly IMapper _mapper;
         private readonly EuGatewayConfig _euGatewayConfig;
@@ -39,7 +38,6 @@ namespace FederationGatewayApi.Services
         private readonly IEFGSKeyStoreService _storeService;
 
         public ILogger<EuGatewayService> _logger { get; set; }
-        public IKeyValidator _keyValidator { get; set; }
 
         public EuGatewayService(ITemporaryExposureKeyRepository tempKeyRepository,
                                ISignatureService signatureService,
@@ -58,7 +56,6 @@ namespace FederationGatewayApi.Services
             _signatureService = signatureService;
             _tempKeyRepository = tempKeyRepository;
             _encodingService = encodingService;
-            _keyFilter = keyFilter;
             _webContextReader = gatewayWebContextReader;
             _mapper = mapper;
             _logger = logger;
@@ -123,7 +120,7 @@ namespace FederationGatewayApi.Services
                   uploadedOnAndLater: uploadedOnAndAfter,
                   numberOfRecordToSkip: lastSyncState.NumberOfKeysProcessedFromTheLastCreationDate,
                   maxCount: batchSizePlusOne,
-                  new KeySource[] { KeySource.SmitteStopApiVersion2 });
+                  new KeySource[] { KeySource.SmitteStopApiVersion3 });
 
             // Take all record uploaded after the date.
             var currBatchStatus = new BatchStatus() { NextBatchExists = keyPackage.Count == batchSizePlusOne };
