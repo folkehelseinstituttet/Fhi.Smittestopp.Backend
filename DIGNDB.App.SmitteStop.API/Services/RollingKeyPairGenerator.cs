@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using DIGNDB.App.SmitteStop.API.Exceptions;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Generators;
@@ -59,7 +60,8 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
         private static BigInteger GeneratePrivateKey(byte[] masterKeyBytes, long keyIntervalNumber, X9ECParameters ecParameters)
         {
-            var keyByteSize = (int) Math.Ceiling(ecParameters.Curve.Order.BitCount / 8.0);
+            const int maxIterations = 1000;
+            var keyByteSize = (int)Math.Ceiling(ecParameters.Curve.Order.BitCount / 8.0);
             var counter = 0;
 
             BigInteger privateKey;
@@ -68,6 +70,8 @@ namespace DIGNDB.App.SmitteStop.API.Services
                 var privateKeyBytes = GeneratePrivateKeyBytes(keyByteSize, masterKeyBytes, keyIntervalNumber, counter);
                 privateKey = new BigInteger(privateKeyBytes);
                 counter++;
+                if (counter > maxIterations)
+                    throw new CannotMatchPrivateKeyToCurveException();
             } while (privateKey.CompareTo(ecParameters.Curve.Order) > 0);
 
             return privateKey;
