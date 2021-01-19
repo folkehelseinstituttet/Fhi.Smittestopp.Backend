@@ -14,7 +14,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
     {
         private readonly byte[] _masterKeyBytes;
 
-        public X9ECParameters ECParameters { get; private set; }
+        public X9ECParameters ECParameters { get; }
 
         public RollingKeyPairGenerator(byte[] masterKeyBytes, X9ECParameters ecParameters)
         {

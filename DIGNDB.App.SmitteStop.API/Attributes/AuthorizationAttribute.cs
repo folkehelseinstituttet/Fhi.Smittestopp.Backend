@@ -39,7 +39,7 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 }
                 else
                 {
-                    logger.LogWarning("Missing token or invalid scheme. Header value:"+authHeader);
+                    logger.LogWarning("Missing token or invalid scheme. Header value:" + authHeader);
                     context.Result = new UnauthorizedObjectResult("Missing token or invalid scheme.");
                 }
             }
@@ -48,10 +48,6 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 logger.LogError("Error on authorization:" + e);
                 context.Result = new UnauthorizedObjectResult(e.Message);
             }
-        }
-
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
         }
     }
 }

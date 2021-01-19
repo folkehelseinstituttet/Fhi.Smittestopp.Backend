@@ -36,7 +36,8 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                     return;
 
                 }
-                else if (authHeader != null && authHeader.StartsWith("Anonymous ")) 
+
+                if (authHeader != null && authHeader.StartsWith("Anonymous "))
                 {
                     string[] anonymousToken = authHeader.Replace("Anonymous ", string.Empty).Split(".");
 
@@ -51,22 +52,16 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                     {
                         context.Result = new UnauthorizedObjectResult("Invalid token");
                     }
+                    return;
                 }
-                else
-                {
-                    logger.LogWarning("Missing token or invalid scheme. Header value:"+authHeader);
-                    context.Result = new UnauthorizedObjectResult("Missing token or invalid scheme.");
-                }
+                logger.LogWarning("Missing token or invalid scheme. Header value:" + authHeader);
+                context.Result = new UnauthorizedObjectResult("Missing token or invalid scheme.");
             }
             catch (Exception e)
             {
                 logger.LogError("Error on authorization:" + e);
                 context.Result = new UnauthorizedObjectResult(e.Message);
             }
-        }
-
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
         }
     }
 }

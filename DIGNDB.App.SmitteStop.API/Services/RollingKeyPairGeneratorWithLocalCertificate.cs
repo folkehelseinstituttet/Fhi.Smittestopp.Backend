@@ -1,8 +1,8 @@
 ﻿using DIGNDB.App.SmitteStop.API.Contracts;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto.EC;
-using System;
 using System.Security.Cryptography.X509Certificates;
+using DIGNDB.App.SmitteStop.API.Exceptions;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
@@ -23,7 +23,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
             {
                 return enumerator.Current;
             }
-            throw new Exception($"Certificate with thumbprint {thumbprint} not found");
+            throw new MissingCertificateException($"Certificate with thumbprint {thumbprint} not found");
         }
     }
 }
