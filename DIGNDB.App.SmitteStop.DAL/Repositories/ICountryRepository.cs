@@ -1,7 +1,6 @@
-﻿using DIGNDB.App.SmitteStop.Core.Models;
+﻿using DIGNDB.App.SmitteStop.Domain.Db;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Domain.Db;
 
 namespace DIGNDB.App.SmitteStop.DAL.Repositories
 {

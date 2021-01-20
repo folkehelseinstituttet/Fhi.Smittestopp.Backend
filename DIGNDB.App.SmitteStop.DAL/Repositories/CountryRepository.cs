@@ -14,7 +14,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         private Country _originCountryCached;
 
-        public CountryRepository(DigNDB_SmittestopContext context, IGenericRepository<Translation> translationRepository, IOriginSpecificSettings originSpecificSettings ) : base(context)
+        public CountryRepository(DigNDB_SmittestopContext context, IGenericRepository<Translation> translationRepository, IOriginSpecificSettings originSpecificSettings) : base(context)
         {
             _translationRepository = translationRepository;
             _originSpecificSettings = originSpecificSettings;
@@ -62,7 +62,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         public Country GetApiOriginCountry()
         {
-            if(_originCountryCached == null)
+            if (_originCountryCached == null)
             {
                 string originCode = _originSpecificSettings.OriginCountryCode;
                 _originCountryCached = FindByIsoCode(originCode) ?? throw new System.ArgumentException($"Invalid Origin country code: {originCode}. Configuration is wrong!");

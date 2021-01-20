@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using AutoMapper;
+﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.API.Contracts;
 using DIGNDB.App.SmitteStop.API.Services;
@@ -18,10 +14,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace DIGNDB.App.SmitteStop.API
 {
