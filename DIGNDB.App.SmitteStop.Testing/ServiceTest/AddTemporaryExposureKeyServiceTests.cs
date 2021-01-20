@@ -47,11 +47,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             await addTemporaryExposureKeyService.CreateKeysInDatabase(parameters, KeySource.SmitteStopApiVersion3);
 
             _temporaryExposureKeyRepositoryMock.Verify(mock =>
-                mock.AddTemporaryExposureKeys(It.Is<IList<TemporaryExposureKey>>(keys =>
+                mock.AddUniqueTemporaryExposureKeys(It.Is<IList<TemporaryExposureKey>>(keys =>
                     keys.All(key => key.KeySource == KeySource.SmitteStopApiVersion3))));
 
             _temporaryExposureKeyRepositoryMock.Verify(mock =>
-               mock.AddTemporaryExposureKeys(It.Is<IList<TemporaryExposureKey>>(keys =>
+               mock.AddUniqueTemporaryExposureKeys(It.Is<IList<TemporaryExposureKey>>(keys =>
                    keys.All(key => key.VisitedCountries.Any(country => country.Country.Code.ToLower() == "dk") == false))));
         }
 
@@ -69,20 +69,15 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 
             var temporaryExposureKeyCountryRepositoryMock = new Mock<IGenericRepository<TemporaryExposureKeyCountry>>();
             var exposureKeyMapperMock = new Mock<IExposureKeyMapper>();
-            exposureKeyMapperMock.Setup(x => x.FromDtoToEntity(It.IsAny<TemporaryExposureKeyBatchDto>())).Returns(new List<TemporaryExposureKey>());
+            exposureKeyMapperMock.Setup(x => x.FromDtoToEntity(It.IsAny<TemporaryExposureKeyBatchDto>())).Returns(_exampleKeyList);
 
-            var conifg = new AppSettingsConfig() { MaxKeysPerFile = 750000 };
-
-            exposureKeyMapperMock.Setup(m =>
-                    m.FilterDuplicateKeys(It.IsAny<IList<TemporaryExposureKey>>(),
-                        It.IsAny<IList<TemporaryExposureKey>>()))
-                .Returns(_exampleKeyList);
+            var config = new AppSettingsConfig() { MaxKeysPerFile = 750000 };
 
             var addTemporaryExposureKeyService = new AddTemporaryExposureKeyService(
                 countryRepositoryMock.Object,
                 temporaryExposureKeyCountryRepositoryMock.Object,
                 exposureKeyMapperMock.Object,
-                _temporaryExposureKeyRepositoryMock.Object, conifg);
+                _temporaryExposureKeyRepositoryMock.Object, config);
 
             return addTemporaryExposureKeyService;
         }

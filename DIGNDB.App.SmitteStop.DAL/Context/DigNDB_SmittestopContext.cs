@@ -1,5 +1,4 @@
-﻿using DIGNDB.App.SmitteStop.Core.Models;
-using DIGNDB.App.SmitteStop.DAL.Seeders;
+﻿using DIGNDB.App.SmitteStop.DAL.Seeders;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +6,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Context
 {
     public partial class DigNDB_SmittestopContext : DbContext
     {
-        private string _connectionString;
+        private readonly string _connectionString;
 
         public DigNDB_SmittestopContext()
         {
@@ -15,7 +14,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Context
 
         public DigNDB_SmittestopContext(string connectionString)
         {
-            this._connectionString = connectionString;
+            _connectionString = connectionString;
         }
 
         public DigNDB_SmittestopContext(DbContextOptions<DigNDB_SmittestopContext> options)
@@ -64,6 +63,10 @@ namespace DIGNDB.App.SmitteStop.DAL.Context
                 .WithMany()
                 .IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<TemporaryExposureKey>()
+                .HasIndex(x => x.KeyData)
+                .IsUnique();
 
             modelBuilder.Entity<TemporaryExposureKeyCountry>()
                 .HasKey(tc => new { tc.TemporaryExposureKeyId, tc.CountryId });

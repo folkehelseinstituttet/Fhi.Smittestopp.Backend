@@ -319,6 +319,9 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("KeyData")
+                        .IsUnique();
+
                     b.HasIndex("OriginId");
 
                     b.ToTable("TemporaryExposureKey");

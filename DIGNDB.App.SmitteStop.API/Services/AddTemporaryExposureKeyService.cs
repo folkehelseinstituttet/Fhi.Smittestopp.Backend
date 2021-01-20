@@ -36,43 +36,11 @@ namespace DIGNDB.App.SmitteStop.API.Services
             }
         }
 
-        public async Task<IList<TemporaryExposureKey>> GetFilteredKeysEntitiesFromDTO(TemporaryExposureKeyBatchDto parameters)
+        public async Task<IList<TemporaryExposureKey>> GetFilteredKeysEntitiesFromDTO(
+            TemporaryExposureKeyBatchDto parameters)
         {
             var incomingKeys = _exposureKeyMapper.FromDtoToEntity(parameters);
-            incomingKeys = await FilterDuplicateIncommingKeys(incomingKeys);
             return incomingKeys;
-        }
-
-        private async Task<List<TemporaryExposureKey>> FilterDuplicateIncommingKeys(List<TemporaryExposureKey> incomingKeys)
-        {
-            int numberOfRecordsToSkip = 0;
-            int batchSize = _appSettingsConfig.MaxKeysPerFile;
-            long lowestRollingStartNumber = GetLowestRollingStartNumber(incomingKeys);
-            var existingKeysBatch = await _temporaryExposureKeyRepository.GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(lowestRollingStartNumber, numberOfRecordsToSkip, batchSize);
-            while (existingKeysBatch.Count != 0)
-            {
-                incomingKeys = _exposureKeyMapper.FilterDuplicateKeys(incomingKeys, existingKeysBatch).ToList();
-                numberOfRecordsToSkip += existingKeysBatch.Count;
-                existingKeysBatch = await _temporaryExposureKeyRepository.GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(lowestRollingStartNumber, numberOfRecordsToSkip, batchSize);
-            }
-            return incomingKeys;
-        }
-
-        private long GetLowestRollingStartNumber(List<TemporaryExposureKey> incomingKeys)
-        {
-            long lowestRollingStartNumber = int.MaxValue;
-            foreach (var key in incomingKeys)
-            {
-                if (key.RollingStartNumber < lowestRollingStartNumber)
-                {
-                    lowestRollingStartNumber = key.RollingStartNumber;
-                }
-            }
-            if (lowestRollingStartNumber == int.MaxValue)
-            {
-                lowestRollingStartNumber = 0;
-            }
-            return lowestRollingStartNumber;
         }
 
         private async Task CreateKeyCountryRelationships(List<string> visitedCountries, IList<TemporaryExposureKey> newTemporaryExposureKeys)
@@ -106,7 +74,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
             var visitedCountries = parameters.visitedCountries.FindAll(countryCode => countryCode.ToLower() != origin.Code.ToLower());
 
-            await _temporaryExposureKeyRepository.AddTemporaryExposureKeys(newTemporaryExposureKeys);
+            await _temporaryExposureKeyRepository.AddUniqueTemporaryExposureKeys(newTemporaryExposureKeys);
             await CreateKeyCountryRelationships(visitedCountries, newTemporaryExposureKeys);
         }
     }
