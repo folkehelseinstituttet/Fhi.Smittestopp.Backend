@@ -65,12 +65,8 @@ namespace FederationGatewayApi.Services
                 _logger.LogInformation($"Starting key validation.");
                 acceptedKeys = _keyFilter.ValidateKeys(mappedKeys, out validationErrors);
                 _logger.LogInformation($"Keys validated with {validationErrors?.Count} error.");
-                _logger.LogInformation($"RemoveKeyDuplicates-start with {acceptedKeys?.Count} keys.");
-                acceptedKeys = _keyFilter.RemoveKeyDuplicatesAsync(acceptedKeys).Result;
-                _logger.LogInformation($"RemoveKeyDuplicates-ended with {acceptedKeys?.Count} keys after filtering.");
-
                 _logger.LogInformation($"Saving...");
-                _tempKeyRepository.AddTemporaryExposureKeys(acceptedKeys).Wait();
+                _tempKeyRepository.AddUniqueTemporaryExposureKeys(acceptedKeys).Wait();
                 _logger.LogInformation($"{acceptedKeys?.Count} keys saved.");
                 acceptedKeysCount = acceptedKeys.Count;
             }
