@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper.Internal;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
@@ -26,6 +24,35 @@ namespace DIGNDB.App.SmitteStop.API.Services
         public async Task<IEnumerable<Country>> GetVisibleCountries()
         {
             return await _countryRepository.GetVisibleAsync();
+        }
+
+        public async Task<IEnumerable<Country>> GetVisibleCountries(string countryCode)
+        {
+            var countries = await _countryRepository.GetVisibleAsync();
+            var countriesWithRightTranslations = FilterOutIrrelevantTranslations(countries, countryCode);
+            countriesWithRightTranslations = countriesWithRightTranslations.OrderBy(x => x.EntityTranslations.Single().Value);
+            return countriesWithRightTranslations;
+        }
+
+        private IEnumerable<Country> FilterOutIrrelevantTranslations(IEnumerable<Country> countries, string countryCode)
+        {
+            var countriesWithRightTranslations = new List<Country>();
+            foreach (var country in countries)
+            {
+                countriesWithRightTranslations.Add(new Country()
+                {
+                    Code = country.Code,
+                    EntityTranslations = new List<Translation>()
+                    {
+                        new Translation()
+                        {
+                            Value = country.EntityTranslations.Single(x=>x.LanguageCountry.Code==countryCode).Value
+                        }
+                    }
+                });
+            }
+
+            return countriesWithRightTranslations;
         }
 
         public async Task<HashSet<long>> GetWhitelistHashSet()
