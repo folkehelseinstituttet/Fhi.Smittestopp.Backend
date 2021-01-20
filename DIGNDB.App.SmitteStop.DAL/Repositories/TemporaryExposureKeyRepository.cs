@@ -85,7 +85,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             return _dbContext.TemporaryExposureKey.Where(x => x.Origin == apiOrigin && x.CreatedOn.Date.CompareTo(uploadedOn.Date) == 0).OrderBy(x => x.Id).ToList();
         }
 
-        public IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUpload(
+        public IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUploadForWhichConsentWasGiven(
             DateTime uploadedOnAndLater,
             int numberOfRecordToSkip,
             int maxCount,

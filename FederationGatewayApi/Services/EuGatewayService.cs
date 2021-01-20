@@ -116,7 +116,7 @@ namespace FederationGatewayApi.Services
             int batchSizePlusOne = batchSize + 1; // if it will return n + 1 then there is at last one more records to send
 
             // Get key package - collection of the records created (uploaded by mobile app) in the db after {uploadedOn}
-            IList<TemporaryExposureKey> keyPackage = _tempKeyRepository.GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUpload(
+            IList<TemporaryExposureKey> keyPackage = _tempKeyRepository.GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUploadForWhichConsentWasGiven(
                   uploadedOnAndLater: uploadedOnAndAfter,
                   numberOfRecordToSkip: lastSyncState.NumberOfKeysProcessedFromTheLastCreationDate,
                   maxCount: batchSizePlusOne,

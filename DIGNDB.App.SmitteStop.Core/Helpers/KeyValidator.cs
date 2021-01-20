@@ -2,8 +2,6 @@ using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.Core.Helpers
 {
@@ -82,19 +80,8 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
                 errorMessage += $"{ErrorPrefix} The DaysSinceOnesetOfSymptoms is invalid. It should be in range of {DaysSinceOnsetOfSymptomsInvalidRangeMin} and {DaysSinceOnsetOfSymptomsInvalidRangeMax}.";
                 return !Valid;
             }
-            if (!ValidateVisitedCountries(exposureKey.VisitedCountries))
-            {
-                errorMessage += $"{ErrorPrefix} VisitedCountries array is not empty and it doesn't contain API Origin.";
-                return !Valid;
-            }
 
             return Valid;
-        }
-
-        private bool ValidateVisitedCountries(IEnumerable<TemporaryExposureKeyCountry> visitedCountries)
-        {
-            // empty array means - no filter
-            return visitedCountries.Any(k2c => string.Equals(k2c.Country.Code, Denmark, StringComparison.CurrentCultureIgnoreCase)) || visitedCountries.Any() == false;
         }
 
         private bool ValidateDaysSinceOnsetOfSymptoms(int? exposureKeyDaysSinceOnsetOfSymptoms)
