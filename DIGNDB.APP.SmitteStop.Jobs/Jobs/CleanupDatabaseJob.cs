@@ -15,5 +15,10 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
         {
             _databaseKeysValidationService.FindAndRemoveInvalidKeys(batchSize);
         }
+
+        public void ValidateRollingStartOnDatabaseKeys(int batchSize)
+        {
+            _databaseKeysValidationService.FindInvalidRollingStartEntrysAndUpdateEntry(batchSize);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using DIGNDB.App.SmitteStop.Core.Models;
+﻿using DIGNDB.App.SmitteStop.Domain.Dto;
 using NUnit.Framework;
 using System;
 
@@ -7,7 +7,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ModelTest
     [TestFixture]
     public class TemporaryExposureKeyDtoTests
     {
-        TemporaryExposureKeyDto _dto;
+        private TemporaryExposureKeyDto _dto;
 
         [SetUp]
         public void initModel()

@@ -1,6 +1,5 @@
 using DIGNDB.App.SmitteStop.API;
 using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
@@ -167,9 +166,9 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
                 {
                     keys = new List<TemporaryExposureKeyDto>
                     {
-                        new TemporaryExposureKeyDto(),
-                        new TemporaryExposureKeyDto(),
-                        new TemporaryExposureKeyDto(),
+                        new TemporaryExposureKeyDto() { rollingStart = DateTime.Now},
+                        new TemporaryExposureKeyDto() { rollingStart = DateTime.Now},
+                        new TemporaryExposureKeyDto() { rollingStart = DateTime.Now},
                     },
                     regions = new List<string> { "DK" }
                 });

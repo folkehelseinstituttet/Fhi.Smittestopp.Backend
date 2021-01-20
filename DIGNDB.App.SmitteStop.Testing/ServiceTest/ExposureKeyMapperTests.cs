@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
@@ -22,6 +23,13 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     public class ExposureKeyMapperTests
     {
         private const string NonExistingCountryCode = "XY";
+        private IEpochConverter _epochConverter;
+
+        [SetUp]
+        public void Init()
+        {
+            _epochConverter = new EpochConverter();
+        }
 
         private IList<TemporaryExposureKey> CreateMockedListExposureKeys(int listCount)
         {
@@ -46,7 +54,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         {
             var mockEntity = CreateMockedExposureKey();
 
-            var mapper = new ExposureKeyMapper();
+            var mapper = new ExposureKeyMapper(_epochConverter);
             var protoModel = mapper.FromEntityToProto(mockEntity);
 
             Assert.AreEqual(mockEntity.KeyData, protoModel.KeyData);
@@ -65,7 +73,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             var startTimes = new DateTimeOffset(keysByTime.First().CreatedOn);
             var endTimes = new DateTimeOffset(keysByTime.Last().CreatedOn);
 
-            var mapper = new ExposureKeyMapper();
+            var mapper = new ExposureKeyMapper(_epochConverter);
             var protoBatch = mapper.FromEntityToProtoBatch(keys);
 
             Assert.AreEqual(listCount, protoBatch.Keys.Count);
@@ -206,13 +214,13 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             //Arrange
             var dto = new TemporaryExposureKeyBatchDto()
             {
-                keys = new List<Core.Models.TemporaryExposureKeyDto>
+                keys = new List<TemporaryExposureKeyDto>
                 {
-                    new Core.Models.TemporaryExposureKeyDto(){},
-                    new Core.Models.TemporaryExposureKeyDto(){}
+                    new TemporaryExposureKeyDto(){},
+                    new TemporaryExposureKeyDto(){}
                 }
             };
-            IExposureKeyMapper mapper = new ExposureKeyMapper();
+            var mapper = new ExposureKeyMapper(_epochConverter);
 
             //Act
             var entities = mapper.FromDtoToEntity(dto);
@@ -229,14 +237,14 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             //Arrange
             var dto = new TemporaryExposureKeyBatchDto()
             {
-                keys = new List<Core.Models.TemporaryExposureKeyDto>
+                keys = new List<TemporaryExposureKeyDto>
                 {
-                    new Core.Models.TemporaryExposureKeyDto() { },
-                    new Core.Models.TemporaryExposureKeyDto() { }
+                    new TemporaryExposureKeyDto() { },
+                    new TemporaryExposureKeyDto() { }
                 },
                 sharingConsentGiven = true
             };
-            IExposureKeyMapper mapper = new ExposureKeyMapper();
+            var mapper = new ExposureKeyMapper(_epochConverter);
 
             //Act
             var entities = mapper.FromDtoToEntity(dto);

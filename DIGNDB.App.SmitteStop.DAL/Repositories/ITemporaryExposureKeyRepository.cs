@@ -24,6 +24,10 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         void RemoveKeys(List<TemporaryExposureKey> keys);
 
+        void UpdateKeysRollingStartField(List<TemporaryExposureKey> keys);
+
+        IList<TemporaryExposureKey> GetAllKeysNextBatchWithOriginId(int numberOfRecordsToSkip, int batchSize);
+
         IList<TemporaryExposureKey> GetAllKeysNextBatch(int numberOfRecordsToSkip, int batchSize);
 
         IList<TemporaryExposureKey> GetOriginCountryKeysForPeriodNextBatch(DateTime startDate, int numberOfRecordsToSkip, int batchSize);

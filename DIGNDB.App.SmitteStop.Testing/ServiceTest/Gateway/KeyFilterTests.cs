@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using FederationGatewayApi.Contracts;
@@ -25,6 +26,8 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         public Mock<ITemporaryExposureKeyRepository> _repository;
         public Mock<ICountryRepository> _countryRepository;
         public SetupMockedServices _mockServices;
+        private IEpochConverter _epochConverter;
+
 
         private const int DaysOffset = 14;
 
@@ -43,7 +46,9 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             _mockServices.SetupKeyValidatorMock(_keyValidator);
             _mockServices.SetupTemopraryExposureKeyRepositoryMock(_repository);
 
-            var mapper = new ExposureKeyMapper();
+            _epochConverter = new EpochConverter();
+
+            var mapper = new ExposureKeyMapper(_epochConverter);
             _keyFilter = new KeyFilter(_keyMapper, _keyValidator.Object, mapper, _logger.Object, _repository.Object);
         }
 
