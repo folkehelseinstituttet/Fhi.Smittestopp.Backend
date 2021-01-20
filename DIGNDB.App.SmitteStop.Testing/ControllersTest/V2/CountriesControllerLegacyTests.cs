@@ -1,37 +1,25 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using DIGNDB.App.SmitteStop.API;
-using Moq;
-using NUnit.Framework;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using Microsoft.Extensions.Logging;
-using DIGNDB.App.SmitteStop.DAL.Repositories;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Mvc;
-using DIGNDB.App.SmitteStop.Core.Models;
-using Microsoft.AspNetCore.Http;
-using DIGNDB.App.SmitteStop.API.Services;
-using System.Threading.Tasks;
-using System.Text.Json;
-using System.IO;
 using AutoMapper;
 using DIGNDB.App.SmitteStop.API.V2.Controllers;
+using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Db;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V2
 {
 
     [TestFixture]
-    public class CountriesControllerTests
+    public class CountriesControllerLegacyTests
     {
         private Mock<ICountryService> _countryService;
-        private Mock<ILogger<CountriesController>> _logger;
+        private Mock<ILogger<CountriesControllerLegacy>> _logger;
         private Mock<IMapper> _mapper;
 
-        private CountriesController _controller;
+        private CountriesControllerLegacy _controller;
 
         private IEnumerable<Country> _exampleCountries;
 
@@ -39,7 +27,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V2
         public void Init()
         {
             SetupMockServices();
-            _controller = new CountriesController(_countryService.Object, _logger.Object, _mapper.Object)
+            _controller = new CountriesControllerLegacy(_countryService.Object, _logger.Object, _mapper.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = MakeFakeContext(true).Object }
             };
@@ -63,7 +51,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V2
                 }
             };
 
-            _logger = new Mock<ILogger<CountriesController>>();
+            _logger = new Mock<ILogger<CountriesControllerLegacy>>();
 
             _mapper = new Mock<IMapper>();
 

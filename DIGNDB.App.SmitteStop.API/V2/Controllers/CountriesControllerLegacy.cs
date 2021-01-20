@@ -1,27 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.API.V2.Controllers
 {
     [ApiController]
     [ApiVersion("2")]
     [Route("api/v{version:apiVersion}/countries")]
-    public class CountriesController : ControllerBase
+    public class CountriesControllerLegacy : ControllerBase
     {
         private readonly ICountryService _countryService;
-        private readonly ILogger<CountriesController> _logger;
+        private readonly ILogger<CountriesControllerLegacy> _logger;
         private readonly IMapper _mapper;
 
-        public CountriesController(
+        public CountriesControllerLegacy(
             ICountryService countryService,
-            ILogger<CountriesController> logger,
+            ILogger<CountriesControllerLegacy> logger,
             IMapper mapper)
         {
             _countryService = countryService;
@@ -39,7 +39,7 @@ namespace DIGNDB.App.SmitteStop.API.V2.Controllers
         ///     GET /countries
         ///
         /// </remarks>
-        /// <returns>List of countries.</returns>
+        /// <returns>List of countries. Does not work anymore due to change in DB format and won't be fixed at all because it is a legacy code.</returns>
         /// <response code="200">Returns list of countries</response>
         [HttpGet]
         [Produces("application/json")]
@@ -52,8 +52,9 @@ namespace DIGNDB.App.SmitteStop.API.V2.Controllers
             var countries = await _countryService.GetVisibleCountries();
             _logger.LogInformation($"{nameof(GetAllCountries)} fetched successfully");
 
-            var countriesDto = _mapper.Map<IEnumerable<Country>, IEnumerable<CountryDto>>(countries);
-            var countryCollection = new CountryCollectionDto {CountryCollection = countriesDto};
+            //It will not work anymore since DB definition of translation table is changed.
+            var countriesDto = _mapper.Map<IEnumerable<Country>, IEnumerable<CountryLegacyDto>>(countries);
+            var countryCollection = new CountryCollectionLegacyDto { CountryCollection = countriesDto };
 
             return Ok(countryCollection);
         }

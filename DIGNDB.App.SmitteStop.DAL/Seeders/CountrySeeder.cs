@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using DIGNDB.App.SmitteStop.Domain.Db;
+﻿using DIGNDB.App.SmitteStop.Domain.Db;
+using System.Collections.Generic;
 
 namespace DIGNDB.App.SmitteStop.DAL.Seeders
 {
@@ -39,8 +39,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new Country {Id = 25, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "SI"},
                 new Country {Id = 26, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "ES"},
                 new Country {Id = 27, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "SE"},
-
-                new Country {Id = DenmarkCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "DK"},
+                new Country {Id = DenmarkCountryId, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "DK"},
                 new Country {Id = NorwayCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NO"},
                 new Country {Id = EnglandCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "EN"},
             };

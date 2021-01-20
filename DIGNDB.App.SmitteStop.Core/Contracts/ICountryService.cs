@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DIGNDB.App.SmitteStop.Domain.Db;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Core.Models;
-using DIGNDB.App.SmitteStop.Domain.Db;
 
 namespace DIGNDB.App.SmitteStop.Core.Contracts
 {
@@ -9,6 +8,7 @@ namespace DIGNDB.App.SmitteStop.Core.Contracts
     {
         Task<IEnumerable<Country>> GetAllCountries();
         Task<IEnumerable<Country>> GetVisibleCountries();
+        Task<IEnumerable<Country>> GetVisibleCountries(string countryCode);
         Task<HashSet<long>> GetWhitelistHashSet();
     }
 }
