@@ -1,8 +1,7 @@
-﻿using DIGNDB.App.SmitteStop.Core.Models;
+﻿using DIGNDB.App.SmitteStop.Domain.Dto;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Text;
-using DIGNDB.App.SmitteStop.Domain.Dto;
 
 namespace DIGNDB.App.SmitteStop.Testing.ModelTest
 {
@@ -17,9 +16,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ModelTest
                 Encoding.ASCII.GetBytes("string2"),
                 Encoding.ASCII.GetBytes("string3"),
             };
-            var cacheResult = new CacheResult();
-            cacheResult.FileBytesList = expectedFileBytesList;
-            Assert.AreEqual(expectedFileBytesList,cacheResult.FileBytesList);
+            var cacheResult = new CacheResult
+            {
+                FileBytesList = expectedFileBytesList
+            };
+            Assert.AreEqual(expectedFileBytesList, cacheResult.FileBytesList);
         }
 
         [Test]
@@ -27,16 +28,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ModelTest
         [TestCase(false)]
         public void CacheResult_SetFinalForTheDay_ShouldGetSameValue(bool isFinal)
         {
-            var cacheResult = new CacheResult();
-            cacheResult.FinalForTheDay = isFinal;
+            var cacheResult = new CacheResult
+            {
+                FinalForTheDay = isFinal
+            };
             Assert.AreEqual(isFinal, cacheResult.FinalForTheDay);
-        }
-
-        [Test]
-        public void CacheResult_GetTimestamp_ShouldReturnZero()
-        {
-            var cacheResult = new CacheResult();
-            Assert.AreEqual(0, cacheResult.Timestamp);
         }
 
         [Test]
@@ -44,8 +40,10 @@ namespace DIGNDB.App.SmitteStop.Testing.ModelTest
         [TestCase(false)]
         public void CacheResult_SetNewerFilesExist_ShouldGetSameValue(bool isNewFileExist)
         {
-            var cacheResult = new CacheResult();
-            cacheResult.NewerFilesExist = isNewFileExist;
+            var cacheResult = new CacheResult
+            {
+                NewerFilesExist = isNewFileExist
+            };
             Assert.AreEqual(isNewFileExist, cacheResult.NewerFilesExist);
         }
     }

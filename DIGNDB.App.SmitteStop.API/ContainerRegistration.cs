@@ -86,6 +86,7 @@ namespace DIGNDB.App.SmitteStop.API
         {
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
             services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<ICacheOperationsV3, CacheOperationsV3>();
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
             services.AddScoped<IAddTemporaryExposureKeyService, AddTemporaryExposureKeyService>();
             services.AddScoped<IExposureKeyValidator, ExposureKeyValidator>();

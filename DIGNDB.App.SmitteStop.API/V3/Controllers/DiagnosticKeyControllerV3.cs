@@ -7,7 +7,6 @@ using DIGNDB.App.SmitteStop.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -26,26 +25,27 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
         private const string ApiVersion = "3";
 
         private readonly IAddTemporaryExposureKeyService _addTemporaryExposureKeyService;
-        private readonly IConfiguration _configuration;
         private readonly IExposureKeyValidator _exposureKeyValidator;
         private readonly ILogger _logger;
         private readonly IExposureConfigurationService _exposureConfigurationService;
         private readonly KeyValidationConfiguration _keyValidationConfig;
         private readonly IZipFileInfoService _zipFileInfoService;
         private readonly AppSettingsConfig _appSettingsConfig;
+        private readonly ICacheOperationsV3 _cacheOperations;
+
 
 
         public DiagnosticKeyControllerV3(
             ILogger<DiagnosticKeyControllerV3> logger,
-            IConfiguration configuration,
             IExposureKeyValidator exposureKeyValidator,
             IExposureConfigurationService exposureConfigurationService,
             KeyValidationConfiguration keyValidationConfig,
             IAddTemporaryExposureKeyService addTemporaryExposureKeyService,
             IZipFileInfoService zipFileInfoService,
-            AppSettingsConfig appSettingsConfig)
+            AppSettingsConfig appSettingsConfig,
+            ICacheOperationsV3 cacheOperations)
         {
-            _configuration = configuration;
+            _cacheOperations = cacheOperations;
             _exposureKeyValidator = exposureKeyValidator;
             _logger = logger;
             _zipFileInfoService = zipFileInfoService;
@@ -117,14 +117,10 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="packageName">A timestamp in the format of "yyyy-mm-dd"</param>
-        /// <returns></returns>
+
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
         [HttpGet("{packageName}")]
-        public IActionResult DownloadDiagnosisKeysFile(string packageName)
+        public async Task<IActionResult> DownloadDiagnosisKeysFile(string packageName)
         {
             _logger.LogInformation("DownloadDiagnosisKeysFile endpoint called");
             try
@@ -133,7 +129,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
                     packageName = ReplacePackageNameWithToday();
 
                 ZipFileInfo packageInfo = _zipFileInfoService.CreateZipFileInfoFromPackageName(packageName);
-                string zipFilesFolder = _configuration["ZipFilesFolder"];
+                string zipFilesFolder = _appSettingsConfig.ZipFilesFolder;
 
                 _logger.LogInformation("Package Date: " + packageInfo.PackageDate);
                 _logger.LogInformation("Add days: " + DateTime.UtcNow.Date.AddDays(-14));
@@ -147,7 +143,17 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
                 var packageExists = _zipFileInfoService.CheckIfPackageExists(packageInfo, zipFilesFolder);
                 if (packageExists)
                 {
-                    var zipFileContent = _zipFileInfoService.ReadPackage(packageInfo, zipFilesFolder);
+                    byte[] zipFileContent = null;
+                    bool invalidateCache = false;
+                    if (Request.Headers.ContainsKey("Cache-Control") && Request.Headers["Cache-Control"] == "no-cache")
+                    {
+                        invalidateCache = true;
+                        zipFileContent = await _cacheOperations.GetCacheValue(packageInfo, zipFilesFolder, invalidateCache);
+                    }
+                    else
+                    {
+                        zipFileContent = await _cacheOperations.GetCacheValue(packageInfo, zipFilesFolder, invalidateCache);
+                    }
                     var currentBatchNumber = packageInfo.BatchNumber;
                     packageInfo.BatchNumber++;
                     var nextPackageExists = _zipFileInfoService.CheckIfPackageExists(packageInfo, zipFilesFolder);
