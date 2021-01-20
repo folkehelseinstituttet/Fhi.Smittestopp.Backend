@@ -1,33 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
 using DIGNDB.App.SmitteStop.DAL.Context;
-using Microsoft.EntityFrameworkCore;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
-using System.Linq;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
 {
     [TestFixture]
     public class TemporaryExposureKeyRepositoryTests
     {
-        TemporaryExposureKeyRepository _repo;
-        DbContextOptions<DigNDB_SmittestopContext> _options;
-        Mock<ICountryRepository> _countryRepository;
-        Mock<IConfiguration> _configuration;
+        private TemporaryExposureKeyRepository _repo;
+        private DbContextOptions<DigNDB_SmittestopContext> _options;
+        private Mock<ICountryRepository> _countryRepository;
+        private Mock<IConfiguration> _configuration;
 
-        private Country _dkCountry = new Country()
+        private readonly Country _dkCountry = new Country()
         {
             Id = 1,
             Code = "dk"
         };
 
-        private Country _notDkCountry = new Country()
+        private readonly Country _notDkCountry = new Country()
         {
             Id = 2,
             Code = "not dk"
@@ -175,7 +175,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
             {
                 context.Database.EnsureDeleted();
                 _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object);
-                _repo.AddTemporaryExposureKeys(data).Wait();
+                _repo.AddUniqueTemporaryExposureKeys(data).Wait();
             }
             using (var context = new DigNDB_SmittestopContext(_options))
             {

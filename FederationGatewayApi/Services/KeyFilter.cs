@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Enums;
@@ -9,7 +8,6 @@ using FederationGatewayApi.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FederationGatewayApi.Services
 {
@@ -71,30 +69,6 @@ namespace FederationGatewayApi.Services
             }
 
             return mappedKeys;
-        }
-
-        public async Task<IList<TemporaryExposureKey>> RemoveKeyDuplicatesAsync(IList<TemporaryExposureKey> downloadedKeys)
-        {
-            var numberOfRecordsToSkip = 0;
-            var filteredKeys = downloadedKeys;
-            IList<TemporaryExposureKey> dbKeysBatch;
-            do
-            {
-                var validRollingStartNumberThreshold =
-                    ConvertOffsetDaysToRollingStartNumber(OutdatedKeysDayOffset);
-
-                dbKeysBatch = await _tempKeyRepository.GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(validRollingStartNumberThreshold, numberOfRecordsToSkip, BatchSize);
-                filteredKeys = _exposureKeyMapper.FilterDuplicateKeys(filteredKeys, dbKeysBatch);
-                numberOfRecordsToSkip += dbKeysBatch.Count;
-
-            } while (dbKeysBatch.Count == BatchSize);
-
-            return filteredKeys;
-        }
-
-        private long ConvertOffsetDaysToRollingStartNumber(int offsetDays)
-        {
-            return DateTimeOffset.Now.Date.AddDays(-(offsetDays + 1)).ToUnixEpoch();
         }
     }
 }
