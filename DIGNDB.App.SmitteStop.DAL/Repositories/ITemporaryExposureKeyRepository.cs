@@ -32,6 +32,6 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         Task<IList<TemporaryExposureKey>> GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(long rollingStartNumberThreshold, int numberOfRecordsToSkip, int batchSize);
 
-        IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUpload(DateTime uploadedOnAndLater, int numberOfRecordToSkip, int maxCount, KeySource[] sources);
+        IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUploadForWhichConsentWasGiven(DateTime uploadedOnAndLater, int numberOfRecordToSkip, int maxCount, KeySource[] sources);
     }
 }

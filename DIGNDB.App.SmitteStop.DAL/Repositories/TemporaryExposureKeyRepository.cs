@@ -12,8 +12,8 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 {
     public class TemporaryExposureKeyRepository : ITemporaryExposureKeyRepository
     {
-        private DigNDB_SmittestopContext _dbContext;
-        ICountryRepository _countryRepository;
+        private readonly DigNDB_SmittestopContext _dbContext;
+        private readonly ICountryRepository _countryRepository;
 
         // constructor used for unit tests
         public TemporaryExposureKeyRepository(DigNDB_SmittestopContext dbContext, ICountryRepository countryRepository)
@@ -78,7 +78,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             return _dbContext.TemporaryExposureKey.Where(x => x.Origin == apiOrigin && x.CreatedOn.Date.CompareTo(uploadedOn.Date) == 0).OrderBy(x => x.Id).ToList();
         }
 
-        public IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUpload(
+        public IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUploadForWhichConsentWasGiven(
             DateTime uploadedOnAndLater,
             int numberOfRecordToSkip,
             int maxCount,
