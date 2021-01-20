@@ -42,6 +42,10 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new Country {Id = DenmarkCountryId, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "DK"},
                 new Country {Id = NorwayCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NO"},
                 new Country {Id = EnglandCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "EN"},
+                new Country {Id = 30, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "EL"},
+                new Country {Id = 31, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "IS"},
+                new Country {Id = 32, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "LI"},
+                new Country {Id = 33, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "CH"},
             };
         }
     }
