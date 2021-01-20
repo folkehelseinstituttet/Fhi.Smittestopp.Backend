@@ -28,10 +28,17 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task AddTemporaryExposureKeys(IList<TemporaryExposureKey> temporaryExposureKeys)
+        public async Task AddUniqueTemporaryExposureKeys(IList<TemporaryExposureKey> temporaryExposureKeys)
         {
-            _dbContext.TemporaryExposureKey.AddRange(temporaryExposureKeys);
-            await _dbContext.SaveChangesAsync();
+            var newKeyData = temporaryExposureKeys.Select(u => u.KeyData).Distinct().ToArray();
+            var keysInDb = _dbContext.TemporaryExposureKey.Where(u => newKeyData.Contains(u.KeyData))
+                .Select(u => u.KeyData).ToArray();
+            var keysNotInDb = temporaryExposureKeys.Where(u => keysInDb.All(x => !x.SequenceEqual(u.KeyData)));
+            foreach (var key in keysNotInDb)
+            {
+                _dbContext.Add(key);
+            }
+            _dbContext.SaveChanges();
         }
 
         public async Task<IList<TemporaryExposureKey>> GetAll()

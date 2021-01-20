@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
 {
@@ -30,32 +29,6 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             }).ToList();
         }
 
-        public IList<TemporaryExposureKey> FilterDuplicateKeys(IList<TemporaryExposureKey> incomingKeys, IList<TemporaryExposureKey> exisitingKeys)
-        {
-            if (exisitingKeys.Count < 1)
-                return incomingKeys;
-            var uniqueKeys = new List<TemporaryExposureKey>();
-
-            foreach (var key in incomingKeys)
-            {
-                if (!CheckIncomingKeyExists(key.KeyData, exisitingKeys))
-                {
-                    uniqueKeys.Add(key);
-                }
-            }
-            return uniqueKeys;
-        }
-
-        private bool CheckIncomingKeyExists(byte[] incomingKey, IList<TemporaryExposureKey> existingKeys)
-        {
-            foreach (var item in existingKeys)
-            {
-                if (StructuralComparisons.StructuralEqualityComparer.Equals(incomingKey, item.KeyData))
-                    return true;
-            }
-
-            return false;
-        }
         public Domain.Proto.TemporaryExposureKey FromEntityToProto(TemporaryExposureKey source)
         {
             return new Domain.Proto.TemporaryExposureKey(

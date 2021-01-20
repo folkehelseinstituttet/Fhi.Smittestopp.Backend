@@ -16,7 +16,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         Task AddTemporaryExposureKey(TemporaryExposureKey temporaryExposureKey);
 
-        Task AddTemporaryExposureKeys(IList<TemporaryExposureKey> temporaryExposureKeys);
+        Task AddUniqueTemporaryExposureKeys(IList<TemporaryExposureKey> temporaryExposureKeys);
 
         IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountry(DateTime uploadedOn, int fetchCommandTimeout);
 

@@ -77,29 +77,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             Assert.IsInstanceOf<Domain.Proto.TemporaryExposureKeyExport>(protoBatch);
         }
 
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        public void FilterDuplicateKeys_GiveKeysInExistingKeys_ShouldReturnKeysThatNotExistBefore(int value)
-        {
-            int listCount = 3;
-            var keys = CreateMockedListExposureKeys(listCount);
-            var existingKeys = new List<TemporaryExposureKey>() { };
-
-            for (int i = 0; i <= value; i++)
-            {
-
-                TemporaryExposureKey existKey = keys[i];
-                existingKeys.Add(new TemporaryExposureKey() { KeyData = existKey.KeyData, CreatedOn = DateTime.UtcNow.AddDays(-1) });
-
-            }
-            var expectedKeysCount = keys.Count - existingKeys.Count;
-
-            var mapper = new ExposureKeyMapper();
-            var extractNewKeys = mapper.FilterDuplicateKeys(keys, existingKeys);
-            Assert.AreEqual(extractNewKeys.Count, expectedKeysCount);
-        }
-
         [Test]
         public void MapTemporaryExposureKey_ToTemporaryExposureKeyGatewayDto_ShouldGetCorrectValue()
         {
@@ -227,7 +204,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         public void MapDto_ToEntity_ShouldHaveSharingAsFalse()
         {
             //Arrange
-            var dto = new TemporaryExposureKeyBatchDto() 
+            var dto = new TemporaryExposureKeyBatchDto()
             {
                 keys = new List<Core.Models.TemporaryExposureKeyDto>
                 {
