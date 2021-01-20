@@ -66,9 +66,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             _webContextReader.Verify(mock => mock.GetItemsFromRequest(It.IsAny<string>()), Times.Never);
             _keyFilter.Verify(mock => mock.MapKeys(It.IsAny<IList<TemporaryExposureKeyGatewayDto>>()), Times.Never);
             _keyFilter.Verify(mock => mock.ValidateKeys(It.IsAny<IList<TemporaryExposureKey>>(), out errorMessageList), Times.Never);
-            _keyFilter.Verify(mock => mock.RemoveKeyDuplicatesAsync(It.IsAny<List<TemporaryExposureKey>>()), Times.Never);
-            _tempKeyRepository.Verify(mock => mock.AddTemporaryExposureKeys(It.IsAny<List<TemporaryExposureKey>>()), Times.Never);
-
+            _tempKeyRepository.Verify(mock => mock.AddUniqueTemporaryExposureKeys(It.IsAny<List<TemporaryExposureKey>>()), Times.Never);
         }
 
     }

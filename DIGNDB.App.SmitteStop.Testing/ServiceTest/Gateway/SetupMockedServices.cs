@@ -1,25 +1,22 @@
 ﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.App.SmitteStop.Domain.Db;
+using DIGNDB.App.SmitteStop.Domain.Settings;
+using FederationGatewayApi.Config;
 using FederationGatewayApi.Contracts;
 using FederationGatewayApi.Mappers;
 using FederationGatewayApi.Models;
 using FederationGatewayApi.Services;
 using Microsoft.Extensions.DependencyInjection;
-using TemporaryExposureKeyGatewayBatchProtoDto = FederationGatewayApi.Models.Proto.TemporaryExposureKeyGatewayBatchDto;
-using TemporaryExposureKeyGatewayProtoDto = FederationGatewayApi.Models.Proto.TemporaryExposureKeyGatewayDto;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Domain.Settings;
-using System.Security.Cryptography.X509Certificates;
-using FederationGatewayApi.Config;
-using DIGNDB.App.SmitteStop.Domain;
-using System.Net;
+using TemporaryExposureKeyGatewayBatchProtoDto = FederationGatewayApi.Models.Proto.TemporaryExposureKeyGatewayBatchDto;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 {
@@ -73,14 +70,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
                 return _exposureKeyMock.MockListOfTemporaryExposureKeys();
             });
 
-            keyFilter.Setup(mock => mock.RemoveKeyDuplicatesAsync(It.IsAny<IList<TemporaryExposureKey>>())).Returns((IList<TemporaryExposureKey> keys) =>
-            {
-                var keyData = _exposureKeyMock.MockListOfTemporaryExposureKeys();
-                keys.RemoveAt(2);
-                keys.RemoveAt(3);
-                return Task.FromResult(keys);
-            });
-
             keyFilter.Setup(mock => mock.ValidateKeys(It.IsAny<IList<TemporaryExposureKey>>(), out errorMessageList)).Returns((IList<TemporaryExposureKey> keys, IList<string> errorMessageList) =>
             {
                 return _exposureKeyMock.MockListOfTemporaryExposureKeys();
@@ -104,7 +93,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 
         public void SetupTemopraryExposureKeyRepositoryMock(Mock<ITemporaryExposureKeyRepository> tempKeyRepository)
         {
-            tempKeyRepository.Setup(mock => mock.AddTemporaryExposureKeys(It.IsAny<List<TemporaryExposureKey>>())).Returns((List<TemporaryExposureKey> keys) =>
+            tempKeyRepository.Setup(mock => mock.AddUniqueTemporaryExposureKeys(It.IsAny<List<TemporaryExposureKey>>())).Returns((List<TemporaryExposureKey> keys) =>
             {
                 return Task.CompletedTask;
             });
@@ -194,7 +183,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             client.Setup(mock => mock.SendAsync(It.IsAny<HttpRequestMessage>())).Returns((HttpRequestMessage message) =>
             {
                 var header = message.Headers.GetValues("batchTag").SingleOrDefault();
-                var endBatchTagValue =  $"{DateTime.UtcNow.Date.ToString("yyyy-MM-dd").Replace("-", string.Empty)}-{2}";
+                var endBatchTagValue = $"{DateTime.UtcNow.Date.ToString("yyyy-MM-dd").Replace("-", string.Empty)}-{2}";
                 var responseMessage = new HttpResponseMessage();
 
                 if (header == endBatchTagValue)
@@ -249,7 +238,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 
         }
 
-        public  IMapper CreateAutoMapperWithDependencies(ICountryRepository repository)
+        public IMapper CreateAutoMapperWithDependencies(ICountryRepository repository)
         {
             IServiceCollection services = new ServiceCollection();
             services.AddLogging();
@@ -265,10 +254,12 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 
         public EuGatewayConfig CreateEuGatewayConfig()
         {
-            var euGatewayConfig = new EuGatewayConfig();
-            euGatewayConfig.Url = "https://acc-efgs-ws.tech.ec.europa.eu/";
-            euGatewayConfig.AuthenticationCertificateFingerprint = "A3C3E533CC9FEACA026F99F688F4488B5FC16BD0E6A80E6E0FC03760983DBF3F";
-            euGatewayConfig.SigningCertificateFingerprint = "979673B55DB0B7E2B35B12CF2A342655F059314BC46323C43BCD3BFC82374BFB";
+            var euGatewayConfig = new EuGatewayConfig
+            {
+                Url = "https://acc-efgs-ws.tech.ec.europa.eu/",
+                AuthenticationCertificateFingerprint = "A3C3E533CC9FEACA026F99F688F4488B5FC16BD0E6A80E6E0FC03760983DBF3F",
+                SigningCertificateFingerprint = "979673B55DB0B7E2B35B12CF2A342655F059314BC46323C43BCD3BFC82374BFB"
+            };
             return euGatewayConfig;
         }
 

@@ -6,9 +6,7 @@ namespace DIGNDB.App.SmitteStop.Core.Contracts
 {
     public interface IExposureKeyMapper
     {
-         List<TemporaryExposureKey> FromDtoToEntity(TemporaryExposureKeyBatchDto dto);
-
-         IList<TemporaryExposureKey> FilterDuplicateKeys(IList<TemporaryExposureKey> incomingKeys, IList<TemporaryExposureKey> exsitingKeys);
+        List<TemporaryExposureKey> FromDtoToEntity(TemporaryExposureKeyBatchDto dto);
 
         Domain.Proto.TemporaryExposureKey FromEntityToProto(TemporaryExposureKey source);
 
