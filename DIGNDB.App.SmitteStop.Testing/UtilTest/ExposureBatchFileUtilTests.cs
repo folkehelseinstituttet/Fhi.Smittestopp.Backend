@@ -1,4 +1,5 @@
-﻿using DIGNDB.App.SmitteStop.Core.Helpers;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using DIGNDB.App.SmitteStop.Domain.Proto;
@@ -30,13 +31,16 @@ YHc1cKvIIi6/H56AJS/kZEYQnfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
 -----END PUBLIC KEY-----";
         private readonly string _pemFilePath = string.Format("{0}{1}", System.IO.Directory.GetCurrentDirectory().Split("\\bin")[0], "\\test.pem");
         private TemporaryExposureKeyExport _exportBatch;
+        private IEpochConverter _epochConverter;
 
 
         [SetUp]
         public void Init()
         {
-           CreatePemFile();
-           SetupTemporaryExposureKeyExport();
+            _epochConverter = new EpochConverter();
+
+            CreatePemFile();
+            SetupTemporaryExposureKeyExport();
         }
 
         private void CreatePemFile()
@@ -62,7 +66,7 @@ YHc1cKvIIi6/H56AJS/kZEYQnfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
                     TransmissionRiskLevel = RiskLevel.RISK_LEVEL_HIGH,
                 }
             };
-            ExposureKeyMapper mapper = new ExposureKeyMapper();
+            ExposureKeyMapper mapper = new ExposureKeyMapper(_epochConverter);
             _exportBatch = mapper.FromEntityToProtoBatch(data);
         }
 
@@ -94,7 +98,7 @@ YHc1cKvIIi6/H56AJS/kZEYQnfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
             using (var archive = new ZipArchive(result))
             {
                 var entries = archive.Entries;
-                foreach(ZipArchiveEntry entry in entries)
+                foreach (ZipArchiveEntry entry in entries)
                 {
                     fileNameInZipStreams.Add(entry.Name);
                 }

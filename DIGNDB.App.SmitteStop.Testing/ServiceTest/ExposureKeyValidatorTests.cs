@@ -1,5 +1,4 @@
 ﻿using DIGNDB.App.SmitteStop.API.Services;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
@@ -19,8 +18,8 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     {
         private Mock<ICountryRepository> countryRepositoryMock;
         private ExposureKeyValidator exposureKeyValidator;
-        TemporaryExposureKeyBatchDto parameterArgument;
-        KeyValidationConfiguration configurationArgument;
+        private TemporaryExposureKeyBatchDto parameterArgument;
+        private KeyValidationConfiguration configurationArgument;
 
         private Mock<ILogger<ExposureKeyValidator>> logger;
 
@@ -68,7 +67,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             countryRepositoryMock = new Mock<ICountryRepository>();
             countryRepositoryMock.Setup(countryRepo => countryRepo.FindByIsoCode("AT")).Returns(new Country() { Code = "AT", VisitedCountriesEnabled = true });
             countryRepositoryMock.Setup(countryRepo => countryRepo.FindByIsoCode("FR")).Returns(new Country() { Code = "FR", VisitedCountriesEnabled = false });
-            countryRepositoryMock.Setup(countryRepo => countryRepo.FindByIsoCode("PL")).Returns((Country) null);
+            countryRepositoryMock.Setup(countryRepo => countryRepo.FindByIsoCode("PL")).Returns((Country)null);
             countryRepositoryMock.Setup(countryRepo => countryRepo.GetApiOriginCountry()).Returns(new Country() { Code = "DK", VisitedCountriesEnabled = false });
             logger = new Mock<ILogger<ExposureKeyValidator>>();
         }
@@ -94,7 +93,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 {
                     key = parameterArgument.keys.First().key,
                     rollingDuration = "1.00:00:00",
-                    rollingStart = DateTime.UtcNow.AddDays(-2),
+                    rollingStart = DateTime.UtcNow.Date.AddDays(-2),
                     transmissionRiskLevel = RiskLevel.RISK_LEVEL_MEDIUM_HIGH
                 });
             Assert.Throws<ArgumentException>(() => exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameterArgument, configurationArgument), "Duplicate key values.");
@@ -117,7 +116,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 {
                     key = new byte[TemporaryExposureKeyDto.KeyLength] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 },
                     rollingDuration = value,
-                    rollingStart = DateTime.UtcNow.AddDays(-2),
+                    rollingStart = DateTime.UtcNow.Date.AddDays(-2),
                     transmissionRiskLevel = RiskLevel.RISK_LEVEL_MEDIUM_HIGH
                 });
             Assert.Throws<ArgumentException>(() => exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameterArgument, configurationArgument), "Incorrect span.");
@@ -141,7 +140,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         [Test]
         public void TestValidateParameterAndThrowIfIncorrect_ShouldThrowNotFoundVisitedCountry()
         {
-            parameterArgument.visitedCountries = new List<string> {"PL"};
+            parameterArgument.visitedCountries = new List<string> { "PL" };
 
             Assert.Throws<ArgumentException>(
                 () => exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameterArgument,
@@ -151,7 +150,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         [Test]
         public void TestValidateParameterAndThrowIfIncorrect_ShouldThrowDisabledCountry()
         {
-            parameterArgument.visitedCountries = new List<string> {"FR"};
+            parameterArgument.visitedCountries = new List<string> { "FR" };
 
             Assert.Throws<ArgumentException>(
                 () => exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameterArgument,
@@ -172,8 +171,8 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             Assert.Throws<ArgumentException>(() => exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameterArgument, configurationArgument), "Incorrect package name.");
         }
 
-        [TestCase(new byte[TemporaryExposureKeyDto.KeyLength-1] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 })]
-        [TestCase(new byte[TemporaryExposureKeyDto.KeyLength+1] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 })]
+        [TestCase(new byte[TemporaryExposureKeyDto.KeyLength - 1] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 })]
+        [TestCase(new byte[TemporaryExposureKeyDto.KeyLength + 1] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 })]
         [Test]
         public void TestValidateParameterAndThrowIfIncorrect_KeySize_ShouldReturnFalse(byte[] value)
         {

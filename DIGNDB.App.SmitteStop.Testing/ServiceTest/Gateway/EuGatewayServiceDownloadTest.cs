@@ -7,7 +7,6 @@ using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
-using DIGNDB.App.SmitteStop.Domain.Enums;
 using DIGNDB.App.SmitteStop.Testing.Mocks;
 using DIGNDB.APP.SmitteStop.Jobs.Services;
 using FederationGatewayApi.Config;
@@ -16,18 +15,14 @@ using FederationGatewayApi.Mappers;
 using FederationGatewayApi.Models;
 using FederationGatewayApi.Services;
 using FederationGatewayApi.Services.Settings;
-using FluentAssertions;
-using Google.Protobuf;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using TemporaryExposureKeyGatewayBatchProtoDto = FederationGatewayApi.Models.Proto.TemporaryExposureKeyGatewayBatchDto;
@@ -38,12 +33,13 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
     {
         private DigNDB_SmittestopContext _dbContext;
         private Country _originCountry;
+        private readonly IEpochConverter _epochConverter;
         private EuGatewayConfig _config;
         private Country _denmark;
         private Country _poland;
         private Country _germany;
         private Country _latvia;
-        string expectedJson = "{'keyData': null,'rollingStartIntervalNumber': 0,'rollingPeriod': 0,'transmissionRiskLevel': 0,'visitedCountries': null,'origin': null,'reportType': null,'daysSinceOnsetOfSymptoms': 0}";
+        private readonly string expectedJson = "{'keyData': null,'rollingStartIntervalNumber': 0,'rollingPeriod': 0,'transmissionRiskLevel': 0,'visitedCountries': null,'origin': null,'reportType': null,'daysSinceOnsetOfSymptoms': 0}";
 
         [SetUp]
         public void CreateDataSet()

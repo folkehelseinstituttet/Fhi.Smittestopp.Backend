@@ -69,6 +69,23 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                 .Take(batchSize);
             return query.ToList();
         }
+        public IList<TemporaryExposureKey> GetAllKeysNextBatchWithOriginId(int numberOfRecordsToSkip, int batchSize)
+        {
+            if (batchSize <= 0) throw new ArgumentException($"Incorrect argument batchSize= {batchSize}");
+
+            var query = _dbContext.TemporaryExposureKey
+                .OrderBy(c => c.CreatedOn)
+                .Skip(numberOfRecordsToSkip).Include(x => x.Origin)
+                .Take(batchSize);
+            var a = query.ToList();
+            return a;
+        }
+
+        public void UpdateKeysRollingStartField(List<TemporaryExposureKey> keys)
+        {
+            _dbContext.UpdateRange(keys);
+            _dbContext.SaveChanges();
+        }
 
         public async Task<TemporaryExposureKey> GetById(Guid id)
         {
@@ -83,6 +100,12 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                 _dbContext.Database.SetCommandTimeout(fetchTimeout);
             }
             return _dbContext.TemporaryExposureKey.Where(x => x.Origin == apiOrigin && x.CreatedOn.Date.CompareTo(uploadedOn.Date) == 0).OrderBy(x => x.Id).ToList();
+        }
+
+        public void RemoveKeys(List<TemporaryExposureKey> keys)
+        {
+            _dbContext.RemoveRange(keys);
+            _dbContext.SaveChanges();
         }
 
         public IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUploadForWhichConsentWasGiven(
@@ -160,12 +183,5 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                 .Skip(numberOfRecordsToSkip)
                 .Take(batchSize);
         }
-
-        public void RemoveKeys(List<TemporaryExposureKey> keys)
-        {
-            _dbContext.RemoveRange(keys);
-            _dbContext.SaveChanges();
-        }
-
     }
 }
