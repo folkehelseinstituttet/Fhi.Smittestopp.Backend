@@ -16,7 +16,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
 
         private readonly ITemporaryExposureKeyRepository _temporaryExposureKeyRepository;
         private readonly IDatabaseKeysToBinaryStreamMapperService _databaseKeysToBinaryStreamMapperService;
-        IKeysListToMemoryStreamConverter _keysListToMemoryStreamConverter;
+        private readonly IKeysListToMemoryStreamConverter _keysListToMemoryStreamConverter;
 
         private readonly int _maxKeysPerFile;
         private readonly int _fetchCommandTimeout = 0;//set default value to 0 so the timeout is not changed unless a value is given in the config
@@ -57,14 +57,13 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             }
 
             return new CacheResult()
-                { FileBytesList = streamBytesList };
+            { FileBytesList = streamBytesList };
         }
 
         public List<byte[]> BuildPackageContentV2(DateTime startDate, string originPostfix)
         {
             List<byte[]> streamBytesList = new List<byte[]>();
 
-            //create file and store in cache if file does not exist in cache
             bool allPackagesCreated = false;
             int numberOfRecordsToSkip = 0;
             while (!allPackagesCreated)

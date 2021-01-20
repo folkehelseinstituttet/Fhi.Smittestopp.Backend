@@ -40,6 +40,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
                         : string.Empty;
 
                 _logger.LogError($"Updating of zip files failed. {innerException}{e.Message}");
+                throw;
             }
         }
 
