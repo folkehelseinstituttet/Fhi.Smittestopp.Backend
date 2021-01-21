@@ -26,7 +26,9 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
             var translations = _translationRepository.Get(t => t.EntityName == nameof(Country));
             foreach (var country in countries)
+            {
                 country.EntityTranslations = translations.Where(t => t.EntityId == country.Id).ToList();
+            }
 
             return countries;
         }
