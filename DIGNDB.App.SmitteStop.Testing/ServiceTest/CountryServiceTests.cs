@@ -7,12 +7,14 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {
     public class CountryServiceTests
     {
         private Mock<ICountryRepository> _countryRepositoryMock;
+        private Mock<ILogger<CountryService>> _countryLogger;
 
         private List<Country> _countries;
 
@@ -77,12 +79,14 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             _countryRepositoryMock
                 .Setup(mock => mock.GetAllCountriesWithGatewayPullingEnabled())
                 .ReturnsAsync(_countries);
+
+            _countryLogger = new Mock<ILogger<CountryService>>();
         }
 
         [Test]
         public void TestGetAll()
         {
-            var countryService = new CountryService(_countryRepositoryMock.Object);
+            var countryService = new CountryService(_countryRepositoryMock.Object, _countryLogger.Object);
 
             var countries = countryService.GetAllCountries().Result;
 
@@ -92,7 +96,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         [Test]
         public void TestGetAllVisible()
         {
-            var countryService = new CountryService(_countryRepositoryMock.Object);
+            var countryService = new CountryService(_countryRepositoryMock.Object, _countryLogger.Object);
 
             var countries = countryService.GetVisibleCountries().Result;
 
@@ -102,7 +106,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         [Test]
         public void TestGetAllVisibleWithCountryCode_ShouldReturnCorrectlyOrderedList()
         {
-            var countryService = new CountryService(_countryRepositoryMock.Object);
+            var countryService = new CountryService(_countryRepositoryMock.Object, _countryLogger.Object);
 
             var countries = countryService.GetVisibleCountries("EN").Result.ToList();
             Assert.That(countries[0].Code == "DE");
@@ -116,7 +120,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         [Test]
         public void TestGetAllVisibleWithCountryCode_ShouldThrowExceptionBecauseTranslationIsMissingForOneCountry()
         {
-            var countryService = new CountryService(_countryRepositoryMock.Object);
+            var countryService = new CountryService(_countryRepositoryMock.Object, _countryLogger.Object);
 
             Assert.Throws<AggregateException>(() => countryService.GetVisibleCountries("PL").Result.ToList());
         }
@@ -124,7 +128,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         [Test]
         public void GetWhitelistHashSet()
         {
-            var countryService = new CountryService(_countryRepositoryMock.Object);
+            var countryService = new CountryService(_countryRepositoryMock.Object, _countryLogger.Object);
 
             var countries = countryService.GetWhitelistHashSet().Result;
 
