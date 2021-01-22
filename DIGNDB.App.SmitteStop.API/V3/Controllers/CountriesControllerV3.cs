@@ -47,7 +47,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
         public async Task<IActionResult> GetAllCountries(string countryCode = "EN")
         {
-            _logger.LogInformation($"{nameof(GetAllCountries)} endpoint called");
+            _logger.LogInformation($"{nameof(GetAllCountries)} endpoint called with countryCode {countryCode}");
 
             var countries = await _countryService.GetVisibleCountries(countryCode);
             _logger.LogInformation($"{nameof(GetAllCountries)} fetched successfully");
