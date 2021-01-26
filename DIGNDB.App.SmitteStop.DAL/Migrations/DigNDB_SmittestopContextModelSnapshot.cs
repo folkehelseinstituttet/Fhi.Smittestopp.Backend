@@ -246,30 +246,37 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 30L,
-                            Code = "EL",
-                            PullingFromGatewayEnabled = true,
-                            VisitedCountriesEnabled = true
-                        },
-                        new
-                        {
-                            Id = 31L,
                             Code = "IS",
                             PullingFromGatewayEnabled = true,
                             VisitedCountriesEnabled = true
                         },
                         new
                         {
-                            Id = 32L,
+                            Id = 31L,
                             Code = "LI",
                             PullingFromGatewayEnabled = true,
                             VisitedCountriesEnabled = true
                         },
                         new
                         {
-                            Id = 33L,
+                            Id = 32L,
                             Code = "CH",
                             PullingFromGatewayEnabled = true,
                             VisitedCountriesEnabled = true
+                        },
+                        new
+                        {
+                            Id = 33L,
+                            Code = "NB",
+                            PullingFromGatewayEnabled = false,
+                            VisitedCountriesEnabled = false
+                        },
+                        new
+                        {
+                            Id = 34L,
+                            Code = "NN",
+                            PullingFromGatewayEnabled = false,
+                            VisitedCountriesEnabled = false
                         });
                 });
 
@@ -404,228 +411,12 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 1L,
                             EntityId = 1L,
                             EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Østrig"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            EntityId = 2L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Belgien"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            EntityId = 3L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Bulgarien"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            EntityId = 4L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Kroatien"
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            EntityId = 5L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Cypern"
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            EntityId = 6L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Tjekkiet"
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            EntityId = 7L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Danmark"
-                        },
-                        new
-                        {
-                            Id = 8L,
-                            EntityId = 8L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Estland"
-                        },
-                        new
-                        {
-                            Id = 9L,
-                            EntityId = 9L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Finland"
-                        },
-                        new
-                        {
-                            Id = 10L,
-                            EntityId = 10L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Frankrig"
-                        },
-                        new
-                        {
-                            Id = 11L,
-                            EntityId = 11L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Tyskland"
-                        },
-                        new
-                        {
-                            Id = 12L,
-                            EntityId = 12L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Grækenland"
-                        },
-                        new
-                        {
-                            Id = 13L,
-                            EntityId = 13L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Ungarn"
-                        },
-                        new
-                        {
-                            Id = 14L,
-                            EntityId = 14L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Irland"
-                        },
-                        new
-                        {
-                            Id = 15L,
-                            EntityId = 15L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Italien"
-                        },
-                        new
-                        {
-                            Id = 16L,
-                            EntityId = 16L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Letland"
-                        },
-                        new
-                        {
-                            Id = 17L,
-                            EntityId = 17L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Litauen"
-                        },
-                        new
-                        {
-                            Id = 18L,
-                            EntityId = 18L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Luxembourg"
-                        },
-                        new
-                        {
-                            Id = 19L,
-                            EntityId = 19L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Malta"
-                        },
-                        new
-                        {
-                            Id = 20L,
-                            EntityId = 20L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Holland"
-                        },
-                        new
-                        {
-                            Id = 21L,
-                            EntityId = 21L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Polen"
-                        },
-                        new
-                        {
-                            Id = 22L,
-                            EntityId = 22L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Portugal"
-                        },
-                        new
-                        {
-                            Id = 23L,
-                            EntityId = 23L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Rumænien"
-                        },
-                        new
-                        {
-                            Id = 24L,
-                            EntityId = 24L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Slovakiet"
-                        },
-                        new
-                        {
-                            Id = 25L,
-                            EntityId = 25L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Slovenien"
-                        },
-                        new
-                        {
-                            Id = 26L,
-                            EntityId = 26L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Spanien"
-                        },
-                        new
-                        {
-                            Id = 27L,
-                            EntityId = 27L,
-                            EntityName = "Country",
-                            LanguageCountryId = 29L,
-                            Value = "Sverige"
-                        },
-                        new
-                        {
-                            Id = 28L,
-                            EntityId = 1L,
-                            EntityName = "Country",
                             LanguageCountryId = 28L,
                             Value = "Austria"
                         },
                         new
                         {
-                            Id = 29L,
+                            Id = 2L,
                             EntityId = 2L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -633,7 +424,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 30L,
+                            Id = 3L,
                             EntityId = 3L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -641,7 +432,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 31L,
+                            Id = 4L,
                             EntityId = 4L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -649,7 +440,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 32L,
+                            Id = 5L,
                             EntityId = 5L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -657,7 +448,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 33L,
+                            Id = 6L,
                             EntityId = 6L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -665,7 +456,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 34L,
+                            Id = 7L,
                             EntityId = 7L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -673,7 +464,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 35L,
+                            Id = 8L,
                             EntityId = 8L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -681,7 +472,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 36L,
+                            Id = 9L,
                             EntityId = 9L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -689,7 +480,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 37L,
+                            Id = 10L,
                             EntityId = 10L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -697,7 +488,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 38L,
+                            Id = 11L,
                             EntityId = 11L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -705,7 +496,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 39L,
+                            Id = 12L,
                             EntityId = 12L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -713,7 +504,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 40L,
+                            Id = 13L,
                             EntityId = 13L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -721,7 +512,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 41L,
+                            Id = 14L,
                             EntityId = 14L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -729,7 +520,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 42L,
+                            Id = 15L,
                             EntityId = 15L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -737,7 +528,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 43L,
+                            Id = 16L,
                             EntityId = 16L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -745,7 +536,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 44L,
+                            Id = 17L,
                             EntityId = 17L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -753,7 +544,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 45L,
+                            Id = 18L,
                             EntityId = 18L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -761,7 +552,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 46L,
+                            Id = 19L,
                             EntityId = 19L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -769,7 +560,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 47L,
+                            Id = 20L,
                             EntityId = 20L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -777,7 +568,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 48L,
+                            Id = 21L,
                             EntityId = 21L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -785,7 +576,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 49L,
+                            Id = 22L,
                             EntityId = 22L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -793,7 +584,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 50L,
+                            Id = 23L,
                             EntityId = 23L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -801,7 +592,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 51L,
+                            Id = 24L,
                             EntityId = 24L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -809,7 +600,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 52L,
+                            Id = 25L,
                             EntityId = 25L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -817,7 +608,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 53L,
+                            Id = 26L,
                             EntityId = 26L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
@@ -825,11 +616,515 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         },
                         new
                         {
-                            Id = 54L,
+                            Id = 27L,
                             EntityId = 27L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
                             Value = "Sweden"
+                        },
+                        new
+                        {
+                            Id = 28L,
+                            EntityId = 28L,
+                            EntityName = "Country",
+                            LanguageCountryId = 28L,
+                            Value = "Iceland"
+                        },
+                        new
+                        {
+                            Id = 29L,
+                            EntityId = 29L,
+                            EntityName = "Country",
+                            LanguageCountryId = 28L,
+                            Value = "Liechtenstein"
+                        },
+                        new
+                        {
+                            Id = 30L,
+                            EntityId = 30L,
+                            EntityName = "Country",
+                            LanguageCountryId = 28L,
+                            Value = "Switzerland"
+                        },
+                        new
+                        {
+                            Id = 31L,
+                            EntityId = 1L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Østerrike"
+                        },
+                        new
+                        {
+                            Id = 32L,
+                            EntityId = 2L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Belgia"
+                        },
+                        new
+                        {
+                            Id = 33L,
+                            EntityId = 3L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Bulgaria"
+                        },
+                        new
+                        {
+                            Id = 34L,
+                            EntityId = 4L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Kroatia"
+                        },
+                        new
+                        {
+                            Id = 35L,
+                            EntityId = 5L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Kypros"
+                        },
+                        new
+                        {
+                            Id = 36L,
+                            EntityId = 6L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Tsjekkia"
+                        },
+                        new
+                        {
+                            Id = 37L,
+                            EntityId = 7L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Danmark"
+                        },
+                        new
+                        {
+                            Id = 38L,
+                            EntityId = 8L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Estland"
+                        },
+                        new
+                        {
+                            Id = 39L,
+                            EntityId = 9L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Finland"
+                        },
+                        new
+                        {
+                            Id = 40L,
+                            EntityId = 10L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Frankrike"
+                        },
+                        new
+                        {
+                            Id = 41L,
+                            EntityId = 11L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Tyskland"
+                        },
+                        new
+                        {
+                            Id = 42L,
+                            EntityId = 12L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Hellas"
+                        },
+                        new
+                        {
+                            Id = 43L,
+                            EntityId = 13L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Ungarn"
+                        },
+                        new
+                        {
+                            Id = 44L,
+                            EntityId = 14L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Irland"
+                        },
+                        new
+                        {
+                            Id = 45L,
+                            EntityId = 15L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Italia"
+                        },
+                        new
+                        {
+                            Id = 46L,
+                            EntityId = 16L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Latvia"
+                        },
+                        new
+                        {
+                            Id = 47L,
+                            EntityId = 17L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Litauen"
+                        },
+                        new
+                        {
+                            Id = 48L,
+                            EntityId = 18L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Luxembourg"
+                        },
+                        new
+                        {
+                            Id = 49L,
+                            EntityId = 19L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Malta"
+                        },
+                        new
+                        {
+                            Id = 50L,
+                            EntityId = 20L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Nederland"
+                        },
+                        new
+                        {
+                            Id = 51L,
+                            EntityId = 21L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Polen"
+                        },
+                        new
+                        {
+                            Id = 52L,
+                            EntityId = 22L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Portugal"
+                        },
+                        new
+                        {
+                            Id = 53L,
+                            EntityId = 23L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Romania"
+                        },
+                        new
+                        {
+                            Id = 54L,
+                            EntityId = 24L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Slovakia"
+                        },
+                        new
+                        {
+                            Id = 55L,
+                            EntityId = 25L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Slovenia"
+                        },
+                        new
+                        {
+                            Id = 56L,
+                            EntityId = 26L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Spania"
+                        },
+                        new
+                        {
+                            Id = 57L,
+                            EntityId = 27L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Sverige"
+                        },
+                        new
+                        {
+                            Id = 58L,
+                            EntityId = 28L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Island"
+                        },
+                        new
+                        {
+                            Id = 59L,
+                            EntityId = 29L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Liechtenstein"
+                        },
+                        new
+                        {
+                            Id = 60L,
+                            EntityId = 30L,
+                            EntityName = "Country",
+                            LanguageCountryId = 33L,
+                            Value = "Sveits"
+                        },
+                        new
+                        {
+                            Id = 61L,
+                            EntityId = 1L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Austerrike"
+                        },
+                        new
+                        {
+                            Id = 62L,
+                            EntityId = 2L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Belgia"
+                        },
+                        new
+                        {
+                            Id = 63L,
+                            EntityId = 3L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Bulgaria"
+                        },
+                        new
+                        {
+                            Id = 64L,
+                            EntityId = 4L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Kroatia"
+                        },
+                        new
+                        {
+                            Id = 65L,
+                            EntityId = 5L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Kypros"
+                        },
+                        new
+                        {
+                            Id = 66L,
+                            EntityId = 6L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Tsjekkia"
+                        },
+                        new
+                        {
+                            Id = 67L,
+                            EntityId = 7L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Danmark"
+                        },
+                        new
+                        {
+                            Id = 68L,
+                            EntityId = 8L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Estland"
+                        },
+                        new
+                        {
+                            Id = 69L,
+                            EntityId = 9L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Finland"
+                        },
+                        new
+                        {
+                            Id = 70L,
+                            EntityId = 10L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Frankrike"
+                        },
+                        new
+                        {
+                            Id = 71L,
+                            EntityId = 11L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Tyskland"
+                        },
+                        new
+                        {
+                            Id = 72L,
+                            EntityId = 12L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Hellas"
+                        },
+                        new
+                        {
+                            Id = 73L,
+                            EntityId = 13L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Ungarn"
+                        },
+                        new
+                        {
+                            Id = 74L,
+                            EntityId = 14L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Irland"
+                        },
+                        new
+                        {
+                            Id = 75L,
+                            EntityId = 15L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Italia"
+                        },
+                        new
+                        {
+                            Id = 76L,
+                            EntityId = 16L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Latvia"
+                        },
+                        new
+                        {
+                            Id = 77L,
+                            EntityId = 17L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Litauen"
+                        },
+                        new
+                        {
+                            Id = 78L,
+                            EntityId = 18L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Luxembourg"
+                        },
+                        new
+                        {
+                            Id = 79L,
+                            EntityId = 19L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Malta"
+                        },
+                        new
+                        {
+                            Id = 80L,
+                            EntityId = 20L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Nederland"
+                        },
+                        new
+                        {
+                            Id = 81L,
+                            EntityId = 21L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Polen"
+                        },
+                        new
+                        {
+                            Id = 82L,
+                            EntityId = 22L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Portugal"
+                        },
+                        new
+                        {
+                            Id = 83L,
+                            EntityId = 23L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Romania"
+                        },
+                        new
+                        {
+                            Id = 84L,
+                            EntityId = 24L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Slovakia"
+                        },
+                        new
+                        {
+                            Id = 85L,
+                            EntityId = 25L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Slovenia"
+                        },
+                        new
+                        {
+                            Id = 86L,
+                            EntityId = 26L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Spania"
+                        },
+                        new
+                        {
+                            Id = 87L,
+                            EntityId = 27L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Sverige"
+                        },
+                        new
+                        {
+                            Id = 88L,
+                            EntityId = 28L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Island"
+                        },
+                        new
+                        {
+                            Id = 89L,
+                            EntityId = 29L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Liechtenstein"
+                        },
+                        new
+                        {
+                            Id = 90L,
+                            EntityId = 30L,
+                            EntityName = "Country",
+                            LanguageCountryId = 34L,
+                            Value = "Sveits"
                         });
                 });
 
