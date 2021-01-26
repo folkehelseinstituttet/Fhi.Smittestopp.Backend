@@ -44,7 +44,7 @@ namespace DIGNDB.App.SmitteStop.API
         public List<string> DeprecatedVersions { get; set; } = new List<string>();
 
         [Required]
-        public string ZipFilesFolder;
+        public string ZipFilesFolder { get; set; }
 
         public bool EnableCacheOverride { get; set; }
     }
