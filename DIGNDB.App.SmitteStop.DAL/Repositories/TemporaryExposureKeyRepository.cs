@@ -1,13 +1,13 @@
 ﻿using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Enums;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
 using SortOrder = DIGNDB.App.SmitteStop.Domain.SortOrder;
 
 namespace DIGNDB.App.SmitteStop.DAL.Repositories
@@ -36,12 +36,12 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
         {
             foreach (var key in temporaryExposureKeys)
             {
-                _dbContext.Add(key);
+                await _dbContext.AddAsync(key);
             }
 
             try
             {
-                _dbContext.SaveChanges();
+                _dbContext.SaveChangesAsync();
             }
             catch (DbUpdateException e)
             {
