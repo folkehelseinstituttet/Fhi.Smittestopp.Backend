@@ -3,7 +3,7 @@ using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -19,7 +19,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
         private TemporaryExposureKeyRepository _repo;
         private DbContextOptions<DigNDB_SmittestopContext> _options;
         private Mock<ICountryRepository> _countryRepository;
-        private Mock<IConfiguration> _configuration;
+        private Mock<ILogger<TemporaryExposureKeyRepository>> _logger;
 
         private readonly Country _dkCountry = new Country()
         {
@@ -34,18 +34,18 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
         };
 
         [SetUp]
+        public void Init()
+        {
+            _logger = new Mock<ILogger<TemporaryExposureKeyRepository>>(MockBehavior.Loose);
+        }
+
+        [SetUp]
         public void CreateOptions()
         {
             var DBName = "TEST_DB_" + DateTime.UtcNow;
             _options = new DbContextOptionsBuilder<DigNDB_SmittestopContext>().UseInMemoryDatabase(databaseName: DBName).Options;
             _countryRepository = new Mock<ICountryRepository>(MockBehavior.Strict);
             _countryRepository.Setup(x => x.GetApiOriginCountry()).Returns(_dkCountry);
-        }
-
-        [SetUp]
-        public void CreateConfiguration()
-        {
-            _configuration = new Mock<IConfiguration>(MockBehavior.Loose);
         }
 
         private IList<TemporaryExposureKey> CreateMockedListExposureKeys(DateTime expectDate, int numberOfKeys, bool isDkOrigin)
@@ -82,7 +82,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
                 context.TemporaryExposureKey.AddRange(dataForOtherDate);
                 context.TemporaryExposureKey.AddRange(dataForNotDK);
                 context.SaveChanges();
-                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object);
+                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object, _logger.Object);
                 var keys = _repo.GetKeysOnlyFromApiOriginCountry(expectDate, 0);
                 Assert.AreEqual(dataForCurrentDate.Count, keys.Count);
             }
@@ -97,7 +97,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
                 context.Database.EnsureDeleted();
                 context.TemporaryExposureKey.AddRange(data);
                 context.SaveChanges();
-                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object);
+                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object, _logger.Object);
                 var expectKey = data[0];
                 var actualKey = _repo.GetById(expectKey.Id).Result;
 
@@ -119,7 +119,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
                 //add data to context
                 context.TemporaryExposureKey.AddRange(data);
                 context.SaveChanges();
-                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object);
+                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object, _logger.Object);
                 var keys = _repo.GetAll().Result;
                 Assert.AreEqual(expectKeys, keys.Count);
             }
@@ -136,7 +136,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
                 //add data to context
                 context.TemporaryExposureKey.AddRange(data);
                 context.SaveChanges();
-                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object);
+                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object, _logger.Object);
                 var keys = _repo.GetAllKeyData().Result;
                 CollectionAssert.AreEqual(expectKeysData, keys);
             }
@@ -155,7 +155,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
             using (var context = new DigNDB_SmittestopContext(_options))
             {
                 context.Database.EnsureDeleted();
-                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object);
+                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object, _logger.Object);
                 _repo.AddTemporaryExposureKey(key).Wait();
             }
             using (var context = new DigNDB_SmittestopContext(_options))
@@ -174,7 +174,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
             using (var context = new DigNDB_SmittestopContext(_options))
             {
                 context.Database.EnsureDeleted();
-                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object);
+                _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object, _logger.Object);
                 _repo.AddUniqueTemporaryExposureKeys(data).Wait();
             }
             using (var context = new DigNDB_SmittestopContext(_options))
