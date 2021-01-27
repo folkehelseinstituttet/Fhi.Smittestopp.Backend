@@ -20,14 +20,17 @@ namespace FederationGatewayApi.Services
         private readonly IKeyFilter _keyFilter;
         private readonly ITemporaryExposureKeyRepository _tempKeyRepository;
         private readonly ILogger<EFGSKeyStoreService> _logger;
+        private readonly IAddTemporaryExposureKeyService _addTemporaryExposureKeyService;
 
         public EFGSKeyStoreService(IKeyFilter filter,
                                    ITemporaryExposureKeyRepository repository,
                                    ILogger<EFGSKeyStoreService> logger,
                                    IRiskCalculator riskCalculator,
                                    IEpochConverter epochConverter,
-                                   IDaysSinceOnsetOfSymptomsDecoder daysSinceOnsetOfSymptomsDecoder)
+                                   IDaysSinceOnsetOfSymptomsDecoder daysSinceOnsetOfSymptomsDecoder,
+                                   IAddTemporaryExposureKeyService addTemporaryExposureKeyService)
         {
+            _addTemporaryExposureKeyService = addTemporaryExposureKeyService;
             _keyFilter = filter;
             _tempKeyRepository = repository;
             _logger = logger;
@@ -66,7 +69,8 @@ namespace FederationGatewayApi.Services
                 acceptedKeys = _keyFilter.ValidateKeys(mappedKeys, out validationErrors);
                 _logger.LogInformation($"Keys validated with {validationErrors?.Count} error.");
                 _logger.LogInformation($"Saving...");
-                _tempKeyRepository.AddUniqueTemporaryExposureKeys(acceptedKeys).Wait();
+                acceptedKeys = _addTemporaryExposureKeyService.FilterDuplicateKeysAsync(acceptedKeys).Result;
+                _tempKeyRepository.AddTemporaryExposureKeysAsync(acceptedKeys).Wait();
                 _logger.LogInformation($"{acceptedKeys?.Count} keys saved.");
                 acceptedKeysCount = acceptedKeys.Count;
             }

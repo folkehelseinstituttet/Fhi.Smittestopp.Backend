@@ -40,7 +40,16 @@ namespace DIGNDB.App.SmitteStop.API.Services
             TemporaryExposureKeyBatchDto parameters)
         {
             var incomingKeys = _exposureKeyMapper.FromDtoToEntity(parameters);
+            incomingKeys = await FilterDuplicateKeysAsync(incomingKeys);
             return incomingKeys;
+        }
+
+        public async Task<List<TemporaryExposureKey>> FilterDuplicateKeysAsync(IList<TemporaryExposureKey> incomingKeys)
+        {
+            var newKeyData = incomingKeys.Select(u => u.KeyData).Distinct().ToArray();
+            var keysInDb = await _temporaryExposureKeyRepository.GetKeysThatAlreadyExistsInDbAsync(newKeyData);
+            var keysNotInDb = incomingKeys.Where(u => keysInDb.All(x => !x.SequenceEqual(u.KeyData))).ToList();
+            return keysNotInDb;
         }
 
         private async Task CreateKeyCountryRelationships(List<string> visitedCountries, IList<TemporaryExposureKey> newTemporaryExposureKeys)
@@ -73,8 +82,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
             }
 
             var visitedCountries = parameters.visitedCountries.FindAll(countryCode => countryCode.ToLower() != origin.Code.ToLower());
-
-            await _temporaryExposureKeyRepository.AddUniqueTemporaryExposureKeys(newTemporaryExposureKeys);
+            await _temporaryExposureKeyRepository.AddTemporaryExposureKeysAsync(newTemporaryExposureKeys);
             await CreateKeyCountryRelationships(visitedCountries, newTemporaryExposureKeys);
         }
     }

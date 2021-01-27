@@ -11,5 +11,6 @@ namespace DIGNDB.App.SmitteStop.Core.Contracts
         Task CreateKeysInDatabase(TemporaryExposureKeyBatchDto parameters, KeySource apiVersion);
 
         Task<IList<TemporaryExposureKey>> GetFilteredKeysEntitiesFromDTO(TemporaryExposureKeyBatchDto parameters);
+        Task<List<TemporaryExposureKey>> FilterDuplicateKeysAsync(IList<TemporaryExposureKey> incomingKeys);
     }
 }
