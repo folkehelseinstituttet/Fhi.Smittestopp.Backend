@@ -1,12 +1,14 @@
 ﻿using DIGNDB.App.SmitteStop.DAL.Context;
-using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Enums;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SortOrder = DIGNDB.App.SmitteStop.Domain.SortOrder;
 
 namespace DIGNDB.App.SmitteStop.DAL.Repositories
 {
@@ -14,10 +16,12 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
     {
         private readonly DigNDB_SmittestopContext _dbContext;
         private readonly ICountryRepository _countryRepository;
+        private readonly ILogger<TemporaryExposureKeyRepository> _logger;
 
         // constructor used for unit tests
-        public TemporaryExposureKeyRepository(DigNDB_SmittestopContext dbContext, ICountryRepository countryRepository)
+        public TemporaryExposureKeyRepository(DigNDB_SmittestopContext dbContext, ICountryRepository countryRepository, ILogger<TemporaryExposureKeyRepository> logger)
         {
+            _logger = logger;
             _countryRepository = countryRepository;
             _dbContext = dbContext;
         }
@@ -30,15 +34,36 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         public async Task AddUniqueTemporaryExposureKeys(IList<TemporaryExposureKey> temporaryExposureKeys)
         {
-            var newKeyData = temporaryExposureKeys.Select(u => u.KeyData).Distinct().ToArray();
-            var keysInDb = _dbContext.TemporaryExposureKey.Where(u => newKeyData.Contains(u.KeyData))
-                .Select(u => u.KeyData).ToArray();
-            var keysNotInDb = temporaryExposureKeys.Where(u => keysInDb.All(x => !x.SequenceEqual(u.KeyData)));
-            foreach (var key in keysNotInDb)
+            foreach (var key in temporaryExposureKeys)
             {
-                _dbContext.Add(key);
+                await _dbContext.AddAsync(key);
             }
-            _dbContext.SaveChanges();
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                if (IsDuplicateKeyInsertException(e))
+                {
+                    _logger.LogInformation("Attempted to save duplicate key in the database. Key ignored");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        private bool IsDuplicateKeyInsertException(DbUpdateException e)
+        {
+            if (e.InnerException is SqlException innerException && innerException.Number == 2601)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<IList<TemporaryExposureKey>> GetAll()
