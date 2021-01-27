@@ -41,7 +41,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
             try
             {
-                _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
             }
             catch (DbUpdateException e)
             {
