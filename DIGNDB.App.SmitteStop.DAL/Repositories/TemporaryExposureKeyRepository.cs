@@ -1,7 +1,6 @@
 ﻿using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Enums;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -40,16 +39,6 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             }
 
             await _dbContext.SaveChangesAsync();
-        }
-
-        private bool IsDuplicateKeyInsertException(DbUpdateException e)
-        {
-            if (e.InnerException is SqlException innerException && innerException.Number == 2601)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         public async Task<IList<TemporaryExposureKey>> GetAll()
