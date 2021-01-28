@@ -32,28 +32,14 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task AddUniqueTemporaryExposureKeys(IList<TemporaryExposureKey> temporaryExposureKeys)
+        public async Task AddTemporaryExposureKeysAsync(IList<TemporaryExposureKey> temporaryExposureKeys)
         {
             foreach (var key in temporaryExposureKeys)
             {
                 await _dbContext.AddAsync(key);
             }
 
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException e)
-            {
-                if (IsDuplicateKeyInsertException(e))
-                {
-                    _logger.LogInformation("Attempted to save duplicate key in the database. Key ignored");
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _dbContext.SaveChangesAsync();
         }
 
         private bool IsDuplicateKeyInsertException(DbUpdateException e)
@@ -153,6 +139,12 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                     .ThenBy(c => c.RollingStartNumber);
 
             return TakeNextBatch(query, numberOfRecordToSkip, maxCount).ToList();
+        }
+
+        public async Task<byte[][]> GetKeysThatAlreadyExistsInDbAsync(byte[][] incomingKeys)
+        {
+            return await _dbContext.TemporaryExposureKey.Where(u => incomingKeys.Contains(u.KeyData))
+                .Select(u => u.KeyData).ToArrayAsync();
         }
 
         public async Task<IList<TemporaryExposureKey>> GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(long rollingStartNumberThreshold, int numberOfRecordsToSkip, int batchSize)

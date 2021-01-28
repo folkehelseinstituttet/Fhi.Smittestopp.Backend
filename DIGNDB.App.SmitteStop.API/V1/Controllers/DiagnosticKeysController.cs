@@ -119,7 +119,7 @@ namespace DIGNDB.App.SmitteStop.API
                         key.KeySource = KeySource.SmitteStopApiVersion1;
                         key.ReportType = ReportType.CONFIRMED_TEST;
                     }
-                    await _temporaryExposureKeyRepository.AddUniqueTemporaryExposureKeys(newTemporaryExposureKeys);
+                    await _temporaryExposureKeyRepository.AddTemporaryExposureKeysAsync(newTemporaryExposureKeys);
                 }
 
                 _logger.LogInformation("Keys uploaded successfully");

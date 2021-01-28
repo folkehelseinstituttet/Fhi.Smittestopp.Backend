@@ -93,7 +93,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 
         public void SetupTemopraryExposureKeyRepositoryMock(Mock<ITemporaryExposureKeyRepository> tempKeyRepository)
         {
-            tempKeyRepository.Setup(mock => mock.AddUniqueTemporaryExposureKeys(It.IsAny<List<TemporaryExposureKey>>())).Returns((List<TemporaryExposureKey> keys) =>
+            tempKeyRepository.Setup(mock => mock.AddTemporaryExposureKeysAsync(It.IsAny<List<TemporaryExposureKey>>())).Returns((List<TemporaryExposureKey> keys) =>
             {
                 return Task.CompletedTask;
             });

@@ -16,7 +16,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         Task AddTemporaryExposureKey(TemporaryExposureKey temporaryExposureKey);
 
-        Task AddUniqueTemporaryExposureKeys(IList<TemporaryExposureKey> temporaryExposureKeys);
+        Task AddTemporaryExposureKeysAsync(IList<TemporaryExposureKey> temporaryExposureKeys);
 
         IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountry(DateTime uploadedOn, int fetchCommandTimeout);
 
@@ -37,5 +37,6 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
         Task<IList<TemporaryExposureKey>> GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(long rollingStartNumberThreshold, int numberOfRecordsToSkip, int batchSize);
 
         IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUploadForWhichConsentWasGiven(DateTime uploadedOnAndLater, int numberOfRecordToSkip, int maxCount, KeySource[] sources);
+        Task<byte[][]> GetKeysThatAlreadyExistsInDbAsync(byte[][] incomingKeys);
     }
 }

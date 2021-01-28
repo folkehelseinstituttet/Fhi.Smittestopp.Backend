@@ -47,11 +47,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             await addTemporaryExposureKeyService.CreateKeysInDatabase(parameters, KeySource.SmitteStopApiVersion3);
 
             _temporaryExposureKeyRepositoryMock.Verify(mock =>
-                mock.AddUniqueTemporaryExposureKeys(It.Is<IList<TemporaryExposureKey>>(keys =>
+                mock.AddTemporaryExposureKeysAsync(It.Is<IList<TemporaryExposureKey>>(keys =>
                     keys.All(key => key.KeySource == KeySource.SmitteStopApiVersion3))));
 
             _temporaryExposureKeyRepositoryMock.Verify(mock =>
-               mock.AddUniqueTemporaryExposureKeys(It.Is<IList<TemporaryExposureKey>>(keys =>
+               mock.AddTemporaryExposureKeysAsync(It.Is<IList<TemporaryExposureKey>>(keys =>
                    keys.All(key => key.VisitedCountries.Any(country => country.Country.Code.ToLower() == "dk") == false))));
         }
 

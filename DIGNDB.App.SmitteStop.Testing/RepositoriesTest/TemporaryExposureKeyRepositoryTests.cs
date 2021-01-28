@@ -175,7 +175,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
             {
                 context.Database.EnsureDeleted();
                 _repo = new TemporaryExposureKeyRepository(context, _countryRepository.Object, _logger.Object);
-                _repo.AddUniqueTemporaryExposureKeys(data).Wait();
+                _repo.AddTemporaryExposureKeysAsync(data).Wait();
             }
             using (var context = new DigNDB_SmittestopContext(_options))
             {
