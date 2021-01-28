@@ -1,5 +1,5 @@
-﻿using System;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+using System;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
 {

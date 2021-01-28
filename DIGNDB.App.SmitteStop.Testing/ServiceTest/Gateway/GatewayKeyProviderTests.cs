@@ -1,10 +1,10 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using FederationGatewayApi.Services;
+﻿using FederationGatewayApi.Services;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using System;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 {

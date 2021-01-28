@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace FederationGatewayApi.Contracts
+﻿namespace FederationGatewayApi.Contracts
 {
     public interface IEuGatewayService
     {

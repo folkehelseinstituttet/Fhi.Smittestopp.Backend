@@ -1,7 +1,7 @@
 ﻿using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.Domain.Db;
-using System.Linq;
 using System;
+using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.DAL.Repositories
 {

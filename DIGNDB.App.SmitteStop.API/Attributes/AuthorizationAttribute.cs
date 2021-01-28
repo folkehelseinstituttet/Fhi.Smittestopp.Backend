@@ -1,11 +1,10 @@
-﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.API.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using DIGNDB.App.SmitteStop.API.Contracts;
 
 namespace DIGNDB.App.SmitteStop.API.Attributes
 {

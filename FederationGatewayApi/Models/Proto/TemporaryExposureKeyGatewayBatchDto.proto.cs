@@ -8,11 +8,11 @@
 using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
-using scg = global::System.Collections.Generic;
-namespace FederationGatewayApi.Models.Proto {
+namespace FederationGatewayApi.Models.Proto
+{
 
-  /// <summary>Holder for reflection information generated from TemporaryExposureKeyGatewayBatchDto.proto</summary>
-  public static partial class TemporaryExposureKeyGatewayBatchDtoReflection {
+    /// <summary>Holder for reflection information generated from TemporaryExposureKeyGatewayBatchDto.proto</summary>
+    public static partial class TemporaryExposureKeyGatewayBatchDtoReflection {
 
     #region Descriptor
     /// <summary>File descriptor for TemporaryExposureKeyGatewayBatchDto.proto</summary>

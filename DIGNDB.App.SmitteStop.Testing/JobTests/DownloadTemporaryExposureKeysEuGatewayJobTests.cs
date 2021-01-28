@@ -1,18 +1,11 @@
-﻿using System;
-using System.Globalization;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
-using DIGNDB.App.SmitteStop.DAL.Repositories;
-using DIGNDB.App.SmitteStop.Domain.Db;
-using DIGNDB.APP.SmitteStop.Jobs.Jobs;
-using FluentAssertions;
-using NUnit.Framework;
-using Microsoft.Extensions.Configuration;
-using Moq;
-using Microsoft.Extensions.Logging;
+﻿using DIGNDB.APP.SmitteStop.Jobs.Config;
 using DIGNDB.APP.SmitteStop.Jobs.EuGateway;
 using FederationGatewayApi.Contracts;
-using DIGNDB.APP.SmitteStop.Jobs.Config;
+using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System;
 
 namespace DIGNDB.App.SmitteStop.Testing.JobTests
 {

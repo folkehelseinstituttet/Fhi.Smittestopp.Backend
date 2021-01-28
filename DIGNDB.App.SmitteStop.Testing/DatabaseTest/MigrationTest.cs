@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using DIGNDB.App.SmitteStop.DAL.Context;
+﻿using DIGNDB.App.SmitteStop.DAL.Context;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using NUnit.Framework;
+using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.Testing.DatabaseTest
 {

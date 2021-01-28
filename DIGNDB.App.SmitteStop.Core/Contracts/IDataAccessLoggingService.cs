@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Security.Principal;
-using DIGNDB.App.SmitteStop.Core.Enums;
-using DIGNDB.App.SmitteStop.Core.Models;
+﻿using DIGNDB.App.SmitteStop.Core.Enums;
 using DIGNDB.App.SmitteStop.Domain;
+using System.Collections.Generic;
+using System.Security.Principal;
 
 namespace DIGNDB.App.SmitteStop.Core.Contracts
 {

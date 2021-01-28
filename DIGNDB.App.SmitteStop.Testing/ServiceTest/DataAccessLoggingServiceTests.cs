@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Principal;
-using DIGNDB.App.SmitteStop.API.Services;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Enums;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.Domain;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Contrib.ExpressionBuilders.Logging;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Security.Principal;
 using Log = Moq.Contrib.ExpressionBuilders.Logging.Log;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest

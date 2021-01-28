@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using FederationGatewayApi.Contracts;
+﻿using FederationGatewayApi.Contracts;
 using FederationGatewayApi.Services;
-using Moq;
-using Moq.Protected;
 using NUnit.Framework;
 
 
