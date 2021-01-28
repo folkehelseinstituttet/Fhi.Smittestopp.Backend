@@ -35,6 +35,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
     public class EuGatewayServiceUploadTest
     {
         private DigNDB_SmittestopContext _dbContext;
+        private Mock<ILogger<TemporaryExposureKeyRepository>> _logger;
         private Country _originCountry;
         private EuGatewayConfig _config;
 
@@ -42,6 +43,12 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         private Country _poland;
         private Country _germany;
         private Country _latvia;
+
+        [SetUp]
+        public void Init()
+        {
+            _logger = new Mock<ILogger<TemporaryExposureKeyRepository>>(MockBehavior.Loose);
+        }
 
         [SetUp]
         public void CreateDataSet()
@@ -459,7 +466,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 
             IOriginSpecificSettings originConfig = new AppSettingsConfig() { OriginCountryCode = _originCountry.Code.ToUpper() };
             var countryRepository = new CountryRepository(_dbContext, translationsRepositoryMock.Object, originConfig);
-            var keysRepository = new TemporaryExposureKeyRepository(_dbContext, countryRepository);
+            var keysRepository = new TemporaryExposureKeyRepository(_dbContext, countryRepository, _logger.Object);
 
             var signatureServiceMock = new Mock<ISignatureService>(MockBehavior.Strict);
             signatureServiceMock.Setup(sigService => sigService.Sign(It.IsAny<TemporaryExposureKeyGatewayBatchProtoDto>(), Domain.SortOrder.ASC))
