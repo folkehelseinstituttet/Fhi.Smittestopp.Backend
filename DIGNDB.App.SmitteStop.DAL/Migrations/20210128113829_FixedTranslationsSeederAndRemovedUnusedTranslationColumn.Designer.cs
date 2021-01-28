@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DIGNDB.App.SmitteStop.DAL.Migrations
 {
     [DbContext(typeof(DigNDB_SmittestopContext))]
-    [Migration("20210128113028_FixedTranslationsSeederAndRemovedUnusedTranslationColumn")]
+    [Migration("20210128113829_FixedTranslationsSeederAndRemovedUnusedTranslationColumn")]
     partial class FixedTranslationsSeederAndRemovedUnusedTranslationColumn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -624,7 +624,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 28L,
-                            EntityId = 28L,
+                            EntityId = 30L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
                             Value = "Iceland"
@@ -632,7 +632,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 29L,
-                            EntityId = 29L,
+                            EntityId = 31L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
                             Value = "Liechtenstein"
@@ -640,7 +640,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 30L,
-                            EntityId = 30L,
+                            EntityId = 32L,
                             EntityName = "Country",
                             LanguageCountryId = 28L,
                             Value = "Switzerland"
@@ -864,7 +864,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 58L,
-                            EntityId = 28L,
+                            EntityId = 30L,
                             EntityName = "Country",
                             LanguageCountryId = 33L,
                             Value = "Island"
@@ -872,7 +872,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 59L,
-                            EntityId = 29L,
+                            EntityId = 31L,
                             EntityName = "Country",
                             LanguageCountryId = 33L,
                             Value = "Liechtenstein"
@@ -880,7 +880,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 60L,
-                            EntityId = 30L,
+                            EntityId = 32L,
                             EntityName = "Country",
                             LanguageCountryId = 33L,
                             Value = "Sveits"
@@ -1104,7 +1104,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 88L,
-                            EntityId = 28L,
+                            EntityId = 30L,
                             EntityName = "Country",
                             LanguageCountryId = 34L,
                             Value = "Island"
@@ -1112,7 +1112,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 89L,
-                            EntityId = 29L,
+                            EntityId = 31L,
                             EntityName = "Country",
                             LanguageCountryId = 34L,
                             Value = "Liechtenstein"
@@ -1120,7 +1120,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 90L,
-                            EntityId = 30L,
+                            EntityId = 32L,
                             EntityName = "Country",
                             LanguageCountryId = 34L,
                             Value = "Sveits"
