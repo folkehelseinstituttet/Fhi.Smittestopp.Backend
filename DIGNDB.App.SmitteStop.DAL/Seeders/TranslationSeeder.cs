@@ -36,9 +36,9 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new {Id = 25L, EntityId = 25L, EntityName = nameof(Country), Value = "Slovenia", LanguageCountryId = CountrySeeder.EnglandCountryId},
                 new {Id = 26L, EntityId = 26L, EntityName = nameof(Country), Value = "Spain", LanguageCountryId = CountrySeeder.EnglandCountryId},
                 new {Id = 27L, EntityId = 27L, EntityName = nameof(Country), Value = "Sweden", LanguageCountryId = CountrySeeder.EnglandCountryId},
-                new {Id = 28L, EntityId = 28L, EntityName = nameof(Country), Value = "Iceland", LanguageCountryId = CountrySeeder.EnglandCountryId},
-                new {Id = 29L, EntityId = 29L, EntityName = nameof(Country), Value = "Liechtenstein", LanguageCountryId = CountrySeeder.EnglandCountryId},
-                new {Id = 30L, EntityId = 30L, EntityName = nameof(Country), Value = "Switzerland", LanguageCountryId = CountrySeeder.EnglandCountryId},
+                new {Id = 28L, EntityId = 30L, EntityName = nameof(Country), Value = "Iceland", LanguageCountryId = CountrySeeder.EnglandCountryId},
+                new {Id = 29L, EntityId = 31L, EntityName = nameof(Country), Value = "Liechtenstein", LanguageCountryId = CountrySeeder.EnglandCountryId},
+                new {Id = 30L, EntityId = 32L, EntityName = nameof(Country), Value = "Switzerland", LanguageCountryId = CountrySeeder.EnglandCountryId},
 
                 new {Id = 31L, EntityId = 1L, EntityName = nameof(Country), Value = "Østerrike", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
                 new {Id = 32L, EntityId = 2L, EntityName = nameof(Country), Value = "Belgia", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
@@ -67,9 +67,9 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new {Id = 55L, EntityId = 25L, EntityName = nameof(Country), Value = "Slovenia", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
                 new {Id = 56L, EntityId = 26L, EntityName = nameof(Country), Value = "Spania", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
                 new {Id = 57L, EntityId = 27L, EntityName = nameof(Country), Value = "Sverige", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
-                new {Id = 58L, EntityId = 28L, EntityName = nameof(Country), Value = "Island", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
-                new {Id = 59L, EntityId = 29L, EntityName = nameof(Country), Value = "Liechtenstein", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
-                new {Id = 60L, EntityId = 30L, EntityName = nameof(Country), Value = "Sveits", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
+                new {Id = 58L, EntityId = 30L, EntityName = nameof(Country), Value = "Island", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
+                new {Id = 59L, EntityId = 31L, EntityName = nameof(Country), Value = "Liechtenstein", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
+                new {Id = 60L, EntityId = 32L, EntityName = nameof(Country), Value = "Sveits", LanguageCountryId = CountrySeeder.NorwayBokmalDialectId},
 
                 new {Id = 61L, EntityId = 1L, EntityName = nameof(Country), Value = "Austerrike", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId},
                 new {Id = 62L, EntityId = 2L, EntityName = nameof(Country), Value = "Belgia", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId},
@@ -98,9 +98,9 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new {Id = 85L, EntityId = 25L, EntityName = nameof(Country), Value = "Slovenia", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId},
                 new {Id = 86L, EntityId = 26L, EntityName = nameof(Country), Value = "Spania", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId},
                 new {Id = 87L, EntityId = 27L, EntityName = nameof(Country), Value = "Sverige", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId},
-                new {Id = 88L, EntityId = 28L, EntityName = nameof(Country), Value = "Island", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId},
-                new {Id = 89L, EntityId = 29L, EntityName = nameof(Country), Value = "Liechtenstein", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId},
-                new {Id = 90L, EntityId = 30L, EntityName = nameof(Country), Value = "Sveits", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId}
+                new {Id = 88L, EntityId = 30L, EntityName = nameof(Country), Value = "Island", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId},
+                new {Id = 89L, EntityId = 31L, EntityName = nameof(Country), Value = "Liechtenstein", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId},
+                new {Id = 90L, EntityId = 32L, EntityName = nameof(Country), Value = "Sveits", LanguageCountryId = CountrySeeder.NorwayNynorskDialectId}
             };
         }
     }

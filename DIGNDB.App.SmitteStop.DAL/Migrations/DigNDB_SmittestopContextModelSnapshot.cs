@@ -390,9 +390,6 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                     b.Property<string>("EntityName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EntityPropertyName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long?>("LanguageCountryId")
                         .HasColumnType("bigint");
 
