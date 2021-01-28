@@ -10,6 +10,7 @@ namespace DIGNDB.App.SmitteStop.Domain.Dto
         public static readonly TimeSpan OneDayTimeSpan = TimeSpan.FromDays(1);
         public TimeSpan rollingDurationSpan { get; private set; } = OneDayTimeSpan;
         public byte[] key { get; set; }
+        [JsonConverter(typeof(UTCMidnightJsonConverter))]
         public DateTime rollingStart { get; set; }
 
         public string rollingDuration
