@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using FederationGatewayApi.Models;
-using System.Collections.Generic;
-using System.Linq;
 using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Domain.Db;
-using System;
 using DIGNDB.App.SmitteStop.Domain.Dto;
+using FederationGatewayApi.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FederationGatewayApi.Mappers
 {

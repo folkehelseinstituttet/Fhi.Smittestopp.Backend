@@ -1,6 +1,4 @@
-﻿using System;
-using DIGNDB.App.SmitteStop.DAL.Migrations;
-using FluentAssertions;
+﻿using DIGNDB.App.SmitteStop.DAL.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Migrations;

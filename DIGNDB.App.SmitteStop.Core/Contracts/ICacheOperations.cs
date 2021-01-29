@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading;
+﻿using DIGNDB.App.SmitteStop.Domain.Dto;
+using System;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Core.Models;
-using DIGNDB.App.SmitteStop.Domain.Dto;
 
 namespace DIGNDB.App.SmitteStop.Core.Contracts
 {

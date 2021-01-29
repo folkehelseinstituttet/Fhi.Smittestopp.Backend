@@ -1,9 +1,7 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.Core.Helpers
 {

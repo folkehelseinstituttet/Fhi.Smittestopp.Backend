@@ -2,11 +2,9 @@
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Domain.Dto;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {

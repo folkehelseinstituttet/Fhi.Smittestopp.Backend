@@ -1,8 +1,8 @@
-﻿using System.IO;
+﻿using log4net;
+using log4net.Repository;
+using System.IO;
 using System.Reflection;
 using System.Xml;
-using log4net;
-using log4net.Repository;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {

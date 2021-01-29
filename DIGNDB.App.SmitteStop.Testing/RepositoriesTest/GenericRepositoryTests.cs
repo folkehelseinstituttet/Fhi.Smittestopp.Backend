@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
 using DIGNDB.App.SmitteStop.DAL.Context;
-using DIGNDB.App.SmitteStop.Core.Models;
-using Microsoft.EntityFrameworkCore;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
-using System.Linq;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
-using Moq;
+using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
 {

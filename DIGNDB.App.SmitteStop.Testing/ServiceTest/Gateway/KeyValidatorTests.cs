@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using FluentAssertions;
 using Moq;
-using Moq.Protected;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 {

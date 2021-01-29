@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DIGNDB.App.SmitteStop.Core.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Reflection;
-using DIGNDB.App.SmitteStop.Core.Exceptions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DIGNDB.App.SmitteStop.Core.DependencyInjection
 {

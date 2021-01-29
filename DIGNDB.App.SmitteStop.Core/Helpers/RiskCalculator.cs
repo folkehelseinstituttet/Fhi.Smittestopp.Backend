@@ -1,8 +1,7 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
-using System;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
+using System;
 
 namespace DIGNDB.App.SmitteStop.Core.Helpers
 {

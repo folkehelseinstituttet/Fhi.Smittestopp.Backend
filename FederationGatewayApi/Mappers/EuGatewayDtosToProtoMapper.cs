@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using DIGNDB.App.SmitteStop.Domain.Dto;
 using Google.Protobuf;
-using System;
 using TemporaryExposureKeyGatewayDtoProto = FederationGatewayApi.Models.Proto.TemporaryExposureKeyGatewayDto;
 
 namespace FederationGatewayApi.Mappers

@@ -8,11 +8,11 @@
 using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
-using scg = global::System.Collections.Generic;
-namespace DIGNDB.App.SmitteStop.Domain.Proto {
+namespace DIGNDB.App.SmitteStop.Domain.Proto
+{
 
-  /// <summary>Holder for reflection information generated from TemporaryExposureKeyBatch.proto</summary>
-  public static partial class TemporaryExposureKeyBatchReflection {
+    /// <summary>Holder for reflection information generated from TemporaryExposureKeyBatch.proto</summary>
+    public static partial class TemporaryExposureKeyBatchReflection {
 
     #region Descriptor
     /// <summary>File descriptor for TemporaryExposureKeyBatch.proto</summary>

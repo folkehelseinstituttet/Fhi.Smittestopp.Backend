@@ -1,6 +1,5 @@
 ﻿using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Dto;
-using Microsoft.Extensions.Logging;
 
 namespace DIGNDB.App.SmitteStop.Core.Contracts
 {

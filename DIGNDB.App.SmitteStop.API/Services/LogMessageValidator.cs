@@ -1,12 +1,11 @@
-﻿using System;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Domain.Dto;
+using Microsoft.Security.Application;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
-using DIGNDB.App.SmitteStop.Domain.Dto;
-using Microsoft.Security.Application;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {

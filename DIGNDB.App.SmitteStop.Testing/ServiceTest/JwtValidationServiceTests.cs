@@ -1,4 +1,5 @@
-﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.API;
+using DIGNDB.App.SmitteStop.API.Contracts;
 using DIGNDB.App.SmitteStop.Core.DependencyInjection;
 using DIGNDB.App.SmitteStop.Core.Exceptions;
 using DIGNDB.App.SmitteStop.DAL.Context;
@@ -17,8 +18,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.API;
-using DIGNDB.App.SmitteStop.API.Contracts;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {
