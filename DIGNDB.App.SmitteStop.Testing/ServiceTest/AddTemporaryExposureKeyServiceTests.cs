@@ -1,6 +1,5 @@
-﻿using DIGNDB.App.SmitteStop.API;
-using DIGNDB.App.SmitteStop.API.Services;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
@@ -71,13 +70,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             var exposureKeyMapperMock = new Mock<IExposureKeyMapper>();
             exposureKeyMapperMock.Setup(x => x.FromDtoToEntity(It.IsAny<TemporaryExposureKeyBatchDto>())).Returns(_exampleKeyList);
 
-            var config = new AppSettingsConfig() { MaxKeysPerFile = 750000 };
-
             var addTemporaryExposureKeyService = new AddTemporaryExposureKeyService(
                 countryRepositoryMock.Object,
                 temporaryExposureKeyCountryRepositoryMock.Object,
                 exposureKeyMapperMock.Object,
-                _temporaryExposureKeyRepositoryMock.Object, config);
+                _temporaryExposureKeyRepositoryMock.Object);
 
             return addTemporaryExposureKeyService;
         }
