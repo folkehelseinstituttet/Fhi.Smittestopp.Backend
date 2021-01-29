@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DIGNDB.App.SmitteStop.API.Services
+namespace DIGNDB.App.SmitteStop.Core.Services
 {
     public class AddTemporaryExposureKeyService : IAddTemporaryExposureKeyService
     {
@@ -15,16 +15,14 @@ namespace DIGNDB.App.SmitteStop.API.Services
         private readonly IGenericRepository<TemporaryExposureKeyCountry> _temporaryExposureKeyCountryRepository;
         private readonly ITemporaryExposureKeyRepository _temporaryExposureKeyRepository;
         private readonly IExposureKeyMapper _exposureKeyMapper;
-        private readonly AppSettingsConfig _appSettingsConfig;
 
         public AddTemporaryExposureKeyService(ICountryRepository countryRepository, IGenericRepository<TemporaryExposureKeyCountry> temporaryExposureKeyCountryRepository,
-            IExposureKeyMapper exposureKeyMapper, ITemporaryExposureKeyRepository temporaryExposureKeyRepository, AppSettingsConfig appSettingsConfig)
+            IExposureKeyMapper exposureKeyMapper, ITemporaryExposureKeyRepository temporaryExposureKeyRepository)
         {
             _countryRepository = countryRepository;
             _temporaryExposureKeyCountryRepository = temporaryExposureKeyCountryRepository;
             _temporaryExposureKeyRepository = temporaryExposureKeyRepository;
             _exposureKeyMapper = exposureKeyMapper;
-            _appSettingsConfig = appSettingsConfig;
         }
 
         public async Task CreateKeysInDatabase(TemporaryExposureKeyBatchDto parameters, KeySource apiVersion)
