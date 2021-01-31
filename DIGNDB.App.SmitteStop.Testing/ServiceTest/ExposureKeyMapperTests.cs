@@ -242,7 +242,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                     new TemporaryExposureKeyDto() { },
                     new TemporaryExposureKeyDto() { }
                 },
-                sharingConsentGiven = true
+                isSharingAllowed = true
             };
             var mapper = new ExposureKeyMapper(_epochConverter);
 

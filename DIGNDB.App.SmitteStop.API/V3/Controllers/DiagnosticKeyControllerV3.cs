@@ -1,20 +1,17 @@
 ﻿using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain;
-using DIGNDB.App.SmitteStop.Domain.Configuration;
-using DIGNDB.App.SmitteStop.Domain.Dto;
 using DIGNDB.App.SmitteStop.Domain.Enums;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System;
-using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+
 namespace DIGNDB.App.SmitteStop.API.V3.Controllers
 {
     [ApiController]
@@ -25,37 +22,33 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
         private const string ApiVersion = "3";
 
         private readonly IAddTemporaryExposureKeyService _addTemporaryExposureKeyService;
-        private readonly IExposureKeyValidator _exposureKeyValidator;
-        private readonly ILogger _logger;
+        private readonly ILogger<DiagnosticKeyControllerV3> _logger;
         private readonly IExposureConfigurationService _exposureConfigurationService;
-        private readonly KeyValidationConfiguration _keyValidationConfig;
         private readonly IZipFileInfoService _zipFileInfoService;
         private readonly AppSettingsConfig _appSettingsConfig;
         private readonly ICacheOperationsV3 _cacheOperations;
-
-
+        private readonly IExposureKeyReader _exposureKeyReader;
 
         public DiagnosticKeyControllerV3(
             ILogger<DiagnosticKeyControllerV3> logger,
-            IExposureKeyValidator exposureKeyValidator,
             IExposureConfigurationService exposureConfigurationService,
-            KeyValidationConfiguration keyValidationConfig,
             IAddTemporaryExposureKeyService addTemporaryExposureKeyService,
             IZipFileInfoService zipFileInfoService,
             AppSettingsConfig appSettingsConfig,
-            ICacheOperationsV3 cacheOperations)
+            ICacheOperationsV3 cacheOperations,
+            IExposureKeyReader exposureKeyReader)
         {
             _cacheOperations = cacheOperations;
-            _exposureKeyValidator = exposureKeyValidator;
             _logger = logger;
             _zipFileInfoService = zipFileInfoService;
             _appSettingsConfig = appSettingsConfig;
             _exposureConfigurationService = exposureConfigurationService;
-            _keyValidationConfig = keyValidationConfig;
             _addTemporaryExposureKeyService = addTemporaryExposureKeyService;
+            _exposureKeyReader = exposureKeyReader;
         }
 
         #region Smitte|stop API
+
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
         [HttpGet("exposureconfiguration")]
         public ActionResult GetExposureConfiguration()
@@ -83,12 +76,13 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
         [TypeFilter(typeof(AuthorizationAttribute))]
         public async Task<IActionResult> UploadDiagnosisKeys()
         {
-            var requestBody = String.Empty;
+            var requestBody = string.Empty;
 
             try
             {
                 _logger.LogInformation("UploadDiagnosisKeys endpoint called");
-                TemporaryExposureKeyBatchDto parameters = await GetRequestParameters();
+
+                var parameters = await _exposureKeyReader.ReadParametersFromBody(HttpContext.Request.Body);
                 await _addTemporaryExposureKeyService.CreateKeysInDatabase(parameters, KeySource.SmitteStopApiVersion3);
 
                 _logger.LogInformation("Keys uploaded successfully");
@@ -143,23 +137,24 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
                 var packageExists = _zipFileInfoService.CheckIfPackageExists(packageInfo, zipFilesFolder);
                 if (packageExists)
                 {
-                    byte[] zipFileContent = null;
-                    bool invalidateCache = false;
+                    byte[] zipFileContent;
+                    
                     if (Request.Headers.ContainsKey("Cache-Control") && Request.Headers["Cache-Control"] == "no-cache")
                     {
-                        invalidateCache = true;
-                        zipFileContent = await _cacheOperations.GetCacheValue(packageInfo, zipFilesFolder, invalidateCache);
+                        zipFileContent = await _cacheOperations.GetCacheValue(packageInfo, zipFilesFolder, forceRefresh: true);
                     }
                     else
                     {
-                        zipFileContent = await _cacheOperations.GetCacheValue(packageInfo, zipFilesFolder, invalidateCache);
+                        zipFileContent = await _cacheOperations.GetCacheValue(packageInfo, zipFilesFolder);
                     }
+
                     var currentBatchNumber = packageInfo.BatchNumber;
                     packageInfo.BatchNumber++;
                     var nextPackageExists = _zipFileInfoService.CheckIfPackageExists(packageInfo, zipFilesFolder);
 
                     AddResponseHeader(nextPackageExists, currentBatchNumber);
                     _logger.LogInformation("Zip package fetched successfully");
+
                     return File(zipFileContent, System.Net.Mime.MediaTypeNames.Application.Zip);
                 }
                 else
@@ -210,24 +205,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
             }
             return true;
         }
-
-        private async Task<string> ReadRequestBody()
-        {
-            using (var reader = new StreamReader(HttpContext.Request.Body))
-            {
-                return await reader.ReadToEndAsync();
-            }
-        }
-
-        private async Task<TemporaryExposureKeyBatchDto> GetRequestParameters()
-        {
-            string requestBody = (await ReadRequestBody());
-
-            var parameters = JsonSerializer.Deserialize<TemporaryExposureKeyBatchDto>(requestBody);
-            _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameters, _keyValidationConfig);
-
-            return parameters;
-        }
     }
+
     #endregion
 }

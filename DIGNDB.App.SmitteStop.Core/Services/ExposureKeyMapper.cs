@@ -20,6 +20,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         {
             _epochConverter = epochConverter;
         }
+
         public List<TemporaryExposureKey> FromDtoToEntity(TemporaryExposureKeyBatchDto dto)
         {
             return dto.keys.Select(key => new TemporaryExposureKey()
@@ -30,7 +31,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
                 RollingPeriod = (long)(key.rollingDurationSpan.TotalMinutes / 10.0d),
                 TransmissionRiskLevel = key.transmissionRiskLevel,
                 DaysSinceOnsetOfSymptoms = key.daysSinceOnsetOfSymptoms,
-                SharingConsentGiven = dto.sharingConsentGiven
+                SharingConsentGiven = dto.isSharingAllowed
             }).ToList();
         }
 
