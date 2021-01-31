@@ -39,8 +39,9 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 },
                 regions = new List<string>
                 {
-                    "dk"
+                    "dk" // shouldn't this be no?
                 },
+                isSharingAllowed = true
             };
 
             await addTemporaryExposureKeyService.CreateKeysInDatabase(parameters, KeySource.SmitteStopApiVersion3);
@@ -63,7 +64,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                     m => m.FindByIsoCode(It.IsAny<string>()))
                 .Returns(new Country()
                 {
-                    Code = "DK"
+                    Code = "DK" // shouldn't this be no?
                 });
 
             var temporaryExposureKeyCountryRepositoryMock = new Mock<IGenericRepository<TemporaryExposureKeyCountry>>();
