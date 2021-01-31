@@ -11,7 +11,6 @@ using System.Text;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
-
     public class ExposureKeyValidator : IExposureKeyValidator
     {
         private readonly ICountryRepository _countryRepository;
@@ -151,7 +150,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
             throw new ArgumentException(errorMessage);
         }
-
+        
         private void ValidateVisitedCountries(TemporaryExposureKeyBatchDto parameter)
         {
             if (parameter.visitedCountries == null) return;

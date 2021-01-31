@@ -199,7 +199,7 @@ namespace DIGNDB.App.SmitteStop.API
 
         private async Task<TemporaryExposureKeyBatchDto> GetRequestParameters()
         {
-            string requestBody = (await ReadRequestBody());
+            string requestBody = await ReadRequestBody();
 
             var parameters = JsonSerializer.Deserialize<TemporaryExposureKeyBatchDto>(requestBody);
             _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(parameters, _keyValidationConfig);

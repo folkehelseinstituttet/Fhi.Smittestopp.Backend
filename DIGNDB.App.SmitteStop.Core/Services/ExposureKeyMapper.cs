@@ -20,6 +20,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         {
             _epochConverter = epochConverter;
         }
+
         public List<TemporaryExposureKey> FromDtoToEntity(TemporaryExposureKeyBatchDto dto)
         {
             return dto.keys.Select(key => new TemporaryExposureKey()
