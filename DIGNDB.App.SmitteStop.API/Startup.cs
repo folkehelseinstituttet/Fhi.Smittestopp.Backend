@@ -102,9 +102,11 @@ namespace DIGNDB.App.SmitteStop.API
                 c.SwaggerEndpoint("swagger/v3/swagger.json", "API Version 3");
             });
 
-            app.UseAuthorization();
+            // Who are you...
             app.UseAuthentication();
-
+            // ...what you may access
+            app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
