@@ -12,8 +12,8 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
 
         private const int KeySize = 16;
         private const ReportType RequiredReportType = ReportType.CONFIRMED_TEST;
-        private const string Denmark = "DK";
-        private const int DenmarkId = 7;
+        private const string Norway = "NO";
+        private const int NorwayId = 29;
         private const bool Enabled = true;
         private const bool Valid = true;
         private const long RollingPeriodMax = 144;
@@ -111,8 +111,8 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
         private bool ValidateOrigin(Country origin)
         {
             return origin.PullingFromGatewayEnabled == Enabled &&
-                   origin.Code != Denmark &&
-                   origin.Id != DenmarkId;
+                   origin.Code != Norway &&
+                   origin.Id != NorwayId;
         }
 
         private bool ValidateKeyReportType(ReportType reportType)
