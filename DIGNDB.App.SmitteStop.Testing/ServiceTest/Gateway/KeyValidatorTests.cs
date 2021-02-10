@@ -49,15 +49,15 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             Assert.IsTrue(_keyValidator.ValidateKeyGateway(_key, out errorMessage));
         }
         [Test]
-        public void CountryMustNotBeDK()
+        public void CountryMustNotBeNO()
         {
             var errorMessage = String.Empty;
             _exposureKeyMock.ResetKeyData(_key);
 
-            _key.Origin = _countryFactory.GenerateCountry(7, "DK");
+            _key.Origin = _countryFactory.GenerateCountry(29, "NO");
             Assert.IsFalse(_keyValidator.ValidateKeyGateway(_key, out errorMessage));
 
-            _key.Origin = _countryFactory.GenerateCountry(21, "DK");
+            _key.Origin = _countryFactory.GenerateCountry(21, "NO");
             Assert.IsFalse(_keyValidator.ValidateKeyGateway(_key, out errorMessage));
 
             _key.Origin = _countryFactory.GenerateCountry(21, "PL");
