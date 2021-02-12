@@ -28,13 +28,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
     {
         private Mock<ICacheOperations> _cacheOperation;
         private Mock<ITemporaryExposureKeyRepository> _temporaryExposureKeyRepository;
-        private Mock<IExposureKeyMapper> _exposureKeyMapper;
         private Mock<IConfiguration> _configuration;
         private Mock<IExposureKeyValidator> _exposureKeyValidator;
         private Mock<ILogger<DiagnosticKeysController>> _logger;
         private Mock<IExposureConfigurationService> _exposureConfigurationService;
 
-        private Mock<ICountryService> _countryServiceMock;
         private Mock<ICountryRepository> _countryRepository;
         private AppSettingsConfig _appSettingsConfig;
         private Mock<IAddTemporaryExposureKeyService> _addTemporaryExposureKeyService;
@@ -58,7 +56,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
                 _exposureKeyValidator.Object,
                 _exposureConfigurationService.Object,
                 _keyValidationConfiguration,
-                _countryRepository.Object, _countryServiceMock.Object,
+                _countryRepository.Object,
                 _appSettingsConfig,
                 _addTemporaryExposureKeyService.Object)
             {
@@ -71,8 +69,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             _logger = new Mock<ILogger<DiagnosticKeysController>>();
             _temporaryExposureKeyRepository = new Mock<ITemporaryExposureKeyRepository>();
             _configuration = new Mock<IConfiguration>();
-            _exposureKeyMapper = new Mock<IExposureKeyMapper>();
-
+            
             var configurationSection = new Mock<IConfigurationSection>();
             configurationSection.Setup(a => a.Value).Returns("false");
             _configuration.Setup(a => a.GetSection("deviceVerificationEnabled")).Returns(configurationSection.Object);
@@ -81,7 +78,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             _addTemporaryExposureKeyService = new Mock<IAddTemporaryExposureKeyService>(MockBehavior.Strict);
             _exposureConfigurationService = new Mock<IExposureConfigurationService>(MockBehavior.Strict);
             _cacheOperation = new Mock<ICacheOperations>(MockBehavior.Strict);
-            _countryServiceMock = new Mock<ICountryService>();
             _countryRepository = new Mock<ICountryRepository>();
 
 

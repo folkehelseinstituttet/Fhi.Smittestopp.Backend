@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using AnonymousTokens.Core.Services;
+using AnonymousTokens.Server.Protocol;
+using DIGNDB.App.SmitteStop.API.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using AnonymousTokens.Core.Services;
-using DIGNDB.App.SmitteStop.API.Contracts;
-using AnonymousTokens.Server.Protocol;
 
 namespace DIGNDB.App.SmitteStop.API.Attributes
 {
