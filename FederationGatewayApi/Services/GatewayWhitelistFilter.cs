@@ -1,13 +1,12 @@
-﻿using System;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Domain.Db;
+using FederationGatewayApi.Contracts;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
-using DIGNDB.App.SmitteStop.Domain.Db;
-using FederationGatewayApi.Contracts;
-using Microsoft.Extensions.Logging;
 
 namespace FederationGatewayApi.Services
 {

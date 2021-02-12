@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 {

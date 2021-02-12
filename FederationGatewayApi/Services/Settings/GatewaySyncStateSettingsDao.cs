@@ -2,7 +2,6 @@
 using DIGNDB.App.SmitteStop.Domain.Settings;
 using FederationGatewayApi.Contracts;
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace FederationGatewayApi.Services.Settings

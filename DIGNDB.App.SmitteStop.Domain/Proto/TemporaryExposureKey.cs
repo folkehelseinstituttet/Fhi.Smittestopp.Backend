@@ -1,5 +1,5 @@
-﻿using System.Text;
-using Google.Protobuf;
+﻿using Google.Protobuf;
+using System.Text;
 
 namespace DIGNDB.App.SmitteStop.Domain.Proto
 {

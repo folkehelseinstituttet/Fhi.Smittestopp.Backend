@@ -1,4 +1,3 @@
-using System;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.DependencyInjection;
 using DIGNDB.App.SmitteStop.Core.Helpers;
@@ -12,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -102,9 +102,11 @@ namespace DIGNDB.App.SmitteStop.API
                 c.SwaggerEndpoint("swagger/v3/swagger.json", "API Version 3");
             });
 
-            app.UseAuthorization();
+            // Who are you...
             app.UseAuthentication();
-
+            // ...what you may access
+            app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

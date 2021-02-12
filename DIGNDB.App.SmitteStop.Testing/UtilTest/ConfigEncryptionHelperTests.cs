@@ -1,8 +1,8 @@
-﻿using NUnit.Framework;
-using DIGNDB.App.SmitteStop.Core.Helpers;
+﻿using DIGNDB.App.SmitteStop.Core.Helpers;
+using NUnit.Framework;
+using System;
 using System.Security.Cryptography;
 using System.Text;
-using System;
 
 namespace DIGNDB.App.SmitteStop.Testing.UtilTest
 {

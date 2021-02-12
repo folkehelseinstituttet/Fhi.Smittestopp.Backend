@@ -7,7 +7,6 @@
 
         public string EntityName { get; set; }
         public long EntityId { get; set; }
-        public string EntityPropertyName { get; set; }
 
         public virtual Country LanguageCountry { get; set; }
     }

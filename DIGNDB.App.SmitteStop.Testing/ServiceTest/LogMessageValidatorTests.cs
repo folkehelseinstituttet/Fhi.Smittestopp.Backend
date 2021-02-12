@@ -1,11 +1,8 @@
-﻿using NUnit.Framework;
-using DIGNDB.App.SmitteStop.API.Services;
-using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
-using DIGNDB.App.SmitteStop.Core.Models;
-using System.Text.Json;
-using System;
+﻿using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Domain.Dto;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {

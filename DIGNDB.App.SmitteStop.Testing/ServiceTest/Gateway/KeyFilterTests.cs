@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
-using DIGNDB.App.SmitteStop.Domain.Db;
 using FederationGatewayApi.Contracts;
 using FederationGatewayApi.Services;
 using Microsoft.Extensions.Logging;
@@ -11,11 +11,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DIGNDB.App.SmitteStop.DAL.Context;
-using DIGNDB.App.SmitteStop.Domain.Configuration;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using DIGNDB.App.SmitteStop.API;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 {
@@ -31,6 +26,8 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         public Mock<ITemporaryExposureKeyRepository> _repository;
         public Mock<ICountryRepository> _countryRepository;
         public SetupMockedServices _mockServices;
+        private IEpochConverter _epochConverter;
+
 
         private const int DaysOffset = 14;
 
@@ -49,7 +46,9 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             _mockServices.SetupKeyValidatorMock(_keyValidator);
             _mockServices.SetupTemopraryExposureKeyRepositoryMock(_repository);
 
-            var mapper = new ExposureKeyMapper();
+            _epochConverter = new EpochConverter();
+
+            var mapper = new ExposureKeyMapper(_epochConverter);
             _keyFilter = new KeyFilter(_keyMapper, _keyValidator.Object, mapper, _logger.Object, _repository.Object);
         }
 
@@ -67,7 +66,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             }
 
             var filteredList = _keyFilter.ValidateKeys(keyList, out errorMessageList);
-            Assert.That(filteredList.Count == keyList.Count-numberOfInvalidKeys);
+            Assert.That(filteredList.Count == keyList.Count - numberOfInvalidKeys);
         }
 
         [Test]
@@ -81,51 +80,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
                 Assert.That(keyList[i].KeyData.SequenceEqual(keyMappedList[i].KeyData));
                 Assert.That(keyList[i].RollingPeriod == Convert.ToUInt32(keyMappedList[i].RollingPeriod));
             }
-        }
-
-        [Test]
-        public void DuplicatesAreSuccessfullyRemoved()
-        {
-            var keyList = _exposureKeyMock.MockListOfTemporaryExposureKeys();
-            var filteredList = _keyFilter.RemoveKeyDuplicatesAsync(keyList).Result;
-            Assert.That(filteredList.Count == keyList.Count-2);
-        }
-
-        [Test]
-        public void RemoveKeyDuplicates_ShouldOnlyWorkOnKeysCreatedUpTo14DaysAgo()
-        {
-            var options = new DbContextOptionsBuilder<DigNDB_SmittestopContext>()
-                .UseInMemoryDatabase(nameof(EuGatewayServiceUploadTest))
-                .Options;
-
-            var dbContext = new DigNDB_SmittestopContext(options);
-            dbContext.Database.EnsureDeleted();
-            var translationsRepositoryMock = new Mock<IGenericRepository<Translation>>(MockBehavior.Strict);
-
-            var originSpecificSettings = new AppSettingsConfig() { OriginCountryCode = "dk" };
-            var countryRepository = new CountryRepository(dbContext, translationsRepositoryMock.Object, originSpecificSettings);
-            var keysRepository = new TemporaryExposureKeyRepository(dbContext, countryRepository);
-
-            _keyFilter = new KeyFilter(_keyMapper, _keyValidator.Object, new ExposureKeyMapper(), _logger.Object, keysRepository);
-
-            var rollingStartNumberNewerThan14Days = DateTimeOffset.Now.Subtract(new TimeSpan(DaysOffset - 1, 0, 0, 0)).ToUnixTimeSeconds();
-            var rollingStartNumberOlderThan14Days = DateTimeOffset.Now.Subtract(new TimeSpan(DaysOffset + 3, 0, 0, 0)).ToUnixTimeSeconds();
-            var origin = new Country {Id = 1};
-            var keysNewerThan14Days = new List<TemporaryExposureKey>
-            {
-                new TemporaryExposureKey {Id = Guid.NewGuid(), RollingStartNumber = rollingStartNumberNewerThan14Days, Origin = origin, KeyData = new byte[]{1}},
-            };
-            var keysOlderThan14Days = new List<TemporaryExposureKey>
-            {
-                new TemporaryExposureKey {Id = Guid.NewGuid(), RollingStartNumber = rollingStartNumberOlderThan14Days, Origin = origin, KeyData = new byte[]{2}},
-                new TemporaryExposureKey {Id = Guid.NewGuid(), RollingStartNumber = rollingStartNumberOlderThan14Days, Origin = origin, KeyData = new byte[]{3}},
-            };
-            var keyList = keysNewerThan14Days.Concat(keysOlderThan14Days).ToList();
-            dbContext.TemporaryExposureKey.AddRange(keyList);
-            dbContext.SaveChanges();
-
-            var filteredList = _keyFilter.RemoveKeyDuplicatesAsync(keyList).Result;
-            filteredList.Count.Should().Be(keysOlderThan14Days.Count);
         }
     }
 }

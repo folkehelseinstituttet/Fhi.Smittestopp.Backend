@@ -37,11 +37,14 @@ namespace DIGNDB.App.SmitteStop.API
 
         public bool LogEndpointOverride { get; set; }
 
-        [Range(minimum:0, maximum:int.MaxValue)]
+        [Range(minimum: 0, maximum: int.MaxValue)]
         public int FetchCommandTimeout { get; set; }
 
         [Required]
         public List<string> DeprecatedVersions { get; set; } = new List<string>();
+
+        [Required]
+        public string ZipFilesFolder { get; set; }
 
         public bool EnableCacheOverride { get; set; }
     }

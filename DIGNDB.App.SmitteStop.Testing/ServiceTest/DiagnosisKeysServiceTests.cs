@@ -1,10 +1,9 @@
 ﻿using DIGNDB.App.SmitteStop.API;
+using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Services;
-using DIGNDB.App.SmitteStop.DAL.Repositories;
-using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
-using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -17,6 +16,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     public class DiagnosisKeysServiceTests
     {
         public AppSettingsConfig _appSettingsConfig;
+        private IEpochConverter _epochConverter;
 
         private ExposureKeyMapper _mapper;
 
@@ -32,7 +32,8 @@ nfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
         public void Init()
         {
             CreatePemFile();
-            _mapper = new ExposureKeyMapper();
+            _epochConverter = new EpochConverter();
+            _mapper = new ExposureKeyMapper(_epochConverter);
             SetupMockConfiguration();
 
         }
@@ -75,14 +76,14 @@ nfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
             var expectDate = DateTime.UtcNow;
             var data = CreateMockedListExposureKeys(expectDate);
             var streamResult = toBinaryStreamMapperService.ExportDiagnosisKeys(data);
-            Assert.AreNotEqual(0,streamResult.Length);
+            Assert.AreNotEqual(0, streamResult.Length);
         }
 
         [Test]
         public void ExportDiagnosisKeys_HaveNoKey_ShouldThrowException()
         {
             DatabaseKeysToBinaryStreamMapperService toBinaryStreamMapperService = new DatabaseKeysToBinaryStreamMapperService(_mapper, _appSettingsConfig);
-            var data = new List<TemporaryExposureKey> {};
+            var data = new List<TemporaryExposureKey> { };
             var exception = Assert.Throws<InvalidOperationException>(() => toBinaryStreamMapperService.ExportDiagnosisKeys(data));
             Assert.AreEqual(exception.Message, "Sequence contains no elements");
         }

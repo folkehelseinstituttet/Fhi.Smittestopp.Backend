@@ -1,5 +1,4 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Dto;
@@ -12,7 +11,6 @@ using System.Text;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
-
     public class ExposureKeyValidator : IExposureKeyValidator
     {
         private readonly ICountryRepository _countryRepository;
@@ -104,10 +102,10 @@ namespace DIGNDB.App.SmitteStop.API.Services
             KeyValidationConfiguration configuration)
         {
             var outdatedKeysDate = DateTime.UtcNow.Date.AddDays(-configuration.OutdatedKeysDayOffset);
-            var now = DateTime.UtcNow;
+            var todaysDateUtcMidnight = DateTime.UtcNow.Date;
 
             var keysWithInvalidRollingStart =
-                parameter.keys.Where(key => key.rollingStart < outdatedKeysDate || key.rollingStart > now).ToList();
+                parameter.keys.Where(key => key.rollingStart < outdatedKeysDate || key.rollingStart > todaysDateUtcMidnight).ToList();
             if (!keysWithInvalidRollingStart.Any()) return;
 
             var invalidRollingStartDates = keysWithInvalidRollingStart.Select(key => key.rollingStart);
@@ -152,7 +150,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
             throw new ArgumentException(errorMessage);
         }
-
+        
         private void ValidateVisitedCountries(TemporaryExposureKeyBatchDto parameter)
         {
             if (parameter.visitedCountries == null) return;

@@ -1,10 +1,9 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using DIGNDB.App.SmitteStop.API.Contracts;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.API.Contracts;
 using DIGNDB.App.SmitteStop.Domain;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {

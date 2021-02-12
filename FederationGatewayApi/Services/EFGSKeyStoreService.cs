@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DIGNDB.App.SmitteStop.Core.Helpers;
 
 namespace FederationGatewayApi.Services
 {
@@ -18,20 +17,20 @@ namespace FederationGatewayApi.Services
         private readonly IRiskCalculator _riskCalculator;
         private readonly IEpochConverter _epochConverter;
         private readonly IDaysSinceOnsetOfSymptomsDecoder _daysSinceOnsetOfSymptomsDecoder;
-        private readonly IGatewayWebContextReader _webContextReader;
         private readonly IKeyFilter _keyFilter;
         private readonly ITemporaryExposureKeyRepository _tempKeyRepository;
         private readonly ILogger<EFGSKeyStoreService> _logger;
+        private readonly IAddTemporaryExposureKeyService _addTemporaryExposureKeyService;
 
-        public EFGSKeyStoreService(IGatewayWebContextReader reader,
-                                    IKeyFilter filter,
+        public EFGSKeyStoreService(IKeyFilter filter,
                                    ITemporaryExposureKeyRepository repository,
                                    ILogger<EFGSKeyStoreService> logger,
                                    IRiskCalculator riskCalculator,
                                    IEpochConverter epochConverter,
-                                   IDaysSinceOnsetOfSymptomsDecoder daysSinceOnsetOfSymptomsDecoder)
+                                   IDaysSinceOnsetOfSymptomsDecoder daysSinceOnsetOfSymptomsDecoder,
+                                   IAddTemporaryExposureKeyService addTemporaryExposureKeyService)
         {
-            _webContextReader = reader;
+            _addTemporaryExposureKeyService = addTemporaryExposureKeyService;
             _keyFilter = filter;
             _tempKeyRepository = repository;
             _logger = logger;
@@ -43,7 +42,7 @@ namespace FederationGatewayApi.Services
         public IList<TemporaryExposureKey> FilterAndSaveKeys(IList<TemporaryExposureKeyGatewayDto> keys)
         {
             StringBuilder logErrorPerBatchSB = new StringBuilder();
-            IList<TemporaryExposureKey> mappedKeys = null;
+            IList<TemporaryExposureKey> mappedKeys;
 
             IList<string> validationErrors = new List<string>();
             try
@@ -69,12 +68,9 @@ namespace FederationGatewayApi.Services
                 _logger.LogInformation($"Starting key validation.");
                 acceptedKeys = _keyFilter.ValidateKeys(mappedKeys, out validationErrors);
                 _logger.LogInformation($"Keys validated with {validationErrors?.Count} error.");
-                _logger.LogInformation($"RemoveKeyDuplicates-start with {acceptedKeys?.Count} keys.");
-                acceptedKeys = _keyFilter.RemoveKeyDuplicatesAsync(acceptedKeys).Result;
-                _logger.LogInformation($"RemoveKeyDuplicates-ended with {acceptedKeys?.Count} keys after filtering.");
-
                 _logger.LogInformation($"Saving...");
-                _tempKeyRepository.AddTemporaryExposureKeys(acceptedKeys).Wait();
+                acceptedKeys = _addTemporaryExposureKeyService.FilterDuplicateKeysAsync(acceptedKeys).Result;
+                _tempKeyRepository.AddTemporaryExposureKeysAsync(acceptedKeys).Wait();
                 _logger.LogInformation($"{acceptedKeys?.Count} keys saved.");
                 acceptedKeysCount = acceptedKeys.Count;
             }

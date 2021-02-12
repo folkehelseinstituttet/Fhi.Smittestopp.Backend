@@ -1,13 +1,13 @@
 ﻿using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain.Settings;
 using DIGNDB.APP.SmitteStop.Jobs.Services;
 using FederationGatewayApi.Services.Settings;
+using FluentAssertions;
+using FluentAssertions.Common;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
-using FluentAssertions;
-using DIGNDB.App.SmitteStop.Domain.Settings;
-using FluentAssertions.Common;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {

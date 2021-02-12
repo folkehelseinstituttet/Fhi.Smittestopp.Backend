@@ -1,23 +1,26 @@
 ﻿using DIGNDB.App.SmitteStop.DAL.Context;
-using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SortOrder = DIGNDB.App.SmitteStop.Domain.SortOrder;
 
 namespace DIGNDB.App.SmitteStop.DAL.Repositories
 {
     public class TemporaryExposureKeyRepository : ITemporaryExposureKeyRepository
     {
-        private DigNDB_SmittestopContext _dbContext;
-        ICountryRepository _countryRepository;
+        private readonly DigNDB_SmittestopContext _dbContext;
+        private readonly ICountryRepository _countryRepository;
+        private readonly ILogger<TemporaryExposureKeyRepository> _logger;
 
         // constructor used for unit tests
-        public TemporaryExposureKeyRepository(DigNDB_SmittestopContext dbContext, ICountryRepository countryRepository)
+        public TemporaryExposureKeyRepository(DigNDB_SmittestopContext dbContext, ICountryRepository countryRepository, ILogger<TemporaryExposureKeyRepository> logger)
         {
+            _logger = logger;
             _countryRepository = countryRepository;
             _dbContext = dbContext;
         }
@@ -28,9 +31,13 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task AddTemporaryExposureKeys(IList<TemporaryExposureKey> temporaryExposureKeys)
+        public async Task AddTemporaryExposureKeysAsync(IList<TemporaryExposureKey> temporaryExposureKeys)
         {
-            _dbContext.TemporaryExposureKey.AddRange(temporaryExposureKeys);
+            foreach (var key in temporaryExposureKeys)
+            {
+                await _dbContext.AddAsync(key);
+            }
+
             await _dbContext.SaveChangesAsync();
         }
 
@@ -62,6 +69,23 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                 .Take(batchSize);
             return query.ToList();
         }
+        public IList<TemporaryExposureKey> GetAllKeysNextBatchWithOriginId(int numberOfRecordsToSkip, int batchSize)
+        {
+            if (batchSize <= 0) throw new ArgumentException($"Incorrect argument batchSize= {batchSize}");
+
+            var query = _dbContext.TemporaryExposureKey
+                .OrderBy(c => c.CreatedOn)
+                .Skip(numberOfRecordsToSkip).Include(x => x.Origin)
+                .Take(batchSize);
+            var a = query.ToList();
+            return a;
+        }
+
+        public void UpdateKeysRollingStartField(List<TemporaryExposureKey> keys)
+        {
+            _dbContext.UpdateRange(keys);
+            _dbContext.SaveChanges();
+        }
 
         public async Task<TemporaryExposureKey> GetById(Guid id)
         {
@@ -78,7 +102,13 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             return _dbContext.TemporaryExposureKey.Where(x => x.Origin == apiOrigin && x.CreatedOn.Date.CompareTo(uploadedOn.Date) == 0).OrderBy(x => x.Id).ToList();
         }
 
-        public IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUpload(
+        public void RemoveKeys(List<TemporaryExposureKey> keys)
+        {
+            _dbContext.RemoveRange(keys);
+            _dbContext.SaveChanges();
+        }
+
+        public IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUploadForWhichConsentWasGiven(
             DateTime uploadedOnAndLater,
             int numberOfRecordToSkip,
             int maxCount,
@@ -93,10 +123,17 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                .Where(k => k.Origin == apiOrigin)
                .Where(k => k.CreatedOn >= uploadedOnAndLater)
                .Where(k => sources.Contains(k.KeySource))
+               .Where(k => k.SharingConsentGiven)
                .OrderBy(c => c.CreatedOn)
                     .ThenBy(c => c.RollingStartNumber);
 
             return TakeNextBatch(query, numberOfRecordToSkip, maxCount).ToList();
+        }
+
+        public async Task<byte[][]> GetKeysThatAlreadyExistsInDbAsync(byte[][] incomingKeys)
+        {
+            return await _dbContext.TemporaryExposureKey.Where(u => incomingKeys.Contains(u.KeyData))
+                .Select(u => u.KeyData).ToArrayAsync();
         }
 
         public async Task<IList<TemporaryExposureKey>> GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(long rollingStartNumberThreshold, int numberOfRecordsToSkip, int batchSize)
@@ -152,12 +189,5 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                 .Skip(numberOfRecordsToSkip)
                 .Take(batchSize);
         }
-
-        public void RemoveKeys(List<TemporaryExposureKey> keys)
-        {
-            _dbContext.RemoveRange(keys);
-            _dbContext.SaveChanges();
-        }
-
     }
 }

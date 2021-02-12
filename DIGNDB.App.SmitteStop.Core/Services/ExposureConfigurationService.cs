@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.Domain.Dto;

@@ -1,27 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace DIGNDB.App.SmitteStop.API.V2.Controllers
+namespace DIGNDB.App.SmitteStop.API.V3.Controllers
 {
     [ApiController]
-    [ApiVersion("2")]
+    [ApiVersion("3")]
     [Route("api/v{version:apiVersion}/countries")]
-    public class CountriesController : ControllerBase
+    public class CountriesControllerV3 : ControllerBase
     {
         private readonly ICountryService _countryService;
-        private readonly ILogger<CountriesController> _logger;
+        private readonly ILogger<CountriesControllerV3> _logger;
         private readonly IMapper _mapper;
 
-        public CountriesController(
+        public CountriesControllerV3(
             ICountryService countryService,
-            ILogger<CountriesController> logger,
+            ILogger<CountriesControllerV3> logger,
             IMapper mapper)
         {
             _countryService = countryService;
@@ -45,15 +45,14 @@ namespace DIGNDB.App.SmitteStop.API.V2.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(CountryCollectionDto), 200)]
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
-        public async Task<IActionResult> GetAllCountries()
+        public async Task<IActionResult> GetAllCountries(string countryCode = "EN")
         {
-            _logger.LogInformation($"{nameof(GetAllCountries)} endpoint called");
+            _logger.LogInformation($"{nameof(GetAllCountries)} endpoint called with countryCode {countryCode}");
 
-            var countries = await _countryService.GetVisibleCountries();
+            var countries = await _countryService.GetVisibleCountries(countryCode);
             _logger.LogInformation($"{nameof(GetAllCountries)} fetched successfully");
-
             var countriesDto = _mapper.Map<IEnumerable<Country>, IEnumerable<CountryDto>>(countries);
-            var countryCollection = new CountryCollectionDto {CountryCollection = countriesDto};
+            var countryCollection = new CountryCollectionDto { CountryCollection = countriesDto };
 
             return Ok(countryCollection);
         }

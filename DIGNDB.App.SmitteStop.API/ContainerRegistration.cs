@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using AnonymousTokens.Core.Services;
-using AutoMapper;
+﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.API.Contracts;
 using DIGNDB.App.SmitteStop.API.Services;
@@ -19,10 +15,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace DIGNDB.App.SmitteStop.API
 {
@@ -87,9 +87,11 @@ namespace DIGNDB.App.SmitteStop.API
         {
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
             services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<ICacheOperationsV3, CacheOperationsV3>();
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
             services.AddScoped<IAddTemporaryExposureKeyService, AddTemporaryExposureKeyService>();
             services.AddScoped<IExposureKeyValidator, ExposureKeyValidator>();
+            services.AddScoped<IExposureKeyReader, ExposureKeyReader>();
             services.AddScoped<ILogMessageValidator, LogMessageValidator>();
             services.AddScoped<ICacheOperations, CacheOperations>();
             services.AddScoped<MobileAuthorizationAttribute>();

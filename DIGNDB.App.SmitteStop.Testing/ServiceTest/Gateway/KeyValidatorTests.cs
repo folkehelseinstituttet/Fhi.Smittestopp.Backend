@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using FluentAssertions;
 using Moq;
-using Moq.Protected;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 {
@@ -51,15 +49,15 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             Assert.IsTrue(_keyValidator.ValidateKeyGateway(_key, out errorMessage));
         }
         [Test]
-        public void CountryMustNotBeDK()
+        public void CountryMustNotBeNO()
         {
             var errorMessage = String.Empty;
             _exposureKeyMock.ResetKeyData(_key);
 
-            _key.Origin = _countryFactory.GenerateCountry(7, "DK");
+            _key.Origin = _countryFactory.GenerateCountry(29, "NO");
             Assert.IsFalse(_keyValidator.ValidateKeyGateway(_key, out errorMessage));
 
-            _key.Origin = _countryFactory.GenerateCountry(21, "DK");
+            _key.Origin = _countryFactory.GenerateCountry(21, "NO");
             Assert.IsFalse(_keyValidator.ValidateKeyGateway(_key, out errorMessage));
 
             _key.Origin = _countryFactory.GenerateCountry(21, "PL");

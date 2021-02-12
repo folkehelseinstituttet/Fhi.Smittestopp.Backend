@@ -1,9 +1,6 @@
 using DIGNDB.App.SmitteStop.API;
-using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
-using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
@@ -60,7 +57,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
                 _temporaryExposureKeyRepository.Object,
                 _exposureKeyValidator.Object,
                 _exposureConfigurationService.Object,
-                _keyValidationConfiguration, 
+                _keyValidationConfiguration,
                 _countryRepository.Object, _countryServiceMock.Object,
                 _appSettingsConfig,
                 _addTemporaryExposureKeyService.Object)
@@ -75,10 +72,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             _temporaryExposureKeyRepository = new Mock<ITemporaryExposureKeyRepository>();
             _configuration = new Mock<IConfiguration>();
             _exposureKeyMapper = new Mock<IExposureKeyMapper>();
-            _exposureKeyMapper.Setup(mock =>
-                    mock.FilterDuplicateKeys(It.IsAny<IList<TemporaryExposureKey>>(),
-                        It.IsAny<IList<TemporaryExposureKey>>()))
-                .Returns(_exampleKeys);
 
             var configurationSection = new Mock<IConfigurationSection>();
             configurationSection.Setup(a => a.Value).Returns("false");
@@ -145,8 +138,10 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
                 }));
         }
 
-        public static IEnumerable<string> InvalidDate {
-            get {
+        public static IEnumerable<string> InvalidDate
+        {
+            get
+            {
                 yield return DateTime.UtcNow.AddDays(1).ToString("yyyy'-'MM'-'dd");
                 yield return DateTime.UtcNow.AddDays(-15).ToString("yyyy'-'MM'-'dd");
             }
@@ -171,9 +166,9 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
                 {
                     keys = new List<TemporaryExposureKeyDto>
                     {
-                        new TemporaryExposureKeyDto(),
-                        new TemporaryExposureKeyDto(),
-                        new TemporaryExposureKeyDto(),
+                        new TemporaryExposureKeyDto() { rollingStart = DateTime.Now},
+                        new TemporaryExposureKeyDto() { rollingStart = DateTime.Now},
+                        new TemporaryExposureKeyDto() { rollingStart = DateTime.Now},
                     },
                     regions = new List<string> { "DK" }
                 });
@@ -211,7 +206,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             var result = _controller.UploadDiagnosisKeys();
 
             _temporaryExposureKeyRepository.Verify(mock =>
-                mock.AddTemporaryExposureKeys(It.Is<IList<TemporaryExposureKey>>(keys =>
+                mock.AddTemporaryExposureKeysAsync(It.Is<IList<TemporaryExposureKey>>(keys =>
                     keys.All(key => key.KeySource == KeySource.SmitteStopApiVersion1))));
         }
 

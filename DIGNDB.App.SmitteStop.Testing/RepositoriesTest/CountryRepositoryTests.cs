@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Bogus;
+﻿using Bogus;
 using DIGNDB.App.SmitteStop.API;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
@@ -11,6 +8,8 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
 {

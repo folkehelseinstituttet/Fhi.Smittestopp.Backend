@@ -30,7 +30,6 @@ namespace FederationGatewayApi.Services
         private readonly ITemporaryExposureKeyRepository _tempKeyRepository;
         private readonly ISignatureService _signatureService;
         public readonly IEncodingService _encodingService;
-        private readonly IKeyFilter _keyFilter;
         private readonly IGatewayWebContextReader _webContextReader;
         private readonly IMapper _mapper;
         private readonly EuGatewayConfig _euGatewayConfig;
@@ -39,7 +38,6 @@ namespace FederationGatewayApi.Services
         private readonly IEFGSKeyStoreService _storeService;
 
         public ILogger<EuGatewayService> _logger { get; set; }
-        public IKeyValidator _keyValidator { get; set; }
 
         public EuGatewayService(ITemporaryExposureKeyRepository tempKeyRepository,
                                ISignatureService signatureService,
@@ -58,7 +56,6 @@ namespace FederationGatewayApi.Services
             _signatureService = signatureService;
             _tempKeyRepository = tempKeyRepository;
             _encodingService = encodingService;
-            _keyFilter = keyFilter;
             _webContextReader = gatewayWebContextReader;
             _mapper = mapper;
             _logger = logger;
@@ -119,11 +116,11 @@ namespace FederationGatewayApi.Services
             int batchSizePlusOne = batchSize + 1; // if it will return n + 1 then there is at last one more records to send
 
             // Get key package - collection of the records created (uploaded by mobile app) in the db after {uploadedOn}
-            IList<TemporaryExposureKey> keyPackage = _tempKeyRepository.GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUpload(
+            IList<TemporaryExposureKey> keyPackage = _tempKeyRepository.GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUploadForWhichConsentWasGiven(
                   uploadedOnAndLater: uploadedOnAndAfter,
                   numberOfRecordToSkip: lastSyncState.NumberOfKeysProcessedFromTheLastCreationDate,
                   maxCount: batchSizePlusOne,
-                  new KeySource[] { KeySource.SmitteStopApiVersion2 });
+                  new KeySource[] { KeySource.SmitteStopApiVersion3 });
 
             // Take all record uploaded after the date.
             var currBatchStatus = new BatchStatus() { NextBatchExists = keyPackage.Count == batchSizePlusOne };

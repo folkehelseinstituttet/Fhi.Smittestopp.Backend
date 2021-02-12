@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-using DIGNDB.App.SmitteStop.Domain.Db;
+﻿using DIGNDB.App.SmitteStop.Domain.Db;
+using System.Collections.Generic;
 
 namespace DIGNDB.App.SmitteStop.DAL.Seeders
 {
     public class CountrySeeder
     {
-        public const long DenmarkCountryId = 7L;
         public const long NorwayCountryId = 29L;
         public const long EnglandCountryId = 28L;
+        public const long NorwayBokmalDialectId = 33L;
+        public const long NorwayNynorskDialectId = 34L;
 
         public IEnumerable<Country> GetSeedData()
         {
@@ -39,10 +40,14 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new Country {Id = 25, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "SI"},
                 new Country {Id = 26, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "ES"},
                 new Country {Id = 27, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "SE"},
-
-                new Country {Id = DenmarkCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "DK"},
+                new Country {Id = 7, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "DK"},
                 new Country {Id = NorwayCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NO"},
                 new Country {Id = EnglandCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "EN"},
+                new Country {Id = 30, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "IS"},
+                new Country {Id = 31, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "LI"},
+                new Country {Id = 32, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "CH"},
+                new Country {Id = 33, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NB"},
+                new Country {Id = 34, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NN"},
             };
         }
     }

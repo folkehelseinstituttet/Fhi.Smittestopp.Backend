@@ -2,8 +2,6 @@ using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.Core.Helpers
 {
@@ -14,8 +12,8 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
 
         private const int KeySize = 16;
         private const ReportType RequiredReportType = ReportType.CONFIRMED_TEST;
-        private const string Denmark = "DK";
-        private const int DenmarkId = 7;
+        private const string Norway = "NO";
+        private const int NorwayId = 29;
         private const bool Enabled = true;
         private const bool Valid = true;
         private const long RollingPeriodMax = 144;
@@ -82,19 +80,8 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
                 errorMessage += $"{ErrorPrefix} The DaysSinceOnesetOfSymptoms is invalid. It should be in range of {DaysSinceOnsetOfSymptomsInvalidRangeMin} and {DaysSinceOnsetOfSymptomsInvalidRangeMax}.";
                 return !Valid;
             }
-            if (!ValidateVisitedCountries(exposureKey.VisitedCountries))
-            {
-                errorMessage += $"{ErrorPrefix} VisitedCountries array is not empty and it doesn't contain API Origin.";
-                return !Valid;
-            }
 
             return Valid;
-        }
-
-        private bool ValidateVisitedCountries(IEnumerable<TemporaryExposureKeyCountry> visitedCountries)
-        {
-            // empty array means - no filter
-            return visitedCountries.Any(k2c => string.Equals(k2c.Country.Code, Denmark, StringComparison.CurrentCultureIgnoreCase)) || visitedCountries.Any() == false;
         }
 
         private bool ValidateDaysSinceOnsetOfSymptoms(int? exposureKeyDaysSinceOnsetOfSymptoms)
@@ -124,8 +111,8 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
         private bool ValidateOrigin(Country origin)
         {
             return origin.PullingFromGatewayEnabled == Enabled &&
-                   origin.Code != Denmark &&
-                   origin.Id != DenmarkId;
+                   origin.Code != Norway &&
+                   origin.Id != NorwayId;
         }
 
         private bool ValidateKeyReportType(ReportType reportType)

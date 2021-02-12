@@ -1,4 +1,5 @@
-﻿using DIGNDB.App.SmitteStop.Core.Helpers;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using FederationGatewayApi.Contracts;
@@ -17,6 +18,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         private IEFGSKeyStoreService _keyStoreService;
 
         private Mock<IGatewayWebContextReader> _webContextReader;
+        private Mock<IAddTemporaryExposureKeyService> _addTemporaryExposureKeyService;
 
         private Mock<IKeyFilter> _keyFilter;
 
@@ -36,6 +38,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         [SetUp]
         public void Init()
         {
+            _addTemporaryExposureKeyService = new Mock<IAddTemporaryExposureKeyService>(MockBehavior.Strict);
             _riskCalulator = new RiskCalculator();
             _exposureKeyMock = new ExposureKeyMock();
             _webContextMock = new WebContextMock();
@@ -51,7 +54,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             _mockSetup.SetupKeyFilterMock(_keyFilter);
             _mockSetup.SetupTemopraryExposureKeyRepositoryMock(_tempKeyRepository);
 
-            _keyStoreService = new EFGSKeyStoreService(_webContextReader.Object, _keyFilter.Object, _tempKeyRepository.Object, _logger.Object, _riskCalulator, _epochConverter, _onsetDaysDecoder);
+            _keyStoreService = new EFGSKeyStoreService(_keyFilter.Object, _tempKeyRepository.Object, _logger.Object, _riskCalulator, _epochConverter, _onsetDaysDecoder, _addTemporaryExposureKeyService.Object);
 
         }
 
@@ -66,9 +69,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             _webContextReader.Verify(mock => mock.GetItemsFromRequest(It.IsAny<string>()), Times.Never);
             _keyFilter.Verify(mock => mock.MapKeys(It.IsAny<IList<TemporaryExposureKeyGatewayDto>>()), Times.Never);
             _keyFilter.Verify(mock => mock.ValidateKeys(It.IsAny<IList<TemporaryExposureKey>>(), out errorMessageList), Times.Never);
-            _keyFilter.Verify(mock => mock.RemoveKeyDuplicatesAsync(It.IsAny<List<TemporaryExposureKey>>()), Times.Never);
-            _tempKeyRepository.Verify(mock => mock.AddTemporaryExposureKeys(It.IsAny<List<TemporaryExposureKey>>()), Times.Never);
-
+            _tempKeyRepository.Verify(mock => mock.AddTemporaryExposureKeysAsync(It.IsAny<List<TemporaryExposureKey>>()), Times.Never);
         }
 
     }

@@ -1,8 +1,5 @@
 ﻿using DIGNDB.App.SmitteStop.Domain.Dto;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 {

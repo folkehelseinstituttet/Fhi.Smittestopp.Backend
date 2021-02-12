@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.App.SmitteStop.Domain.Db;
 using FederationGatewayApi.Models;
 using System;
-using DIGNDB.App.SmitteStop.Domain.Db;
 
 namespace FederationGatewayApi.Mappers
 {

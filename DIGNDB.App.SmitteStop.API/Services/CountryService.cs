@@ -1,21 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper.Internal;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Models;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
     public class CountryService : ICountryService
     {
         private readonly ICountryRepository _countryRepository;
+        private readonly ILogger<CountryService> _logger;
 
-        public CountryService(ICountryRepository countryRepository)
+        public CountryService(ICountryRepository countryRepository, ILogger<CountryService> logger)
         {
             _countryRepository = countryRepository;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Country>> GetAllCountries()
@@ -26,6 +27,46 @@ namespace DIGNDB.App.SmitteStop.API.Services
         public async Task<IEnumerable<Country>> GetVisibleCountries()
         {
             return await _countryRepository.GetVisibleAsync();
+        }
+
+        public async Task<IEnumerable<Country>> GetVisibleCountries(string countryCode)
+        {
+            var countries = await _countryRepository.GetVisibleAsync();
+            var countriesWithRightTranslations = FilterOutIrrelevantTranslations(countries, countryCode);
+            countriesWithRightTranslations = countriesWithRightTranslations.OrderBy(x => x.EntityTranslations.Single().Value);
+            return countriesWithRightTranslations;
+        }
+
+        private IEnumerable<Country> FilterOutIrrelevantTranslations(IEnumerable<Country> countries, string countryCode)
+        {
+            var countriesWithRightTranslations = new List<Country>();
+            foreach (var country in countries)
+            {
+                var translations = country.EntityTranslations;
+                if (!translations.Any())
+                {
+                    _logger.LogError($"No translation available for country {country.Code}");
+                    continue;
+                }
+
+                var translation = translations.Single(x => x.LanguageCountry.Code == countryCode);
+                var translationValue = translation.Value;
+
+
+                countriesWithRightTranslations.Add(new Country()
+                {
+                    Code = country.Code,
+                    EntityTranslations = new List<Translation>()
+                    {
+                        new Translation
+                        {
+                            Value = translationValue
+                        }
+                    }
+                });
+            }
+
+            return countriesWithRightTranslations;
         }
 
         public async Task<HashSet<long>> GetWhitelistHashSet()

@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Enums;
 using DIGNDB.App.SmitteStop.Domain;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
+using System.Text;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
 {

@@ -16,13 +16,17 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         Task AddTemporaryExposureKey(TemporaryExposureKey temporaryExposureKey);
 
-        Task AddTemporaryExposureKeys(IList<TemporaryExposureKey> temporaryExposureKeys);
+        Task AddTemporaryExposureKeysAsync(IList<TemporaryExposureKey> temporaryExposureKeys);
 
         IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountry(DateTime uploadedOn, int fetchCommandTimeout);
 
         int GetCountOfKeysByUpladedDayAndSource(DateTime uploadDate, KeySource gateway);
 
         void RemoveKeys(List<TemporaryExposureKey> keys);
+
+        void UpdateKeysRollingStartField(List<TemporaryExposureKey> keys);
+
+        IList<TemporaryExposureKey> GetAllKeysNextBatchWithOriginId(int numberOfRecordsToSkip, int batchSize);
 
         IList<TemporaryExposureKey> GetAllKeysNextBatch(int numberOfRecordsToSkip, int batchSize);
 
@@ -32,6 +36,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         Task<IList<TemporaryExposureKey>> GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(long rollingStartNumberThreshold, int numberOfRecordsToSkip, int batchSize);
 
-        IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUpload(DateTime uploadedOnAndLater, int numberOfRecordToSkip, int maxCount, KeySource[] sources);
+        IList<TemporaryExposureKey> GetKeysOnlyFromApiOriginCountryUploadedAfterTheDateForGatewayUploadForWhichConsentWasGiven(DateTime uploadedOnAndLater, int numberOfRecordToSkip, int maxCount, KeySource[] sources);
+        Task<byte[][]> GetKeysThatAlreadyExistsInDbAsync(byte[][] incomingKeys);
     }
 }

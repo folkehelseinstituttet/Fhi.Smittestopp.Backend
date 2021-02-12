@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
@@ -21,6 +23,13 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     public class ExposureKeyMapperTests
     {
         private const string NonExistingCountryCode = "XY";
+        private IEpochConverter _epochConverter;
+
+        [SetUp]
+        public void Init()
+        {
+            _epochConverter = new EpochConverter();
+        }
 
         private IList<TemporaryExposureKey> CreateMockedListExposureKeys(int listCount)
         {
@@ -45,7 +54,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         {
             var mockEntity = CreateMockedExposureKey();
 
-            var mapper = new ExposureKeyMapper();
+            var mapper = new ExposureKeyMapper(_epochConverter);
             var protoModel = mapper.FromEntityToProto(mockEntity);
 
             Assert.AreEqual(mockEntity.KeyData, protoModel.KeyData);
@@ -64,7 +73,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             var startTimes = new DateTimeOffset(keysByTime.First().CreatedOn);
             var endTimes = new DateTimeOffset(keysByTime.Last().CreatedOn);
 
-            var mapper = new ExposureKeyMapper();
+            var mapper = new ExposureKeyMapper(_epochConverter);
             var protoBatch = mapper.FromEntityToProtoBatch(keys);
 
             Assert.AreEqual(listCount, protoBatch.Keys.Count);
@@ -74,29 +83,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             Assert.AreEqual(protoBatch.EndTimestamp, endTimes.ToUnixTimeSeconds());
             Assert.AreEqual(protoBatch.Region, "DK");
             Assert.IsInstanceOf<Domain.Proto.TemporaryExposureKeyExport>(protoBatch);
-        }
-
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        public void FilterDuplicateKeys_GiveKeysInExistingKeys_ShouldReturnKeysThatNotExistBefore(int value)
-        {
-            int listCount = 3;
-            var keys = CreateMockedListExposureKeys(listCount);
-            var existingKeys = new List<TemporaryExposureKey>() { };
-
-            for (int i = 0; i <= value; i++)
-            {
-
-                TemporaryExposureKey existKey = keys[i];
-                existingKeys.Add(new TemporaryExposureKey() { KeyData = existKey.KeyData, CreatedOn = DateTime.UtcNow.AddDays(-1) });
-
-            }
-            var expectedKeysCount = keys.Count - existingKeys.Count;
-
-            var mapper = new ExposureKeyMapper();
-            var extractNewKeys = mapper.FilterDuplicateKeys(keys, existingKeys);
-            Assert.AreEqual(extractNewKeys.Count, expectedKeysCount);
         }
 
         [Test]
@@ -220,6 +206,53 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 tuple.mapper.Map<TemporaryExposureKeyGatewayDto, TemporaryExposureKey>(tuple.sourceKey);
 
             mappingAction.Should().Throw<AutoMapperMappingException>();
+        }
+
+        [Test]
+        public void MapDto_ToEntity_ShouldHaveSharingAsFalse()
+        {
+            //Arrange
+            var dto = new TemporaryExposureKeyBatchDto()
+            {
+                keys = new List<TemporaryExposureKeyDto>
+                {
+                    new TemporaryExposureKeyDto(){},
+                    new TemporaryExposureKeyDto(){}
+                }
+            };
+            var mapper = new ExposureKeyMapper(_epochConverter);
+
+            //Act
+            var entities = mapper.FromDtoToEntity(dto);
+
+            //Assert
+            entities.Should().NotBeNull();
+            entities.Should().NotBeEmpty();
+            entities.Select(ent => ent.SharingConsentGiven).Should().AllBeEquivalentTo(false);
+        }
+
+        [Test]
+        public void MapDtoWithSharingTrue_ToEntity_ShouldHaveSharingTrue()
+        {
+            //Arrange
+            var dto = new TemporaryExposureKeyBatchDto()
+            {
+                keys = new List<TemporaryExposureKeyDto>
+                {
+                    new TemporaryExposureKeyDto() { },
+                    new TemporaryExposureKeyDto() { }
+                },
+                isSharingAllowed = true
+            };
+            var mapper = new ExposureKeyMapper(_epochConverter);
+
+            //Act
+            var entities = mapper.FromDtoToEntity(dto);
+
+            //Assert
+            entities.Should().NotBeNull();
+            entities.Should().NotBeEmpty();
+            entities.Select(ent => ent.SharingConsentGiven).Should().AllBeEquivalentTo(true);
         }
 
         private (IMapper mapper, TemporaryExposureKeyGatewayDto sourceKey, Country country) CreateMapperSourceKeyAndCountry()

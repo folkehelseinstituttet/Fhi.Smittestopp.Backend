@@ -13,7 +13,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
@@ -26,7 +25,7 @@ namespace DIGNDB.App.SmitteStop.API
     [Route("api/diagnostickeys")]
     public class DiagnosticKeysController : ControllerBase
     {
-    	private const string ApiVersion = "1";
+        private const string ApiVersion = "1";
 
         private readonly IAddTemporaryExposureKeyService _addTemporaryExposureKeyService;
         private readonly ICacheOperations _cacheOperations;
@@ -119,7 +118,7 @@ namespace DIGNDB.App.SmitteStop.API
                         key.KeySource = KeySource.SmitteStopApiVersion1;
                         key.ReportType = ReportType.CONFIRMED_TEST;
                     }
-                    await _temporaryExposureKeyRepository.AddTemporaryExposureKeys(newTemporaryExposureKeys);
+                    await _temporaryExposureKeyRepository.AddTemporaryExposureKeysAsync(newTemporaryExposureKeys);
                 }
 
                 _logger.LogInformation("Keys uploaded successfully");
@@ -206,7 +205,7 @@ namespace DIGNDB.App.SmitteStop.API
                 Response.Headers.Add("FinalForTheDay", finalForTheDay.ToString());
 
                 //case where no keys for the day exists (yet)
-                if(cacheResult != null && cacheResult.FileBytesList != null && !cacheResult.FileBytesList.Any())
+                if (cacheResult != null && cacheResult.FileBytesList != null && !cacheResult.FileBytesList.Any())
                 {
                     return NoContent();
                 }
@@ -219,7 +218,7 @@ namespace DIGNDB.App.SmitteStop.API
                 _logger.LogInformation("Zip package fetched successfully");
                 return File(cacheResult.FileBytesList[packageNumber], "application/zip");
             }
-            catch(SynchronizationLockException e)
+            catch (SynchronizationLockException e)
             {
                 _logger.LogError("Timeout getting lock: " + e);
                 return Accepted();
