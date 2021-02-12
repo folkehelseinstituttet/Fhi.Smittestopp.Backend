@@ -96,7 +96,7 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<ICacheOperations, CacheOperations>();
             services.AddScoped<MobileAuthorizationAttribute>();
             services.AddScoped<DeprecatedCheckAttribute>();
-            services.AddScoped<AuthorizationAttribute>();
+            services.AddScoped<UploadKeysAuthorizationAttribute>();
 
             services.AddScoped<IJwtValidationService, JwtValidationService>();
             services.AddSingleton<IRsaProviderService, JwkRsaProviderService>();

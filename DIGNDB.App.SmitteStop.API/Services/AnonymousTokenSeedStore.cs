@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using AnonymousTokens.Core.Services;
+﻿using AnonymousTokens.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
