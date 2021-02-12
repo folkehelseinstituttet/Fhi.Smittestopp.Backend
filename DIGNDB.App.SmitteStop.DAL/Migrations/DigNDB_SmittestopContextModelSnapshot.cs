@@ -27,7 +27,8 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(2)")
+                        .HasMaxLength(2);
 
                     b.Property<bool>("PullingFromGatewayEnabled")
                         .HasColumnType("bit");
@@ -302,7 +303,8 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(96)")
+                        .HasMaxLength(96);
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -388,13 +390,15 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("EntityName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(96)")
+                        .HasMaxLength(96);
 
                     b.Property<long?>("LanguageCountryId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(96)")
+                        .HasMaxLength(96);
 
                     b.HasKey("Id");
 

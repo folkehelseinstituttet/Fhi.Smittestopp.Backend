@@ -34,14 +34,13 @@ namespace DIGNDB.App.SmitteStop.API
         private readonly ILogger _logger;
         private readonly IExposureConfigurationService _exposureConfigurationService;
         private readonly KeyValidationConfiguration _keyValidationRulesConfig;
-        private readonly ICountryService _countryService;
         private readonly ICountryRepository _countryRepository;
         private readonly AppSettingsConfig _appSettingsConfig;
 
         public DiagnosticKeysController(ICacheOperations cacheOperations, ILogger<DiagnosticKeysController> logger,
             ITemporaryExposureKeyRepository temporaryExposureKeyRepository, IExposureKeyValidator exposureKeyValidator,
             IExposureConfigurationService exposureConfigurationService, KeyValidationConfiguration keyValidationRulesConfig,
-            ICountryRepository countryRepository, ICountryService countryService, AppSettingsConfig appSettingsConfig, IAddTemporaryExposureKeyService addTemporaryExposureKeyService)
+            ICountryRepository countryRepository, AppSettingsConfig appSettingsConfig, IAddTemporaryExposureKeyService addTemporaryExposureKeyService)
         {
             _addTemporaryExposureKeyService = addTemporaryExposureKeyService;
             _cacheOperations = cacheOperations;
@@ -50,7 +49,6 @@ namespace DIGNDB.App.SmitteStop.API
             _logger = logger;
             _exposureConfigurationService = exposureConfigurationService;
             _keyValidationRulesConfig = keyValidationRulesConfig;
-            _countryService = countryService;
             _appSettingsConfig = appSettingsConfig;
             _countryRepository = countryRepository;
         }
@@ -91,11 +89,11 @@ namespace DIGNDB.App.SmitteStop.API
         }
 
         [HttpPost]
-        [TypeFilter(typeof(AuthorizationAttribute))]
+        [TypeFilter(typeof(UploadKeysAuthorizationAttribute))]
         [MapToApiVersion(ApiVersion)]
         public async Task<IActionResult> UploadDiagnosisKeys()
         {
-            var requestBody = String.Empty;
+            var requestBody = string.Empty;
 
             try
             {

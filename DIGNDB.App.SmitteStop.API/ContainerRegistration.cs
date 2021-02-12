@@ -1,3 +1,4 @@
+using AnonymousTokens.Core.Services;
 ﻿using AutoMapper;
 using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.API.Contracts;
@@ -95,11 +96,14 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<ICacheOperations, CacheOperations>();
             services.AddScoped<MobileAuthorizationAttribute>();
             services.AddScoped<DeprecatedCheckAttribute>();
-            services.AddScoped<AuthorizationAttribute>();
+            services.AddScoped<UploadKeysAuthorizationAttribute>();
 
             services.AddScoped<IJwtValidationService, JwtValidationService>();
             services.AddSingleton<IRsaProviderService, JwkRsaProviderService>();
             services.AddScoped<IJwtTokenReplyAttackService, JwtTokenReplyAttackService>();
+
+            services.AddScoped<ISeedStore, AnonymousTokenSeedStore>();
+            services.AddSingleton<IAnonymousTokenKeySource, AnonymousTokenKeySource>();
 
             return services;
         }
@@ -127,6 +131,8 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddSingleton(jwtAuthorizationConfig);
 
             services.AddSingleton(configuration);
+
+            services.Configure<AnonymousTokenKeyStoreConfiguration>(configuration.GetSection("AnonymousTokenValidation"));
 
             return services;
         }
