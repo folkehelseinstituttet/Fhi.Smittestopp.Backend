@@ -10,13 +10,11 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
 {
     public class AuthorizationAttribute : ActionFilterAttribute
     {
-        private readonly AppSettingsConfig _appSettingsConfig;
         private readonly AuthOptions _authOptions;
         private readonly IJwtValidationService _jwtValidationService;
 
-        public AuthorizationAttribute(AppSettingsConfig appSettingsConfig, AuthOptions authOptions, IJwtValidationService jwtValidationService)
+        public AuthorizationAttribute(AuthOptions authOptions, IJwtValidationService jwtValidationService)
         {
-            _appSettingsConfig = appSettingsConfig;
             _authOptions = authOptions;
             _jwtValidationService = jwtValidationService;
         }
@@ -40,7 +38,7 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 }
                 else
                 {
-                    logger.LogWarning("Missing token or invalid scheme. Header value:"+authHeader);
+                    logger.LogWarning("Missing token or invalid scheme. Header value:" + authHeader);
                     context.Result = new UnauthorizedObjectResult("Missing token or invalid scheme.");
                 }
             }
@@ -49,10 +47,6 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 logger.LogError("Error on authorization:" + e);
                 context.Result = new UnauthorizedObjectResult(e.Message);
             }
-        }
-
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
         }
     }
 }
