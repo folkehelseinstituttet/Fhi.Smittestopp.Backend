@@ -1,10 +1,12 @@
 ﻿using AnonymousTokens.Core.Services;
 using AnonymousTokens.Server.Protocol;
 using DIGNDB.App.SmitteStop.API.Contracts;
+using DIGNDB.App.SmitteStop.Domain.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 
 namespace DIGNDB.App.SmitteStop.API.Attributes
@@ -14,12 +16,16 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
         private readonly IJwtValidationService _jwtValidationService;
         private readonly IAnonymousTokenKeySource _anonymousTokenKeySource;
         private readonly ITokenVerifier _tokenVerifier;
+        private readonly AnonymousTokenKeyStoreConfiguration _config;
 
-        public UploadKeysAuthorizationAttribute(IJwtValidationService jwtValidationService, IAnonymousTokenKeySource anonymousTokenKeySource, ISeedStore seedStore)
+        public UploadKeysAuthorizationAttribute(IJwtValidationService jwtValidationService,
+            IAnonymousTokenKeySource anonymousTokenKeySource, ISeedStore seedStore,
+            IOptions<AnonymousTokenKeyStoreConfiguration> config)
         {
             _jwtValidationService = jwtValidationService;
             _anonymousTokenKeySource = anonymousTokenKeySource;
             _tokenVerifier = new TokenVerifier(seedStore);
+            _config = config.Value;
         }
 
         public override async void OnActionExecuting(ActionExecutingContext context)
@@ -34,27 +40,35 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                     token = token.Trim();
 
                     _jwtValidationService.IsTokenValid(token);
-                    return;
 
+                    return;
                 }
 
-                if (authHeader != null && authHeader.StartsWith("Anonymous "))
+                if (_config.Enabled)
                 {
-                    string[] anonymousToken = authHeader.Replace("Anonymous ", string.Empty).Split(".");
-
-                    var submittedPoint = _anonymousTokenKeySource.ECParameters.Curve.DecodePoint(Convert.FromBase64String(anonymousToken[0]));
-                    var tokenSeed = Convert.FromBase64String(anonymousToken[1]);
-                    var keyId = anonymousToken[2];
-
-                    var privateKey = _anonymousTokenKeySource.GetPrivateKey(keyId);
-
-                    var isValid = await _tokenVerifier.VerifyTokenAsync(privateKey, _anonymousTokenKeySource.ECParameters.Curve, tokenSeed, submittedPoint);
-                    if (!isValid)
+                    if (authHeader != null && authHeader.StartsWith("Anonymous "))
                     {
-                        context.Result = new UnauthorizedObjectResult("Invalid token");
+                        string[] anonymousToken = authHeader.Replace("Anonymous ", string.Empty).Split(".");
+
+                        var submittedPoint =
+                            _anonymousTokenKeySource.ECParameters.Curve.DecodePoint(
+                                Convert.FromBase64String(anonymousToken[0]));
+                        var tokenSeed = Convert.FromBase64String(anonymousToken[1]);
+                        var keyId = anonymousToken[2];
+
+                        var privateKey = _anonymousTokenKeySource.GetPrivateKey(keyId);
+
+                        var isValid = await _tokenVerifier.VerifyTokenAsync(privateKey,
+                            _anonymousTokenKeySource.ECParameters.Curve, tokenSeed, submittedPoint);
+                        if (!isValid)
+                        {
+                            context.Result = new UnauthorizedObjectResult("Invalid token");
+                        }
+
+                        return;
                     }
-                    return;
                 }
+
                 logger.LogWarning("Missing token or invalid scheme. Header value:" + authHeader);
                 context.Result = new UnauthorizedObjectResult("Missing token or invalid scheme.");
             }
