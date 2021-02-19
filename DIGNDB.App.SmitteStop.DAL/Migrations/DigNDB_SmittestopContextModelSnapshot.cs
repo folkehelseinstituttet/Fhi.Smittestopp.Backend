@@ -282,7 +282,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         new
                         {
                             Id = 35L,
-                            Code = "SA",
+                            Code = "AR",
                             PullingFromGatewayEnabled = false,
                             VisitedCountriesEnabled = false
                         },
