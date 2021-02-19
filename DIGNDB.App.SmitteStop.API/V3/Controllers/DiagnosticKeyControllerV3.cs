@@ -73,7 +73,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
         }
 
         [HttpPost]
-        [TypeFilter(typeof(AuthorizationAttribute))]
+        [TypeFilter(typeof(UploadKeysAuthorizationAttribute))]
         public async Task<IActionResult> UploadDiagnosisKeys()
         {
             var requestBody = string.Empty;

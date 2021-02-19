@@ -9,6 +9,11 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
         public const long EnglandCountryId = 28L;
         public const long NorwayBokmalDialectId = 33L;
         public const long NorwayNynorskDialectId = 34L;
+        public const long SaudiArabiaCountryId = 35L;
+        public const long SomaliaCountryId = 36L;
+        public const long TigrinyaDialectId = 37L;
+        public const long UrduDialectId = 38L;
+        public const long PolandCountryId = 21L;
 
         public IEnumerable<Country> GetSeedData()
         {
@@ -33,7 +38,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new Country {Id = 18, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "LU"},
                 new Country {Id = 19, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "MT"},
                 new Country {Id = 20, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "NL"},
-                new Country {Id = 21, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "PL"},
+                new Country {Id = PolandCountryId, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "PL"},
                 new Country {Id = 22, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "PT"},
                 new Country {Id = 23, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "RO"},
                 new Country {Id = 24, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "SK"},
@@ -46,8 +51,12 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new Country {Id = 30, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "IS"},
                 new Country {Id = 31, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "LI"},
                 new Country {Id = 32, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "CH"},
-                new Country {Id = 33, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NB"},
-                new Country {Id = 34, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NN"},
+                new Country {Id = NorwayBokmalDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NB"},
+                new Country {Id = NorwayNynorskDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NN"},
+                new Country {Id = SaudiArabiaCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "SA"},
+                new Country {Id = SomaliaCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "SO"},
+                new Country {Id = TigrinyaDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "TI"},
+                new Country {Id = UrduDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "UR"},
             };
         }
     }
