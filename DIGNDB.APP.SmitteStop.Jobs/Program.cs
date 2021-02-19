@@ -24,9 +24,11 @@ namespace DIGNDB.APP.SmitteStop.Jobs
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<HangfireStartup>();
-                }).ConfigureWebHost(config =>
+                })
+                .ConfigureWebHost(config =>
                 {
                     config.UseUrls("http://localhost:5050");
-                }).UseWindowsService();
+                })
+                .UseWindowsService();
     }
 }
