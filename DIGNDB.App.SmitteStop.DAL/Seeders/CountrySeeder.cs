@@ -9,7 +9,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
         public const long EnglandCountryId = 28L;
         public const long NorwayBokmalDialectId = 33L;
         public const long NorwayNynorskDialectId = 34L;
-        public const long SaudiArabiaCountryId = 35L;
+        public const long ArabiaDialectId = 35L;
         public const long SomaliaCountryId = 36L;
         public const long TigrinyaDialectId = 37L;
         public const long UrduDialectId = 38L;
@@ -53,7 +53,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new Country {Id = 32, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "CH"},
                 new Country {Id = NorwayBokmalDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NB"},
                 new Country {Id = NorwayNynorskDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NN"},
-                new Country {Id = SaudiArabiaCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "SA"},
+                new Country {Id = ArabiaDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "AR"},
                 new Country {Id = SomaliaCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "SO"},
                 new Country {Id = TigrinyaDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "TI"},
                 new Country {Id = UrduDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "UR"},
