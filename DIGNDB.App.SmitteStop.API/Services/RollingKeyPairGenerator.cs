@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using DIGNDB.App.SmitteStop.API.Exceptions;
+﻿using DIGNDB.App.SmitteStop.API.Exceptions;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
+using System;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
