@@ -16,16 +16,16 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
         private readonly IJwtValidationService _jwtValidationService;
         private readonly IAnonymousTokenKeySource _anonymousTokenKeySource;
         private readonly ITokenVerifier _tokenVerifier;
-        private readonly AnonymousTokenKeyStoreConfiguration _config;
+        private readonly AnonymousTokenKeyStoreConfiguration _anonymousTokenConfig;
 
         public UploadKeysAuthorizationAttribute(IJwtValidationService jwtValidationService,
             IAnonymousTokenKeySource anonymousTokenKeySource, ISeedStore seedStore,
-            IOptions<AnonymousTokenKeyStoreConfiguration> config)
+            IOptions<AnonymousTokenKeyStoreConfiguration> anonymousTokenConfig)
         {
             _jwtValidationService = jwtValidationService;
             _anonymousTokenKeySource = anonymousTokenKeySource;
             _tokenVerifier = new TokenVerifier(seedStore);
-            _config = config.Value;
+            _anonymousTokenConfig = anonymousTokenConfig.Value;
         }
 
         public override async void OnActionExecuting(ActionExecutingContext context)
@@ -44,7 +44,7 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                     return;
                 }
 
-                if (_config.Enabled)
+                if (_anonymousTokenConfig.Enabled)
                 {
                     if (authHeader != null && authHeader.StartsWith("Anonymous "))
                     {
