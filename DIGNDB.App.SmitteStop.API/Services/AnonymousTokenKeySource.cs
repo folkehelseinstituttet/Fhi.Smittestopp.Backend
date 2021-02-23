@@ -61,7 +61,8 @@ namespace DIGNDB.App.SmitteStop.API.Services
         private RollingKeyPairGenerator CreateKeyPairGenerator()
         {
             var masterCertificate = LocateLocalCertificate(_config.CertificateThumbPrint);
-            return new RollingKeyPairGenerator(masterCertificate, ECParameters);
+            var masterKeyBytes = new CertificatePrivateKeyBytesLoader().ExtractPrivateKeyBytes(masterCertificate);
+            return new RollingKeyPairGenerator(masterKeyBytes, ECParameters);
         }
 
         private static X509Certificate2 LocateLocalCertificate(string thumbprint)

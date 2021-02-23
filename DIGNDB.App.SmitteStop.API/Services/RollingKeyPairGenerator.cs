@@ -6,8 +6,6 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
@@ -21,29 +19,6 @@ namespace DIGNDB.App.SmitteStop.API.Services
         {
             _masterKeyBytes = masterKeyBytes;
             ECParameters = ecParameters;
-        }
-
-        public RollingKeyPairGenerator(X509Certificate2 certificate, X9ECParameters ecParameters)
-            : this(RetrievePrivateKeyBytes(certificate), ecParameters)
-        {
-        }
-
-        private static byte[] RetrievePrivateKeyBytes(X509Certificate2 certificate)
-        {
-            var ecdsaPrivateKey = certificate.GetECDsaPrivateKey();
-            if (ecdsaPrivateKey != null)
-            {
-                return ecdsaPrivateKey.ExportParameters(true).D;
-            }
-
-            var rsaPrivateKey = certificate.GetRSAPrivateKey();
-            if (rsaPrivateKey != null)
-            {
-                // TODO: find a better way to extract bytes for RSA key
-                return Encoding.UTF8.GetBytes(rsaPrivateKey.ToXmlString(true));
-            }
-
-            throw new NotSupportedException($"Unsupported private key for certificate {certificate.Thumbprint}");
         }
 
         public BigInteger GetPrivateKey(long keyId)
