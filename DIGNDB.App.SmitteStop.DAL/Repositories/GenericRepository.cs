@@ -40,6 +40,22 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             return orderBy != null ? orderBy(query).ToList() : query.ToList();
         }
 
+        public virtual async Task<IEnumerable<T>> GetAsync(
+           Expression<Func<T, bool>> filter = null,
+           Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+           string includeProperties = "")
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            query = includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+
+            return await (orderBy != null ? orderBy(query).ToListAsync() : query.ToListAsync());
+        }
+
         public virtual IEnumerable<T> GetAll()
         {
             return _dbSet.ToList();
