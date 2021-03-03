@@ -15,11 +15,6 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             string includeProperties = "");
 
-        Task<IEnumerable<T>> GetAsync(
-                   Expression<Func<T, bool>> filter = null,
-                   Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-                   string includeProperties = "");
-
         IEnumerable<T> GetAll();
 
         Task<IEnumerable<T>> GetAllAsync();

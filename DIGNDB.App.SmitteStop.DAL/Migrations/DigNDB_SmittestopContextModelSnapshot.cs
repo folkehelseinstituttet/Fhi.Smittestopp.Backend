@@ -19,30 +19,6 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.ApplicationStatistics", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("EntryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PositiveResultsLast7Days")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PositiveTestsResultsTotal")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalSmittestopDownloads")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ApplicationStatistics");
-                });
-
             modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.Country", b =>
                 {
                     b.Property<long>("Id")
@@ -344,42 +320,6 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("JwtToken");
-                });
-
-            modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.SSIStatistics", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ConfirmedCasesToday")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ConfirmedCasesTotal")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PatientsAdmittedToday")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TestsConductedToday")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TestsConductedTotal")
-                        .HasColumnType("int");
-
-                    b.Property<double>("VaccinatedFirstDose")
-                        .HasColumnType("float");
-
-                    b.Property<double>("VaccinatedSecondDose")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SSIStatistics");
                 });
 
             modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.Setting", b =>
