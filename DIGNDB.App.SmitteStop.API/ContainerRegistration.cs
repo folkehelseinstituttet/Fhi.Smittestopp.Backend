@@ -1,7 +1,8 @@
 using AnonymousTokens.Core.Services;
-﻿using AutoMapper;
+using AutoMapper;
 using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.API.Contracts;
+using DIGNDB.App.SmitteStop.API.Mappers;
 using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
@@ -77,6 +78,9 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<DigNDB_SmittestopContext>();
 
             services.AddAutoMapper(typeof(CountryMapper));
+            services.AddAutoMapper(typeof(ApplicationStatisticsMapper));
+            services.AddAutoMapper(typeof(SSIStatisticsMapper));
+            services.AddAutoMapper(typeof(CovidStatisticsMapper));
 
             services.AddAPIConfiguration(configuration);
 
