@@ -2,7 +2,7 @@
 
 namespace DIGNDB.App.SmitteStop.Domain.Db
 {
-    public partial class SSIStatistics
+    public class CovidStatistics
     {
         public int Id { get; set; }
         public int ConfirmedCasesToday { get; set; }
@@ -10,8 +10,11 @@ namespace DIGNDB.App.SmitteStop.Domain.Db
         public int TestsConductedToday { get; set; }
         public int TestsConductedTotal { get; set; }
         public int PatientsAdmittedToday { get; set; }
-        public double VaccinatedFirstDose { get; set; }
-        public double VaccinatedSecondDose { get; set; }
+        public int IcuAdmittedToday { get; set; }
+        public double VaccinatedFirstDoseTotal { get; set; }
+        public double VaccinatedFirstDoseToday { get; set; }
+        public double VaccinatedSecondDoseTotal { get; set; }
+        public double VaccinatedSecondDoseToday { get; set; }
         public DateTime Date { get; set; }
     }
 }

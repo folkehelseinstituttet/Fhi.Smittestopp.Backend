@@ -12,7 +12,7 @@ namespace DIGNDB.App.SmitteStop.DAL.DependencyInjection
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped(typeof(ITemporaryExposureKeyRepository), typeof(TemporaryExposureKeyRepository));
             services.AddScoped<ISettingRepository, SettingRepository>();
-            services.AddScoped(typeof(ISSIStatisticsRepository), typeof(SSIStatisticsRepository));
+            services.AddScoped(typeof(ICovidStatisticsRepository), typeof(CovidStatisticsRepository));
             services.AddScoped(typeof(IApplicationStatisticsRepository), typeof(ApplicationStatisticsRepository));
             services.AddScoped<ITemporaryExposureKeyRepository, TemporaryExposureKeyRepository>();
 

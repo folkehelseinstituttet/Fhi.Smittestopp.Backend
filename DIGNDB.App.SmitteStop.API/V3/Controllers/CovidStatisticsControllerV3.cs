@@ -16,7 +16,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
     public class CovidStatisticsControllerV3 : ControllerBase
     {
         private readonly IApplicationStatisticsRepository _applicationStatisticsRepository;
-        private readonly ISSIStatisticsRepository _ssiStatisticsRepository;
+        private readonly ICovidStatisticsRepository _covidStatisticsRepository;
         private readonly ILogger<CovidStatisticsControllerV3> _logger;
         private readonly IMapper _mapper;
 
@@ -25,11 +25,11 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
         public CovidStatisticsControllerV3(
             ILogger<CovidStatisticsControllerV3> logger,
             IApplicationStatisticsRepository applicationStatisticsRepository,
-            ISSIStatisticsRepository ssiStatisticsRepository,
+            ICovidStatisticsRepository covidStatisticsRepository,
             IMapper mapper)
         {
 
-            _ssiStatisticsRepository = ssiStatisticsRepository;
+            _covidStatisticsRepository = covidStatisticsRepository;
             _applicationStatisticsRepository = applicationStatisticsRepository;
             _logger = logger;
             _mapper = mapper;
@@ -47,7 +47,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
                 {
                     throw new InvalidOperationException("No application statistics entries in the database");
                 }
-                SSIStatistics ssiStatisticsDb;
+                CovidStatistics covidStatisticsDb;
                 if (packageDate != null)
                 {
 
@@ -57,19 +57,19 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
                         _logger.LogError("Could not parse package date");
                         return BadRequest("Could not parse package date");
                     }
-                    ssiStatisticsDb = await _ssiStatisticsRepository.GetEntryByDateAsync(lastPackageDate);
+                    covidStatisticsDb = await _covidStatisticsRepository.GetEntryByDateAsync(lastPackageDate);
                 }
                 else
                 {
-                    ssiStatisticsDb = await _ssiStatisticsRepository.GetNewestEntryAsync();
+                    covidStatisticsDb = await _covidStatisticsRepository.GetNewestEntryAsync();
                 }
 
-                if (ssiStatisticsDb != null)
+                if (covidStatisticsDb != null)
                 {
-                    var resultsDbTuple = new Tuple<SSIStatistics, ApplicationStatistics>(ssiStatisticsDb, applicationStatisticsDb);
-                    CovidStatisticsDto ssiStatisticsDto =
-                        _mapper.Map<Tuple<SSIStatistics, ApplicationStatistics>, CovidStatisticsDto>(resultsDbTuple);
-                    return Ok(ssiStatisticsDto);
+                    var resultsDbTuple = new Tuple<CovidStatistics, ApplicationStatistics>(covidStatisticsDb, applicationStatisticsDb);
+                    StatisticsDto covidStatisticsDto =
+                        _mapper.Map<Tuple<CovidStatistics, ApplicationStatistics>, StatisticsDto>(resultsDbTuple);
+                    return Ok(covidStatisticsDto);
                 }
                 return NoContent();
             }

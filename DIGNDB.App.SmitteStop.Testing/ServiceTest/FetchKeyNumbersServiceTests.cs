@@ -1,30 +1,30 @@
-﻿using System;
+﻿using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services;
+using Moq;
+using NUnit.Framework;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DIGNDB.APP.SmitteStop.Jobs.Jobs.KeyNumbers;
-using DIGNDB.APP.SmitteStop.Jobs.Services;
-using Moq;
-using NUnit.Framework;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {
     public class FetchKeyNumbersServiceTests
     {
-        private Mock<IKeyNumbersWebService> mockedWebService = new Mock<IKeyNumbersWebService>();
+        private readonly Mock<IWebServiceWrapper> mockedWebService = new Mock<IWebServiceWrapper>();
 
         [Test]
         public async Task FetchTestNumbersFromDate_Correct_URL_Format()
         {
             mockedWebService.Setup(service => service.GetAsync(It.IsAny<string>())).Returns(
                 Task.FromResult(
-                    new HttpResponseMessage {
+                    new HttpResponseMessage
+                    {
                         Content = new StringContent("test")
                     }
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             DateTime date = new DateTime(2021, 3, 1);
             string expectedUrl = "https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19/data_covid19_lab_by_time_2021-03-01.csv";
             await service.FetchTestNumbersFromDate(date);
@@ -45,7 +45,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             DateTime date = new DateTime(2021, 3, 1);
             string expectedUrl = "https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19/data_covid19_hospital_by_time_2021-03-01.csv";
             await service.FetchHospitalNumbersFromDate(date);
@@ -66,7 +66,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             DateTime date = new DateTime(2021, 3, 1);
             string expectedUrl = "https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19/data_covid19_sysvak_by_time_location_2021-03-01.csv";
             await service.FetchVaccineNumbersFromDate(date);
@@ -87,7 +87,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             string expectedUrl = "https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19/data_covid19_lab_by_time_latest.csv";
             await service.FetchLatestTestNumbers();
 
@@ -107,7 +107,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             string expectedUrl = "https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19/data_covid19_hospital_by_time_latest.csv";
             await service.FetchLatestHospitalNumbers();
 
@@ -127,7 +127,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             string expectedUrl = "https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19/data_covid19_sysvak_by_time_location_latest.csv";
             await service.FetchLatestVaccineNumbers();
 
@@ -149,7 +149,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             DateTime date = new DateTime(2021, 3, 1);
             Stream response = await service.FetchVaccineNumbersFromDate(date);
             string responseString = await new StreamReader(response).ReadToEndAsync();
@@ -172,7 +172,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             DateTime date = new DateTime(2021, 3, 1);
             Stream response = await service.FetchHospitalNumbersFromDate(date);
             string responseString = await new StreamReader(response).ReadToEndAsync();
@@ -195,7 +195,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             DateTime date = new DateTime(2021, 3, 1);
             Stream response = await service.FetchVaccineNumbersFromDate(date);
             string responseString = await new StreamReader(response).ReadToEndAsync();
@@ -218,7 +218,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             Stream response = await service.FetchLatestTestNumbers();
             string responseString = await new StreamReader(response).ReadToEndAsync();
 
@@ -240,7 +240,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             Stream response = await service.FetchLatestHospitalNumbers();
             string responseString = await new StreamReader(response).ReadToEndAsync();
 
@@ -262,7 +262,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 )
             );
 
-            FetchKeyNumbersService service = new FetchKeyNumbersService(mockedWebService.Object);
+            FetchCovidStatisticsService service = new FetchCovidStatisticsService(mockedWebService.Object);
             Stream response = await service.FetchLatestVaccineNumbers();
             string responseString = await new StreamReader(response).ReadToEndAsync();
 

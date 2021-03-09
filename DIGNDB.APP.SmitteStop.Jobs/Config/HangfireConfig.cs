@@ -60,5 +60,8 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Config
 
         [Required]
         public DailyMaintenanceCheckJobConfig DailyMaintenanceCheck { get; set; }
+
+        [Required]
+        public GetCovidStatisticsJobConfig GetCovidStatistics { get; set; }
     }
 }

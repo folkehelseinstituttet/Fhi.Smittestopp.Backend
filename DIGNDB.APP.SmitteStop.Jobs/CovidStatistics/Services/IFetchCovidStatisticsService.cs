@@ -2,9 +2,9 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace DIGNDB.APP.SmitteStop.Jobs.Jobs.Interfaces
+namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services
 {
-    public interface IFetchKeyNumbersService
+    public interface IFetchCovidStatisticsService
     {
         Task<Stream> FetchTestNumbersFromDate(DateTime date);
         Task<Stream> FetchHospitalNumbersFromDate(DateTime date);

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace DIGNDB.APP.SmitteStop.Jobs.Services
+namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services
 {
-    public class KeyNumbersWebService : IKeyNumbersWebService
+    public class WebServiceWrapper : IWebServiceWrapper
     {
 
         private readonly HttpClient httpClient;
 
-        public KeyNumbersWebService()
+        public WebServiceWrapper()
         {
             httpClient = new HttpClient();
         }

@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.DAL.Repositories
 {
-    public class SSIStatisticsRepository : GenericRepository<SSIStatistics>, ISSIStatisticsRepository
+    public class CovidStatisticsRepository : GenericRepository<CovidStatistics>, ICovidStatisticsRepository
     {
-        public SSIStatisticsRepository(DigNDB_SmittestopContext context) : base(context)
+        public CovidStatisticsRepository(DigNDB_SmittestopContext context) : base(context)
         {
         }
 
-        public SSIStatistics GetEntryByDate(DateTime date)
+        public CovidStatistics GetEntryByDate(DateTime date)
         {
             return Get(filter: c => c.Date.Date.CompareTo(date.Date) == 0).SingleOrDefault();
         }
 
-        public async Task<SSIStatistics> GetEntryByDateAsync(DateTime date)
+        public async Task<CovidStatistics> GetEntryByDateAsync(DateTime date)
         {
             return (await GetAsync(filter: c => c.Date.Date == date.Date)).SingleOrDefault();
         }
 
-        public void CreateEntry(SSIStatistics entry)
+        public void CreateEntry(CovidStatistics entry)
         {
             Insert(entry);
             Save();
@@ -38,7 +38,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             Save();
         }
 
-        public async Task<SSIStatistics> GetNewestEntryAsync()
+        public async Task<CovidStatistics> GetNewestEntryAsync()
         {
             return (await GetAsync(orderBy: x => x.OrderByDescending(x => x.Date))).First();
         }
