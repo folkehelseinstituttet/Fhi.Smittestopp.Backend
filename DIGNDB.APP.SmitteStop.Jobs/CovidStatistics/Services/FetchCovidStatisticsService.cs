@@ -1,22 +1,20 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using DIGNDB.APP.SmitteStop.Jobs.Jobs.Interfaces;
-using DIGNDB.APP.SmitteStop.Jobs.Services;
 
-namespace DIGNDB.APP.SmitteStop.Jobs.Jobs.KeyNumbers
+namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services
 {
-    public class FetchKeyNumbersService : IFetchKeyNumbersService
+    public class FetchCovidStatisticsService : IFetchCovidStatisticsService
     {
 
-        private readonly IKeyNumbersWebService keyNumbersWebService;
+        private readonly IWebServiceWrapper keyNumbersWebService;
 
         private const string BASE_URL = "https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19/";
         private const string TESTED_URL = "data_covid19_lab_by_time_";
         private const string HOSPITAL_ADMISSIONS_URL = "data_covid19_hospital_by_time_";
         private const string VACCINATION_URL = "data_covid19_sysvak_by_time_location_";
 
-        public FetchKeyNumbersService(IKeyNumbersWebService webService)
+        public FetchCovidStatisticsService(IWebServiceWrapper webService)
         {
             keyNumbersWebService = webService;
         }

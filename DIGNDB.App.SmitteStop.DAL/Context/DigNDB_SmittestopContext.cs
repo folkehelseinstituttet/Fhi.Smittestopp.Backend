@@ -29,7 +29,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Context
         public virtual DbSet<TemporaryExposureKeyCountry> TemporaryExposureKeyCountry { get; set; }
         public virtual DbSet<JwtToken> JwtToken { get; set; }
 
-        public virtual DbSet<SSIStatistics> SSIStatistics { get; set; }
+        public virtual DbSet<CovidStatistics> CovidStatistics { get; set; }
         public virtual DbSet<ApplicationStatistics> ApplicationStatistics { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

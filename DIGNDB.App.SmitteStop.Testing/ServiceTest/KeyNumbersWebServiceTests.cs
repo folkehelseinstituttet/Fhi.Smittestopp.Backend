@@ -1,13 +1,9 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services;
+using Moq;
+using NUnit.Framework;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using DIGNDB.APP.SmitteStop.Jobs.Services;
-using Moq;
-using Moq.Protected;
-using NUnit.Framework;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
 {
@@ -23,7 +19,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 StatusCode = HttpStatusCode.OK,
             };
 
-            var keyNumbersWebService = new Mock<IKeyNumbersWebService>();
+            var keyNumbersWebService = new Mock<IWebServiceWrapper>();
             keyNumbersWebService.Setup((service) => service.GetAsync(ExampleUrl))
                 .Returns(Task.FromResult(expectedResponse));
 

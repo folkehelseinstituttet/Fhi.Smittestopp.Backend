@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
 {
     [TestFixture]
-    public class SSIStatisticsRepositoryTests
+    public class CovidStatisticsRepositoryTests
     {
         private DigNDB_SmittestopContext _context;
-        private List<SSIStatistics> _ssiStatisticsMockData;
+        private List<CovidStatistics> _covidStatisticsMockData;
         private readonly DateTime _exampleDate = new DateTime(2020, 10, 20, 5, 5, 5);
         [SetUp]
         public void SetUp()
@@ -25,25 +25,25 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
                     .UseInMemoryDatabase(nameof(ApplicationStatisticsRepositoryTests)).Options;
             _context = new DigNDB_SmittestopContext(options);
             _context.Database.EnsureDeleted();
-            _context.AddRange(_ssiStatisticsMockData);
+            _context.AddRange(_covidStatisticsMockData);
             _context.SaveChanges();
         }
 
         private void GenerateData()
         {
-            _ssiStatisticsMockData = new List<SSIStatistics>()
+            _covidStatisticsMockData = new List<CovidStatistics>()
             {
-                new SSIStatistics()
+                new CovidStatistics()
                 {
                     Id = 200,
                     Date = _exampleDate.AddDays(-1)
                 },
-                new SSIStatistics()
+                new CovidStatistics()
                 {
                     Id = 300,
                     Date = _exampleDate.AddDays(-2)
                 },
-                new SSIStatistics()
+                new CovidStatistics()
                 {
                     Id = 400,
                     Date = _exampleDate.AddDays(-3)
@@ -51,28 +51,28 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
             };
         }
 
-        private SSIStatisticsRepository CreateSSIStatisticsRepository()
+        private CovidStatisticsRepository CreateCovidStatisticsRepository()
         {
-            return new SSIStatisticsRepository(_context);
+            return new CovidStatisticsRepository(_context);
         }
 
         [Test]
         public void GetEntryByDate_EntryExists_EntryIsReturned()
         {
             // Arrange
-            var expectedResult = new SSIStatistics()
+            var expectedResult = new CovidStatistics()
             {
                 Id = 5,
                 Date = _exampleDate
             };
-            _ssiStatisticsMockData.Add(expectedResult);
+            _covidStatisticsMockData.Add(expectedResult);
             _context.Add(expectedResult);
             _context.SaveChanges();
-            var sSIStatisticsRepository = CreateSSIStatisticsRepository();
+            var covidStatisticsRepository = CreateCovidStatisticsRepository();
             DateTime date = _exampleDate;
 
             // Act
-            var result = sSIStatisticsRepository.GetEntryByDate(
+            var result = covidStatisticsRepository.GetEntryByDate(
                 date);
 
             // Assert
@@ -83,11 +83,11 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
         public void GetEntryByDate_EntryDoesNotExists_NullIsReturned()
         {
             // Arrange
-            var sSIStatisticsRepository = CreateSSIStatisticsRepository();
+            var covidStatisticsRepository = CreateCovidStatisticsRepository();
             DateTime date = _exampleDate;
 
             // Act
-            var result = sSIStatisticsRepository.GetEntryByDate(
+            var result = covidStatisticsRepository.GetEntryByDate(
                 date);
 
             // Assert
@@ -98,18 +98,18 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
         public async Task GetEntryByDateAsync_EntryExists_EntryIsReturned()
         {
             // Arrange
-            var expectedResult = new SSIStatistics()
+            var expectedResult = new CovidStatistics()
             {
                 Id = 5,
                 Date = _exampleDate
             };
             _context.Add(expectedResult);
             _context.SaveChanges();
-            var sSIStatisticsRepository = CreateSSIStatisticsRepository();
+            var covidStatisticsRepository = CreateCovidStatisticsRepository();
             DateTime date = _exampleDate;
 
             // Act
-            var result = await sSIStatisticsRepository.GetEntryByDateAsync(
+            var result = await covidStatisticsRepository.GetEntryByDateAsync(
                 date);
 
             // Assert
@@ -119,11 +119,11 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
         [Test]
         public async Task GetEntryByDateAsync_EntryDoesNotExists_NullIsReturned()
         {
-            var sSIStatisticsRepository = CreateSSIStatisticsRepository();
+            var covidStatisticsRepository = CreateCovidStatisticsRepository();
             DateTime date = _exampleDate;
 
             // Act
-            var result = await sSIStatisticsRepository.GetEntryByDateAsync(
+            var result = await covidStatisticsRepository.GetEntryByDateAsync(
                 date);
 
             // Assert
@@ -134,18 +134,18 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
         public void CreateEntry_EntryIsCreated()
         {
             // Arrange
-            var sSIStatisticsRepository = CreateSSIStatisticsRepository();
-            SSIStatistics expectedResult = new SSIStatistics()
+            var covidStatisticsRepository = CreateCovidStatisticsRepository();
+            CovidStatistics expectedResult = new CovidStatistics()
             {
                 Id = 1
             };
 
             // Act
-            sSIStatisticsRepository.CreateEntry(
+            covidStatisticsRepository.CreateEntry(
                 expectedResult);
 
             // Assert
-            var retrievedEntity = _context.SSIStatistics.Find(expectedResult.Id);
+            var retrievedEntity = _context.CovidStatistics.Find(expectedResult.Id);
             Assert.AreEqual(expectedResult, retrievedEntity);
         }
 
@@ -153,23 +153,23 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
         public void RemoveEntriesOlderThan_ShouldRemoveAllOlderRecords()
         {
             // Arrange
-            var expectedResult = new SSIStatistics()
+            var expectedResult = new CovidStatistics()
             {
                 Id = 5,
                 Date = _exampleDate.AddDays(1)
             };
             _context.Add(expectedResult);
             _context.SaveChanges();
-            var sSIStatisticsRepository = CreateSSIStatisticsRepository();
+            var covidStatisticsRepository = CreateCovidStatisticsRepository();
             DateTime date = _exampleDate;
 
             // Act
-            sSIStatisticsRepository.RemoveEntriesOlderThan(
+            covidStatisticsRepository.RemoveEntriesOlderThan(
                 date);
 
             // Assert
-            Assert.AreEqual(1, _context.SSIStatistics.Count());
-            var retrievedEntity = _context.SSIStatistics.Find(expectedResult.Id);
+            Assert.AreEqual(1, _context.CovidStatistics.Count());
+            var retrievedEntity = _context.CovidStatistics.Find(expectedResult.Id);
             Assert.AreEqual(expectedResult, retrievedEntity);
         }
 
@@ -177,17 +177,17 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
         public async Task GetNewestEntryAsync_ShouldReturnNewestEntry()
         {
             // Arrange
-            var expectedResult = new SSIStatistics()
+            var expectedResult = new CovidStatistics()
             {
                 Id = 5,
                 Date = _exampleDate
             };
             _context.Add(expectedResult);
             _context.SaveChanges();
-            var sSIStatisticsRepository = CreateSSIStatisticsRepository();
+            var covidStatisticsRepository = CreateCovidStatisticsRepository();
 
             // Act
-            var result = await sSIStatisticsRepository.GetNewestEntryAsync();
+            var result = await covidStatisticsRepository.GetNewestEntryAsync();
 
             // Assert
             Assert.AreEqual(expectedResult, result);

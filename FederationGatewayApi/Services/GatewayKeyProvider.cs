@@ -34,7 +34,7 @@ namespace FederationGatewayApi.Services
             _x509CertificateParser = x509CertificateParserWrapper ?? new IX509CertificateParserWrapper.X509CertificateParserWrapper();
 
             if (authenticationCertificateFingerprint != null && signingCertificateFingerprint != null)
-               LoadCertificates(authenticationCertificateFingerprint, signingCertificateFingerprint);
+                LoadCertificates(authenticationCertificateFingerprint, signingCertificateFingerprint);
         }
 
         public void LoadCertificates(string authenticationCertificateFingerprint, string signingCertificateFingerprint)
@@ -59,7 +59,7 @@ namespace FederationGatewayApi.Services
             LoadCertificatesFromLocation(authenticationCertificateFingerprint, signingCertificateFingerprint, StoreLocation.LocalMachine);
         }
 
-        private void LoadCertificateFromCurrentUserStore(string authenticationCertificateFingerprint,string signingCertificateFingerprint)
+        private void LoadCertificateFromCurrentUserStore(string authenticationCertificateFingerprint, string signingCertificateFingerprint)
         {
             LoadCertificatesFromLocation(authenticationCertificateFingerprint, signingCertificateFingerprint, StoreLocation.CurrentUser);
         }
@@ -89,7 +89,7 @@ namespace FederationGatewayApi.Services
             }
 
             AuthenticationCertificateFingerprint = authenticationCertificateFingerprint;
-            ValidateCertificates(authenticationCertificateFingerprint, signingCertificateFingerprint);
+            //ValidateCertificates(authenticationCertificateFingerprint, signingCertificateFingerprint);
         }
 
         private void ValidateCertificates(string authenticationCertificateFingerprint, string signingCertificateFingerprint)
