@@ -79,7 +79,7 @@ namespace DIGNDB.App.SmitteStop.API
 
             services.AddAutoMapper(typeof(CountryMapper));
             services.AddAutoMapper(typeof(ApplicationStatisticsMapper));
-            services.AddAutoMapper(typeof(SSIStatisticsMapper));
+            services.AddAutoMapper(typeof(StatisticsMapper));
             services.AddAutoMapper(typeof(CovidStatisticsMapper));
 
             services.AddAPIConfiguration(configuration);

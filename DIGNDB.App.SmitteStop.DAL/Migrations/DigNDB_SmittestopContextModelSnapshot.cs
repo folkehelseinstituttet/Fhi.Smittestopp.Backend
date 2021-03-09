@@ -333,20 +333,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.JwtToken", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("ExpirationTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("JwtToken");
-                });
-
-            modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.SSIStatistics", b =>
+            modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.CovidStatistics", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -362,6 +349,9 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("IcuAdmittedToday")
+                        .HasColumnType("int");
+
                     b.Property<int>("PatientsAdmittedToday")
                         .HasColumnType("int");
 
@@ -371,15 +361,34 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                     b.Property<int>("TestsConductedTotal")
                         .HasColumnType("int");
 
-                    b.Property<double>("VaccinatedFirstDose")
+                    b.Property<double>("VaccinatedFirstDoseToday")
                         .HasColumnType("float");
 
-                    b.Property<double>("VaccinatedSecondDose")
+                    b.Property<double>("VaccinatedFirstDoseTotal")
+                        .HasColumnType("float");
+
+                    b.Property<double>("VaccinatedSecondDoseToday")
+                        .HasColumnType("float");
+
+                    b.Property<double>("VaccinatedSecondDoseTotal")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.ToTable("SSIStatistics");
+                    b.ToTable("CovidStatistics");
+                });
+
+            modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.JwtToken", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JwtToken");
                 });
 
             modelBuilder.Entity("DIGNDB.App.SmitteStop.Domain.Db.Setting", b =>

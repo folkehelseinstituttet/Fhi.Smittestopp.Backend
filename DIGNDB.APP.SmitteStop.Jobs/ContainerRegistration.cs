@@ -6,6 +6,8 @@ using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.APP.SmitteStop.Jobs.Config;
+using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services;
+using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Utils;
 using DIGNDB.APP.SmitteStop.Jobs.Services;
 using FederationGatewayApi.Contracts;
 using FederationGatewayApi.Mappers;
@@ -37,6 +39,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             services.AddSingleton(gateWayConfig);
             services.AddSingleton(hangfireConfig.Jobs.UploadKeysToTheGateway);
             services.AddSingleton(hangfireConfig.Jobs.DownloadKeysFromTheGateway);
+            services.AddSingleton(hangfireConfig.Jobs.GetCovidStatistics);
 
             services.AddHangfire(x => x.UseSqlServerStorage(hangfireConfig.HangFireConnectionString));
             services.AddDbContext<DigNDB_SmittestopContext>(opts =>
@@ -70,6 +73,15 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             services.AddScoped<IGatewaySyncStateSettingsDao, GatewaySyncStateSettingsDao>();
             services.AddScoped<IEuGatewayService, EuGatewayService>();
             services.AddScoped<IAddTemporaryExposureKeyService, AddTemporaryExposureKeyService>();
+            services.AddScoped<IWebServiceWrapper, WebServiceWrapper>();
+            services.AddScoped<IFetchCovidStatisticsService, FetchCovidStatisticsService>();
+            services.AddScoped<ICovidStatisticsFilePackageBuilder, CovidStatisticsFilePackageBuilder>();
+            services.AddScoped<IDateTimeResolver, DateTimeResolver>();
+            services.AddScoped<ICovidStatisticsDataExtractingService, CovidStatisticsDataExtractingService>();
+            services.AddScoped<ICovidStatisticsCsvParser, CovidStatisticsCsvParser>();
+            services.AddScoped<ICovidStatisticsBuilder, CovidStatisticsBuilder>();
+            services.AddScoped<ICovidStatisticsRetrieveService, CovidStatisticsRetrieveService>();
+            services.AddScoped<ICovidStatisticsCsvDataRetrieveService, CovidStatisticsCsvDataRetrieveService>();
             services.AddSingleton<IGatewayKeyProvider>(
                 new GatewayKeyProvider(gateWayConfig.AuthenticationCertificateFingerprint, gateWayConfig.SigningCertificateFingerprint));
 
