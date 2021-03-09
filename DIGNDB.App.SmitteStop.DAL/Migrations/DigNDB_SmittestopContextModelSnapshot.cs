@@ -2423,6 +2423,246 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             EntityName = "Country",
                             LanguageCountryId = 38L,
                             Value = "سوئٹزرلینڈ"
+                        },
+                        new
+                        {
+                            Id = 241L,
+                            EntityId = 1L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Austrija"
+                        },
+                        new
+                        {
+                            Id = 242L,
+                            EntityId = 2L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Belgija"
+                        },
+                        new
+                        {
+                            Id = 243L,
+                            EntityId = 3L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Bulgarija"
+                        },
+                        new
+                        {
+                            Id = 244L,
+                            EntityId = 4L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Kroatija"
+                        },
+                        new
+                        {
+                            Id = 245L,
+                            EntityId = 5L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Kipras"
+                        },
+                        new
+                        {
+                            Id = 246L,
+                            EntityId = 6L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Čekijos Respublika"
+                        },
+                        new
+                        {
+                            Id = 247L,
+                            EntityId = 7L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Danija"
+                        },
+                        new
+                        {
+                            Id = 248L,
+                            EntityId = 8L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Estija"
+                        },
+                        new
+                        {
+                            Id = 249L,
+                            EntityId = 9L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Suomija"
+                        },
+                        new
+                        {
+                            Id = 250L,
+                            EntityId = 10L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Prancūzija"
+                        },
+                        new
+                        {
+                            Id = 251L,
+                            EntityId = 11L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Vokietija"
+                        },
+                        new
+                        {
+                            Id = 252L,
+                            EntityId = 12L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Graikija"
+                        },
+                        new
+                        {
+                            Id = 253L,
+                            EntityId = 13L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Vengrija"
+                        },
+                        new
+                        {
+                            Id = 254L,
+                            EntityId = 14L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Airija"
+                        },
+                        new
+                        {
+                            Id = 255L,
+                            EntityId = 15L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Italija"
+                        },
+                        new
+                        {
+                            Id = 256L,
+                            EntityId = 16L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Latvija"
+                        },
+                        new
+                        {
+                            Id = 257L,
+                            EntityId = 17L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Lietuva"
+                        },
+                        new
+                        {
+                            Id = 258L,
+                            EntityId = 18L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Liuksemburgas"
+                        },
+                        new
+                        {
+                            Id = 259L,
+                            EntityId = 19L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Malta"
+                        },
+                        new
+                        {
+                            Id = 260L,
+                            EntityId = 20L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Nyderlandai"
+                        },
+                        new
+                        {
+                            Id = 261L,
+                            EntityId = 21L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Lenkija"
+                        },
+                        new
+                        {
+                            Id = 262L,
+                            EntityId = 22L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Portugalija"
+                        },
+                        new
+                        {
+                            Id = 263L,
+                            EntityId = 23L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Rumunija"
+                        },
+                        new
+                        {
+                            Id = 264L,
+                            EntityId = 24L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Slovakija"
+                        },
+                        new
+                        {
+                            Id = 265L,
+                            EntityId = 25L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Slovėnija"
+                        },
+                        new
+                        {
+                            Id = 266L,
+                            EntityId = 26L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Ispanija"
+                        },
+                        new
+                        {
+                            Id = 267L,
+                            EntityId = 27L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Švedija"
+                        },
+                        new
+                        {
+                            Id = 268L,
+                            EntityId = 30L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Islandija"
+                        },
+                        new
+                        {
+                            Id = 269L,
+                            EntityId = 31L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Lichtenšteinas"
+                        },
+                        new
+                        {
+                            Id = 270L,
+                            EntityId = 32L,
+                            EntityName = "Country",
+                            LanguageCountryId = 31L,
+                            Value = "Šveicarija "
                         });
                 });
 
