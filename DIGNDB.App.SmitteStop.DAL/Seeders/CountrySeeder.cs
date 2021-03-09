@@ -14,6 +14,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
         public const long TigrinyaDialectId = 37L;
         public const long UrduDialectId = 38L;
         public const long PolandCountryId = 21L;
+        public const long LithuaniaCountryId = 31L;
 
         public IEnumerable<Country> GetSeedData()
         {
@@ -49,7 +50,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new Country {Id = NorwayCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NO"},
                 new Country {Id = EnglandCountryId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "EN"},
                 new Country {Id = 30, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "IS"},
-                new Country {Id = 31, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "LI"},
+                new Country {Id = LithuaniaCountryId, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "LI"},
                 new Country {Id = 32, PullingFromGatewayEnabled = true, VisitedCountriesEnabled = true, Code = "CH"},
                 new Country {Id = NorwayBokmalDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NB"},
                 new Country {Id = NorwayNynorskDialectId, PullingFromGatewayEnabled = false, VisitedCountriesEnabled = false, Code = "NN"},
