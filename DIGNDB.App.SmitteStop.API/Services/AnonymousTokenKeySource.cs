@@ -34,7 +34,8 @@ namespace DIGNDB.App.SmitteStop.API.Services
                 throw new FormatException($"Provided {nameof(keyIdString)} could not be parsed to a long number.");
             }
 
-            if (!GetActiveKeyIds().Contains(keyId))
+            var activeKeyIds = GetActiveKeyIds();
+            if (!activeKeyIds.Contains(keyId))
             {
                 throw new ArgumentException($"Provided {nameof(keyIdString)} does not match one of the currently active key IDs.");
             }
