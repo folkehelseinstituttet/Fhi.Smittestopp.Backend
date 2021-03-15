@@ -89,6 +89,8 @@ namespace DIGNDB.App.SmitteStop.API
 
         public static IServiceCollection AddApiServiceCollectionDependencies(this IServiceCollection services)
         {
+            services.AddOptions();
+
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICacheOperationsV3, CacheOperationsV3>();
@@ -99,6 +101,7 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<ILogMessageValidator, LogMessageValidator>();
             services.AddScoped<ICacheOperations, CacheOperations>();
             services.AddScoped<MobileAuthorizationAttribute>();
+            services.AddScoped<GitHubAuthorizationAttribute>();
             services.AddScoped<DeprecatedCheckAttribute>();
             services.AddScoped<UploadKeysAuthorizationAttribute>();
 
@@ -108,6 +111,7 @@ namespace DIGNDB.App.SmitteStop.API
 
             services.AddScoped<ISeedStore, AnonymousTokenSeedStore>();
             services.AddSingleton<IAnonymousTokenKeySource, AnonymousTokenKeySource>();
+            services.AddScoped<IAnonymousTokenValidationService, AnonymousTokenValidationService>();
 
             return services;
         }

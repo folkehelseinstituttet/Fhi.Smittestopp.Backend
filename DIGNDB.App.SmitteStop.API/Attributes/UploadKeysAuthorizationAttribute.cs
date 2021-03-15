@@ -1,6 +1,4 @@
-﻿using AnonymousTokens.Core.Services;
-using AnonymousTokens.Server.Protocol;
-using DIGNDB.App.SmitteStop.API.Contracts;
+﻿using DIGNDB.App.SmitteStop.API.Contracts;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,17 +12,15 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
     public class UploadKeysAuthorizationAttribute : ActionFilterAttribute
     {
         private readonly IJwtValidationService _jwtValidationService;
-        private readonly IAnonymousTokenKeySource _anonymousTokenKeySource;
-        private readonly ITokenVerifier _tokenVerifier;
+        private readonly IAnonymousTokenValidationService _anonymousTokenValidationService;
         private readonly AnonymousTokenKeyStoreConfiguration _anonymousTokenConfig;
 
         public UploadKeysAuthorizationAttribute(IJwtValidationService jwtValidationService,
-            IAnonymousTokenKeySource anonymousTokenKeySource, ISeedStore seedStore,
+            IAnonymousTokenValidationService anonymousTokenValidationService,
             IOptions<AnonymousTokenKeyStoreConfiguration> anonymousTokenConfig)
         {
             _jwtValidationService = jwtValidationService;
-            _anonymousTokenKeySource = anonymousTokenKeySource;
-            _tokenVerifier = new TokenVerifier(seedStore);
+            _anonymousTokenValidationService = anonymousTokenValidationService;
             _anonymousTokenConfig = anonymousTokenConfig.Value;
         }
 
@@ -48,18 +44,8 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 {
                     if (authHeader != null && authHeader.StartsWith("Anonymous "))
                     {
-                        string[] anonymousToken = authHeader.Replace("Anonymous ", string.Empty).Split(".");
-
-                        var submittedPoint =
-                            _anonymousTokenKeySource.ECParameters.Curve.DecodePoint(
-                                Convert.FromBase64String(anonymousToken[0]));
-                        var tokenSeed = Convert.FromBase64String(anonymousToken[1]);
-                        var keyId = anonymousToken[2];
-
-                        var privateKey = _anonymousTokenKeySource.GetPrivateKey(keyId);
-
-                        var isValid = await _tokenVerifier.VerifyTokenAsync(privateKey,
-                            _anonymousTokenKeySource.ECParameters.Curve, tokenSeed, submittedPoint);
+                        var anonymousToken = authHeader.Replace("Anonymous ", string.Empty);
+                        var isValid = await _anonymousTokenValidationService.IsTokenValid(anonymousToken);
                         if (!isValid)
                         {
                             context.Result = new UnauthorizedObjectResult("Invalid token");
