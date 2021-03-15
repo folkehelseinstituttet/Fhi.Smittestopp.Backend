@@ -1,6 +1,6 @@
 name: Download and upload covid files 
 on:
-  workflow_dispatch:    
+  workflow_dispatch:
 
 jobs:
   download_dagens_tal:
@@ -41,7 +41,7 @@ jobs:
     - name: Upload tested file
       id: upload_tested_file
       run: |
-        curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS }}" -F "file=@public/tested/${{env.file_tested}}" https://test-be-op.ss2np.fhi.no/uploadStatistics
+        curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@public/tested/${{env.file_tested}}" ${{secrets.UPLOAD_URL}}
     
     # hospital admission file
     - uses: suisei-cn/actions-download-file@v1
@@ -53,7 +53,7 @@ jobs:
     - name: Upload hospital admission file
       id: upload_hosp_admission_file
       run: |
-        curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS }}" -F "file=@public/hospital/${{env.file_hosp_admission}}" https://test-be-op.ss2np.fhi.no/uploadStatistics
+        curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@public/hospital/${{env.file_hosp_admission}}" ${{secrets.UPLOAD_URL}}
     
     # vaccination file
     - uses: suisei-cn/actions-download-file@v1
@@ -65,5 +65,5 @@ jobs:
     - name: Upload vaccination file
       id: upload_vaccination_file
       run: |
-        curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS }}" -F "file=@public/vaccination/${{env.file_vaccination}}" ${{secrets.UPLOAD_URL}}
+        curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@public/vaccination/${{env.file_vaccination}}" ${{secrets.UPLOAD_URL}}
     
