@@ -1,0 +1,69 @@
+name: Download and upload covid files 
+on:
+  workflow_dispatch:    
+
+jobs:
+  download_dagens_tal:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set date env
+      id: step_date
+      run: |
+        echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Set base url
+      id: step_base_url
+      run: |
+        echo "base_url=https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19" >> $GITHUB_ENV
+    - name: Set tested file name
+      id: step_tested_file_name
+      run: |
+        echo "file_tested=data_covid19_lab_by_time_${{ env.date }}.csv" >> $GITHUB_ENV
+    - name: Set hospital admission file name
+      id: step_hospital_admission
+      run: |
+        echo "file_hosp_admission=data_covid19_hospital_by_time_${{ env.date }}.csv" >> $GITHUB_ENV
+    - name: Set vaccination file name
+      id: step_vaccination_file_name
+      run: |
+        echo "file_vaccination=data_covid19_sysvak_by_time_location_${{ env.date }}.csv" >> $GITHUB_ENV
+    
+    #############################
+    # Download and upload files #
+    #############################
+    
+    # tested file
+    - uses: suisei-cn/actions-download-file@v1
+      id: download_test_file # Remember to give an ID if you need the output filename      
+      name: Download tested file
+      with:
+        url: "${{env.base_url}}/${{env.file_tested}}"
+        target: public/tested
+    - name: Upload tested file
+      id: upload_tested_file
+      run: |
+        curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS }}" -F "file=@public/tested/${{env.file_tested}}" https://test-be-op.ss2np.fhi.no/uploadStatistics
+    
+    # hospital admission file
+    - uses: suisei-cn/actions-download-file@v1
+      id: download_hospital_admission_file # Remember to give an ID if you need the output filename      
+      name: Download hospital admission file
+      with:
+        url: "${{env.base_url}}/${{env.file_hosp_admission}}"
+        target: public/hospital/
+    - name: Upload hospital admission file
+      id: upload_hosp_admission_file
+      run: |
+        curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS }}" -F "file=@public/hospital/${{env.file_hosp_admission}}" https://test-be-op.ss2np.fhi.no/uploadStatistics
+    
+    # vaccination file
+    - uses: suisei-cn/actions-download-file@v1
+      id: download_vaccination_file # Remember to give an ID if you need the output filename      
+      name: Download vaccination file
+      with:
+        url: "${{env.base_url}}/${{env.file_vaccination}}"
+        target: public/vaccination
+    - name: Upload vaccination file
+      id: upload_vaccination_file
+      run: |
+        curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS }}" -F "file=@public/vaccination/${{env.file_vaccination}}" ${{secrets.UPLOAD_URL}}
+    
