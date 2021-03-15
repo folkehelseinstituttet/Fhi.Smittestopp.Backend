@@ -1,5 +1,4 @@
 ﻿using DIGNDB.App.SmitteStop.API.Attributes;
-using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.APP.SmitteStop.API.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -54,6 +53,11 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
                 }
                 
                 var destinationPath = Path.Combine(folderPath, file.FileName);
+                if (System.IO.File.Exists(destinationPath))
+                {
+                    return Ok("File already uploaded");
+                }
+
                 try
                 {
                     await using Stream fileStream = new FileStream(destinationPath, FileMode.Create);
