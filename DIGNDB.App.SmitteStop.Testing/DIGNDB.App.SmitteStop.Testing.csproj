@@ -35,4 +35,8 @@
     <ProjectReference Include="..\DIGNDB.APP.SmitteStop.Jobs\DIGNDB.APP.SmitteStop.Jobs.csproj" />
     <ProjectReference Include="..\FederationGatewayApi\FederationGatewayApi.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CovidStatisticsFiles\" />
+  </ItemGroup>
 </Project>
