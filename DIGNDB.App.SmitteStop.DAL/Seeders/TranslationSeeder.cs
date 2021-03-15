@@ -129,7 +129,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new {Id = 115L, EntityId = 25L, EntityName = nameof(Country), Value = "سلوفینیا", LanguageCountryId = CountrySeeder.ArabiaDialectId},
                 new {Id = 116L, EntityId = 26L, EntityName = nameof(Country), Value = "اسبانیا", LanguageCountryId = CountrySeeder.ArabiaDialectId},
                 new {Id = 117L, EntityId = 27L, EntityName = nameof(Country), Value = "السوید", LanguageCountryId = CountrySeeder.ArabiaDialectId},
-                new {Id = 118L, EntityId = 30L, EntityName = nameof(Country), Value = "ایسلندة", LanguageCountryId = CountrySeeder.ArabiaDialectId},
+                new {Id = 118L, EntityId = 30L, EntityName = nameof(Country), Value = "أيسلندا", LanguageCountryId = CountrySeeder.ArabiaDialectId},
                 new {Id = 119L, EntityId = 31L, EntityName = nameof(Country), Value = "لشتنشتاین", LanguageCountryId = CountrySeeder.ArabiaDialectId},
                 new {Id = 120L, EntityId = 32L, EntityName = nameof(Country), Value = "سویسرا", LanguageCountryId = CountrySeeder.ArabiaDialectId},
 
@@ -234,7 +234,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new {Id = 216L, EntityId = 6L, EntityName = nameof(Country), Value = "چیک ریپبلک", LanguageCountryId = CountrySeeder.UrduDialectId},
                 new {Id = 217L, EntityId = 7L, EntityName = nameof(Country), Value = "ڈنمارک", LanguageCountryId = CountrySeeder.UrduDialectId},
                 new {Id = 218L, EntityId = 8L, EntityName = nameof(Country), Value = "ایسٹونیا", LanguageCountryId = CountrySeeder.UrduDialectId},
-                new {Id = 219L, EntityId = 9L, EntityName = nameof(Country), Value = "فن لینڈ", LanguageCountryId = CountrySeeder.UrduDialectId},
+                new {Id = 219L, EntityId = 9L, EntityName = nameof(Country), Value = "فنلندا", LanguageCountryId = CountrySeeder.UrduDialectId},
                 new {Id = 220L, EntityId = 10L, EntityName = nameof(Country), Value = "فرانس", LanguageCountryId = CountrySeeder.UrduDialectId},
                 new {Id = 221L, EntityId = 11L, EntityName = nameof(Country), Value = "جرمنی", LanguageCountryId = CountrySeeder.UrduDialectId},
                 new {Id = 222L, EntityId = 12L, EntityName = nameof(Country), Value = "یونان", LanguageCountryId = CountrySeeder.UrduDialectId},
