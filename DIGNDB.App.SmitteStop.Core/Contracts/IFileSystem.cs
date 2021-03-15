@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace DIGNDB.App.SmitteStop.Core.Contracts
 {
@@ -19,5 +20,6 @@ namespace DIGNDB.App.SmitteStop.Core.Contracts
         void Rename(string filePath, string newFilePath);
         string GetDirectoryNameFromPath(string path);
         string GetFileNameFromPath(string filePath);
+        Stream GetFileStream(string path);
     }
 }

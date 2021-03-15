@@ -87,5 +87,10 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
         {
             return Path.GetFileName(path);
         }
+
+        public Stream GetFileStream(string path)
+        {
+            return new FileStream(path, FileMode.Open);
+        }
     }
 }

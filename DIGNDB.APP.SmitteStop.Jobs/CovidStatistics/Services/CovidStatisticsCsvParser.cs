@@ -40,7 +40,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services
         private IEnumerable<T> RetrieveDataFromCsvFile<T>(Stream csvStream, ClassMap<T> classMap)
         {
             using var streamReader = GetStreamReaderForStream(csvStream);
-            CheckIfDataIsMissing(streamReader, csvStream);
             using var csvContentReader = ConfigureCsvReader(classMap, streamReader);
             try
             {
@@ -73,29 +72,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services
             csvContentReader.Configuration.CultureInfo = CultureInfo.InvariantCulture;
             csvContentReader.Configuration.Delimiter = ",";
             return csvContentReader;
-        }
-
-        private void CheckIfDataIsMissing(StreamReader streamReader, Stream stream)
-        {
-            var content = streamReader.ReadToEnd();
-            if (content == "404: Not Found")
-            {
-                HandleDataMissing();
-            }
-            stream.Position = 0;
-        }
-
-        private void HandleDataMissing()
-        {
-            if (_dateTimeResolver.GetDateTimeNow().Hour < _settings.MakeAlertIfDataIsMissingAfterHour)
-            {
-                _logger.LogInformation(CovidStatisticsFilleMissingOnServerException.DataMissingInfoMessage);
-            }
-            else
-            {
-                _logger.LogError(CovidStatisticsFilleMissingOnServerException.DataMissingErrorMessage);
-                throw new CovidStatisticsFilleMissingOnServerException();
-            }
         }
 
         private static Stream GetFileOrThrow(List<CsvFileDto> packageFiles, CovidStatisticsFileName fileName)

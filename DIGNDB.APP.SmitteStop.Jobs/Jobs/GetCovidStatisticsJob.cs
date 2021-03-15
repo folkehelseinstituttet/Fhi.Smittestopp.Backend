@@ -1,7 +1,11 @@
 ﻿using DIGNDB.App.SmitteStop.DAL.Repositories;
+using DIGNDB.APP.SmitteStop.Jobs.Config;
+using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Exceptions;
 using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services;
 using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Utils;
 using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
 
 namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
 {
@@ -11,12 +15,15 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
         private readonly IDateTimeResolver _dateTimeResolver;
         private readonly ICovidStatisticsRepository _covidStatisticsRepository;
         private readonly ICovidStatisticsRetrieveService _covidStatisticsRetrieveService;
+        private readonly GetCovidStatisticsJobConfig _config;
 
         public GetCovidStatisticsJob(ILogger<CovidStatisticsBuilder> logger,
             IDateTimeResolver dateTimeResolver,
             ICovidStatisticsRepository covidStatisticsRepository,
-            ICovidStatisticsRetrieveService covidStatisticsRetrieveService)
+            ICovidStatisticsRetrieveService covidStatisticsRetrieveService,
+            GetCovidStatisticsJobConfig config)
         {
+            _config = config;
             _covidStatisticsRetrieveService = covidStatisticsRetrieveService;
             _covidStatisticsRepository = covidStatisticsRepository;
             _dateTimeResolver = dateTimeResolver;
@@ -32,7 +39,19 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
             }
             else
             {
-                _covidStatisticsRetrieveService.GetCovidStatistics();
+                try
+                {
+                    _covidStatisticsRetrieveService.GetCovidStatistics();
+                }
+                catch (FileNotFoundException)
+                {
+                    HandleDataMissing();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"Unexpected error while calculating covid statistics: {e}");
+                    throw;
+                }
             }
         }
 
@@ -44,6 +63,19 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
         private void SetDateTimeToNow()
         {
             _dateTimeResolver.SetDateTimeToUtcNow();
+        }
+
+        private void HandleDataMissing()
+        {
+            if (_dateTimeResolver.GetDateTimeNow().Hour < _config.MakeAlertIfDataIsMissingAfterHour)
+            {
+                _logger.LogInformation(CovidStatisticsFilleMissingOnServerException.DataMissingInfoMessage);
+            }
+            else
+            {
+                _logger.LogError(CovidStatisticsFilleMissingOnServerException.DataMissingErrorMessage);
+                throw new CovidStatisticsFilleMissingOnServerException();
+            }
         }
     }
 }

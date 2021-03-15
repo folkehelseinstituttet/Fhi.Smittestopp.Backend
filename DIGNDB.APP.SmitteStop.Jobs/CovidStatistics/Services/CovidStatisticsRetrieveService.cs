@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Net.Http;
 
 namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services
 {
@@ -23,18 +22,9 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services
 
         public void GetCovidStatistics()
         {
-            try
-            {
-                using var covidStatisticsSourceFileStreamsPackage = _covidStatisticsFilePackageBuilder.GetCovidStatisticsFilesPackage();
-                var covidStatisticsFilesContent = _covidStatisticsCsvParser.ParsePackage(covidStatisticsSourceFileStreamsPackage);
-                _covidStatisticsDataExtractingService.ProcessData(covidStatisticsFilesContent);
-            }
-            catch (HttpRequestException e)
-            {
-                _logger.LogError(
-                    $"There was an error while trying to obtain one of the files needed to build covid statistics. inner exception - {e}");
-                throw;
-            }
+            using var covidStatisticsSourceFileStreamsPackage = _covidStatisticsFilePackageBuilder.GetCovidStatisticsFilesPackage();
+            var covidStatisticsFilesContent = _covidStatisticsCsvParser.ParsePackage(covidStatisticsSourceFileStreamsPackage);
+            _covidStatisticsDataExtractingService.ProcessData(covidStatisticsFilesContent);
         }
     }
 }
