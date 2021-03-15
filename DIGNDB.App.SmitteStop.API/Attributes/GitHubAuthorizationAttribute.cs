@@ -3,24 +3,23 @@ using DIGNDB.App.SmitteStop.Domain.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Linq;
 
 namespace DIGNDB.App.SmitteStop.API.Attributes
 {
-    public class MobileAuthorizationAttribute : ActionFilterAttribute
+    public class GitHubAuthorizationAttribute : ActionFilterAttribute
     {
         private readonly AuthOptions _authOptions;
-        private readonly ILogger<MobileAuthorizationAttribute> _logger;
+        private readonly ILogger<GitHubAuthorizationAttribute> _logger;
 
-        private readonly string _mobileTokenEncrypted;
+        private readonly string _gitHubTokenEncrypted;
 
-        public MobileAuthorizationAttribute(AuthOptions authOptions, ILogger<MobileAuthorizationAttribute> logger, AppSettingsConfig appSettingsConfig)
+        public GitHubAuthorizationAttribute(AuthOptions authOptions, ILogger<GitHubAuthorizationAttribute> logger, AppSettingsConfig appSettingsConfig)
         {
             _authOptions = authOptions;
             _logger = logger;
-            _mobileTokenEncrypted = appSettingsConfig.AuthorizationMobile;
+            _gitHubTokenEncrypted = appSettingsConfig.AuthorizationGitHub;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -30,8 +29,7 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 return;
             }
 
-            StringValues values = new StringValues();
-            if (context.HttpContext.Request.Headers.TryGetValue("authorization_mobile", out values))
+            if (context.HttpContext.Request.Headers.TryGetValue("Authorization_GitHub", out var values))
             {
                 if (!values.Any())
                 {
@@ -40,22 +38,22 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 else
                 {
                     var token = values.First();
-                    string mobileTokenDecrypted;
+                    string gitHubTokenDecrypted;
 
                     try
                     {
-                        mobileTokenDecrypted = ConfigEncryptionHelper.UnprotectString(_mobileTokenEncrypted);
+                        gitHubTokenDecrypted = ConfigEncryptionHelper.UnprotectString(_gitHubTokenEncrypted);
                     }
                     catch (Exception e)
                     {
-                        _logger.LogError($"Configuration error. Cannot decrypt the mobileToken from configuration. MobileTokenEncrypted: {_mobileTokenEncrypted}. Message: {e.Message}");
+                        _logger.LogError($"Configuration error. Cannot decrypt the GitHub token from configuration. MobileTokenEncrypted: {_gitHubTokenEncrypted}. Message: {e.Message}");
                         throw;
                     }
 
-                    if (!token.Equals(mobileTokenDecrypted) || string.IsNullOrEmpty(mobileTokenDecrypted))
+                    if (!token.Equals(gitHubTokenDecrypted) || string.IsNullOrEmpty(gitHubTokenDecrypted))
+                    {
                         context.Result = new UnauthorizedObjectResult("Missing or invalid token");
-                    else
-                        return;
+                    }
                 }
             }
             else

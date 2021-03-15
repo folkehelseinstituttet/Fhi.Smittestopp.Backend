@@ -46,6 +46,12 @@ namespace DIGNDB.App.SmitteStop.API
         [Required]
         public string ZipFilesFolder { get; set; }
 
+        [Required]
+        public string GitHubStatisticsZipFileFolder { get; set; }
+        
+        [Required]
+        public string AuthorizationGitHub { get; set; }
+
         public bool EnableCacheOverride { get; set; }
     }
 }
