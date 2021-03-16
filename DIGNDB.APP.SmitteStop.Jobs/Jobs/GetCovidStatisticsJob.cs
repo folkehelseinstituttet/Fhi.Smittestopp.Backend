@@ -30,39 +30,32 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
             _logger = logger;
         }
 
-        public void GetCovidStatisticsIfEntryDoesNotExists()
+        public void ObtainCovidStatistics()
         {
-            SetDateTimeToNow();
-            if (StatisticsRecordAlreadyExists())
+            var currentEntryDate =
+                _covidStatisticsRepository.GetNewestEntry()?.Date ?? DateTime.UtcNow.AddDays(-1);
+            while (currentEntryDate.Date < DateTime.UtcNow.Date)
             {
-                _logger.LogInformation("Statistics entry already exists. Aborting.");
+                currentEntryDate = currentEntryDate.AddDays(1);
+                if (!(currentEntryDate.DayOfWeek == DayOfWeek.Saturday ||
+                      currentEntryDate.DayOfWeek == DayOfWeek.Sunday))
+                {
+                    _dateTimeResolver.SetDateTime(currentEntryDate);
+                    try
+                    {
+                        _covidStatisticsRetrieveService.GetCovidStatistics();
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        HandleDataMissing();
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError($"Unexpected error while calculating covid statistics: {e}");
+                        throw;
+                    }
+                }
             }
-            else
-            {
-                try
-                {
-                    _covidStatisticsRetrieveService.GetCovidStatistics();
-                }
-                catch (FileNotFoundException)
-                {
-                    HandleDataMissing();
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError($"Unexpected error while calculating covid statistics: {e}");
-                    throw;
-                }
-            }
-        }
-
-        private bool StatisticsRecordAlreadyExists()
-        {
-            return !(_covidStatisticsRepository.GetEntryByDate(_dateTimeResolver.GetDateToday()) is null);
-        }
-
-        private void SetDateTimeToNow()
-        {
-            _dateTimeResolver.SetDateTimeToUtcNow();
         }
 
         private void HandleDataMissing()

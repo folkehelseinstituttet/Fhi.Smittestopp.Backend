@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
@@ -145,30 +144,6 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
                 expectedResult);
 
             // Assert
-            var retrievedEntity = _context.CovidStatistics.Find(expectedResult.Id);
-            Assert.AreEqual(expectedResult, retrievedEntity);
-        }
-
-        [Test]
-        public void RemoveEntriesOlderThan_ShouldRemoveAllOlderRecords()
-        {
-            // Arrange
-            var expectedResult = new CovidStatistics()
-            {
-                Id = 5,
-                Date = _exampleDate.AddDays(1)
-            };
-            _context.Add(expectedResult);
-            _context.SaveChanges();
-            var covidStatisticsRepository = CreateCovidStatisticsRepository();
-            DateTime date = _exampleDate;
-
-            // Act
-            covidStatisticsRepository.RemoveEntriesOlderThan(
-                date);
-
-            // Assert
-            Assert.AreEqual(1, _context.CovidStatistics.Count());
             var retrievedEntity = _context.CovidStatistics.Find(expectedResult.Id);
             Assert.AreEqual(expectedResult, retrievedEntity);
         }

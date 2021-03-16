@@ -9,8 +9,8 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
         public Task<CovidStatistics> GetEntryByDateAsync(DateTime date);
         CovidStatistics GetEntryByDate(DateTime date);
         void CreateEntry(CovidStatistics entry);
-        void RemoveEntriesOlderThan(DateTime date);
         void Delete(CovidStatistics existingCovidStatistics);
         Task<CovidStatistics> GetNewestEntryAsync();
+        CovidStatistics GetNewestEntry();
     }
 }

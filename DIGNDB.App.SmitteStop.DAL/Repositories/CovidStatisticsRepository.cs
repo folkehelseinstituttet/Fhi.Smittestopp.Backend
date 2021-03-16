@@ -28,19 +28,14 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             Save();
         }
 
-        public void RemoveEntriesOlderThan(DateTime date)
-        {
-            var allRecords = Get(filter: x => x.Date.Date <= date.Date);
-            foreach (var record in allRecords)
-            {
-                Delete(record);
-            }
-            Save();
-        }
-
         public async Task<CovidStatistics> GetNewestEntryAsync()
         {
             return (await GetAsync(orderBy: x => x.OrderByDescending(x => x.Date))).First();
+        }
+
+        public CovidStatistics GetNewestEntry()
+        {
+            return (Get(orderBy: x => x.OrderByDescending(x => x.Date))).First();
         }
     }
 }
