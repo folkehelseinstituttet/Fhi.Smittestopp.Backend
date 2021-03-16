@@ -1,8 +1,8 @@
 ﻿using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.APP.SmitteStop.Jobs.Config;
-using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Exceptions;
-using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services;
-using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Utils;
+using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Exceptions;
+using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services;
+using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Utils;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
