@@ -30,15 +30,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
             _logger = logger;
         }
 
-        public void GetCovidStatisticsIfEntryDoesNotExists()
+        public void ObtainCovidStatistics()
         {
-            SetDateTimeToNow();
-            if (StatisticsRecordAlreadyExists())
+            var currentEntryDate =
+                _covidStatisticsRepository.GetNewestEntry()?.Date ?? DateTime.UtcNow.AddDays(-1);
+            while (currentEntryDate.Date < DateTime.UtcNow.Date)
             {
-                _logger.LogInformation("Statistics entry already exists. Aborting.");
-            }
-            else
-            {
+                currentEntryDate = currentEntryDate.AddDays(1);
+                _dateTimeResolver.SetDateTime(currentEntryDate);
                 try
                 {
                     _covidStatisticsRetrieveService.GetCovidStatistics();
@@ -53,11 +52,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
                     throw;
                 }
             }
-        }
-
-        private bool StatisticsRecordAlreadyExists()
-        {
-            return !(_covidStatisticsRepository.GetEntryByDate(_dateTimeResolver.GetDateToday()) is null);
         }
 
         private void SetDateTimeToNow()
