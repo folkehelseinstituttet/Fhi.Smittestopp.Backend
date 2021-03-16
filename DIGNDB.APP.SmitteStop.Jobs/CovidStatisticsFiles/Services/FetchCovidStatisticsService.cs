@@ -1,52 +1,45 @@
-﻿using System;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.APP.SmitteStop.Jobs.Config;
+using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
 {
     public class FetchCovidStatisticsService : IFetchCovidStatisticsService
     {
 
-        private readonly IWebServiceWrapper keyNumbersWebService;
+        private readonly IFileSystem _fileSystem;
+        private readonly GetCovidStatisticsJobConfig _config;
 
-        private const string BASE_URL = "https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19/";
-        private const string TESTED_URL = "data_covid19_lab_by_time_";
-        private const string HOSPITAL_ADMISSIONS_URL = "data_covid19_hospital_by_time_";
-        private const string VACCINATION_URL = "data_covid19_sysvak_by_time_location_";
+        private const string TestedFileName = "data_covid19_lab_by_time_";
+        private const string HospitalAdmissionsFileName = "data_covid19_hospital_by_time_";
+        private const string VaccinationFileName = "data_covid19_sysvak_by_time_location_";
 
-        public FetchCovidStatisticsService(IWebServiceWrapper webService)
+        public FetchCovidStatisticsService(IFileSystem fileSystem, GetCovidStatisticsJobConfig config)
         {
-            keyNumbersWebService = webService;
+            _fileSystem = fileSystem;
+            _config = config;
         }
 
-        public async Task<Stream> FetchTestNumbersFromDate(DateTime date)
+        public Stream FetchTestNumbersFromDate(DateTime date)
         {
-            return await keyNumbersWebService.GetAsync($"{BASE_URL}{TESTED_URL}{date:yyyy-MM-dd}.csv").Result.Content.ReadAsStreamAsync();
+            return GetStreamOrThrow($"{_config.CovidStatisticsFolder}/{TestedFileName}{date:yyyy-MM-dd}.csv");
         }
 
-        public async Task<Stream> FetchHospitalNumbersFromDate(DateTime date)
+        public Stream FetchHospitalNumbersFromDate(DateTime date)
         {
-            return await keyNumbersWebService.GetAsync($"{BASE_URL}{HOSPITAL_ADMISSIONS_URL}{date:yyyy-MM-dd}.csv").Result.Content.ReadAsStreamAsync();
+            return GetStreamOrThrow(
+                $"{_config.CovidStatisticsFolder}/{HospitalAdmissionsFileName}{date:yyyy-MM-dd}.csv");
         }
 
-        public async Task<Stream> FetchVaccineNumbersFromDate(DateTime date)
+        public Stream FetchVaccineNumbersFromDate(DateTime date)
         {
-            return await keyNumbersWebService.GetAsync($"{BASE_URL}{VACCINATION_URL}{date:yyyy-MM-dd}.csv").Result.Content.ReadAsStreamAsync();
+            return GetStreamOrThrow($"{_config.CovidStatisticsFolder}/{VaccinationFileName}{date:yyyy-MM-dd}.csv");
         }
 
-        public async Task<Stream> FetchLatestTestNumbers()
+        private Stream GetStreamOrThrow(string path)
         {
-            return await keyNumbersWebService.GetAsync($"{BASE_URL}{TESTED_URL}latest.csv").Result.Content.ReadAsStreamAsync();
-        }
-
-        public async Task<Stream> FetchLatestHospitalNumbers()
-        {
-            return await keyNumbersWebService.GetAsync($"{BASE_URL}{HOSPITAL_ADMISSIONS_URL}latest.csv").Result.Content.ReadAsStreamAsync();
-        }
-
-        public async Task<Stream> FetchLatestVaccineNumbers()
-        {
-            return await keyNumbersWebService.GetAsync($"{BASE_URL}{VACCINATION_URL}latest.csv").Result.Content.ReadAsStreamAsync();
+            return _fileSystem.GetFileStream(path);
         }
     }
 }

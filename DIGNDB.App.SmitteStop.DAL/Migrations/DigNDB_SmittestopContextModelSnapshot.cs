@@ -1446,7 +1446,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             EntityId = 30L,
                             EntityName = "Country",
                             LanguageCountryId = 35L,
-                            Value = "ایسلندة"
+                            Value = "أيسلندا"
                         },
                         new
                         {
@@ -2254,7 +2254,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             EntityId = 9L,
                             EntityName = "Country",
                             LanguageCountryId = 38L,
-                            Value = "فن لینڈ"
+                            Value = "فنلندا"
                         },
                         new
                         {
@@ -2429,7 +2429,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 241L,
                             EntityId = 1L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Austrija"
                         },
                         new
@@ -2437,7 +2437,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 242L,
                             EntityId = 2L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Belgija"
                         },
                         new
@@ -2445,7 +2445,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 243L,
                             EntityId = 3L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Bulgarija"
                         },
                         new
@@ -2453,7 +2453,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 244L,
                             EntityId = 4L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Kroatija"
                         },
                         new
@@ -2461,7 +2461,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 245L,
                             EntityId = 5L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Kipras"
                         },
                         new
@@ -2469,7 +2469,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 246L,
                             EntityId = 6L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Čekijos Respublika"
                         },
                         new
@@ -2477,7 +2477,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 247L,
                             EntityId = 7L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Danija"
                         },
                         new
@@ -2485,7 +2485,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 248L,
                             EntityId = 8L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Estija"
                         },
                         new
@@ -2493,7 +2493,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 249L,
                             EntityId = 9L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Suomija"
                         },
                         new
@@ -2501,7 +2501,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 250L,
                             EntityId = 10L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Prancūzija"
                         },
                         new
@@ -2509,7 +2509,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 251L,
                             EntityId = 11L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Vokietija"
                         },
                         new
@@ -2517,7 +2517,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 252L,
                             EntityId = 12L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Graikija"
                         },
                         new
@@ -2525,7 +2525,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 253L,
                             EntityId = 13L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Vengrija"
                         },
                         new
@@ -2533,7 +2533,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 254L,
                             EntityId = 14L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Airija"
                         },
                         new
@@ -2541,7 +2541,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 255L,
                             EntityId = 15L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Italija"
                         },
                         new
@@ -2549,7 +2549,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 256L,
                             EntityId = 16L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Latvija"
                         },
                         new
@@ -2557,7 +2557,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 257L,
                             EntityId = 17L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Lietuva"
                         },
                         new
@@ -2565,7 +2565,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 258L,
                             EntityId = 18L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Liuksemburgas"
                         },
                         new
@@ -2573,7 +2573,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 259L,
                             EntityId = 19L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Malta"
                         },
                         new
@@ -2581,7 +2581,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 260L,
                             EntityId = 20L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Nyderlandai"
                         },
                         new
@@ -2589,7 +2589,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 261L,
                             EntityId = 21L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Lenkija"
                         },
                         new
@@ -2597,7 +2597,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 262L,
                             EntityId = 22L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Portugalija"
                         },
                         new
@@ -2605,7 +2605,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 263L,
                             EntityId = 23L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Rumunija"
                         },
                         new
@@ -2613,7 +2613,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 264L,
                             EntityId = 24L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Slovakija"
                         },
                         new
@@ -2621,7 +2621,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 265L,
                             EntityId = 25L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Slovėnija"
                         },
                         new
@@ -2629,7 +2629,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 266L,
                             EntityId = 26L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Ispanija"
                         },
                         new
@@ -2637,7 +2637,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 267L,
                             EntityId = 27L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Švedija"
                         },
                         new
@@ -2645,7 +2645,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 268L,
                             EntityId = 30L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Islandija"
                         },
                         new
@@ -2653,7 +2653,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 269L,
                             EntityId = 31L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Lichtenšteinas"
                         },
                         new
@@ -2661,7 +2661,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             Id = 270L,
                             EntityId = 32L,
                             EntityName = "Country",
-                            LanguageCountryId = 31L,
+                            LanguageCountryId = 17L,
                             Value = "Šveicarija "
                         });
                 });

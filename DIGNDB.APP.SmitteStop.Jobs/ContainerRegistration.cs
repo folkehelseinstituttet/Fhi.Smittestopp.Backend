@@ -73,7 +73,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             services.AddScoped<IGatewaySyncStateSettingsDao, GatewaySyncStateSettingsDao>();
             services.AddScoped<IEuGatewayService, EuGatewayService>();
             services.AddScoped<IAddTemporaryExposureKeyService, AddTemporaryExposureKeyService>();
-            services.AddScoped<IWebServiceWrapper, WebServiceWrapper>();
             services.AddScoped<IFetchCovidStatisticsService, FetchCovidStatisticsService>();
             services.AddScoped<ICovidStatisticsFilePackageBuilder, CovidStatisticsFilePackageBuilder>();
             services.AddScoped<IDateTimeResolver, DateTimeResolver>();

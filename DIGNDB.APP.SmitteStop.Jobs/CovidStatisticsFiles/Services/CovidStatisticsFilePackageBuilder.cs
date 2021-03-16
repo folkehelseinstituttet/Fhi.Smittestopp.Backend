@@ -21,19 +21,19 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
             package.Files.Add(
                 new CsvFileDto()
                 {
-                    File = _fetchCovidStatisticsService.FetchHospitalNumbersFromDate(_dateTimeResolver.GetDateToday()).Result,
+                    File = _fetchCovidStatisticsService.FetchHospitalNumbersFromDate(_dateTimeResolver.GetDateToday()),
                     Name = CovidStatisticsFileName.Hospital
                 });
             package.Files.Add(
                 new CsvFileDto()
                 {
-                    File = _fetchCovidStatisticsService.FetchVaccineNumbersFromDate(_dateTimeResolver.GetDateToday()).Result,
+                    File = _fetchCovidStatisticsService.FetchVaccineNumbersFromDate(_dateTimeResolver.GetDateToday()),
                     Name = CovidStatisticsFileName.Vaccination
                 });
             package.Files.Add(
                 new CsvFileDto()
                 {
-                    File = _fetchCovidStatisticsService.FetchTestNumbersFromDate(_dateTimeResolver.GetDateToday()).Result,
+                    File = _fetchCovidStatisticsService.FetchTestNumbersFromDate(_dateTimeResolver.GetDateToday()),
                     Name = CovidStatisticsFileName.Test
                 });
             return package;
