@@ -1,6 +1,6 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.APP.SmitteStop.Jobs.Config;
-using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services;
+using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services;
 using Moq;
 using NUnit.Framework;
 using System;
