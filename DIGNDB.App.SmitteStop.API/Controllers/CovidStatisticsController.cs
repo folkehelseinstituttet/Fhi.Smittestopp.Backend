@@ -5,7 +5,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace DIGNDB.App.SmitteStop.API.Controllers
 {
@@ -17,8 +19,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
         private readonly ILogger<CovidStatisticsUploadController> _logger;
         private readonly AppSettingsConfig _appSettingsConfig;
 
-        public CovidStatisticsUploadController(ILogger<CovidStatisticsUploadController> logger,
-            AppSettingsConfig appSettingsConfig)
+        public CovidStatisticsUploadController(ILogger<CovidStatisticsUploadController> logger, AppSettingsConfig appSettingsConfig)
         {
             _appSettingsConfig = appSettingsConfig;
             _logger = logger;
@@ -31,28 +32,8 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             _logger.LogInformation("File upload called");
             try
             {
-                var folderPath = _appSettingsConfig.GitHubStatisticsZipFileFolder;
-                if (!Directory.Exists(folderPath))
-                {
-                    const string errorMessage = "Server error: The file save directory is not reachable or does not exist";
-                    _logger.LogError(errorMessage);
-
-                    throw new GitHubControllerServerErrorException(errorMessage);
-                }
-
-                var sentFiles = Request.Form.Files;
-                if (sentFiles.Count != 1)
-                {
-                    throw new GitHubControllerServerErrorException("Files count is not equal to 1");
-                }
-
-                var file = sentFiles.First();
-                if (file.Length <= 0)
-                {
-                    throw new GitHubControllerServerErrorException("The file sent was empty");
-                }
+                var destinationPath = VerifyOrThrow(out var file, Request);
                 
-                var destinationPath = Path.Combine(folderPath, file.FileName);
                 if (System.IO.File.Exists(destinationPath))
                 {
                     return Ok("File already uploaded");
@@ -62,6 +43,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
                 {
                     await using Stream fileStream = new FileStream(destinationPath, FileMode.Create);
                     await file.CopyToAsync(fileStream);
+                    await fileStream.DisposeAsync();
 
                     _logger.LogInformation($"File uploaded completed successfully: {file.FileName}");
 
@@ -86,6 +68,60 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
 
                 return StatusCode(500, e.Message);
             }
+        }
+
+        private string VerifyOrThrow(out IFormFile file, HttpRequest request)
+        {
+            var folderPath = _appSettingsConfig.GitHubSettings.GitHubStatisticsZipFileFolder;
+
+            if (!Directory.Exists(folderPath))
+            {
+                const string errorMessage = "Server error: The file save directory is not reachable or does not exist";
+                _logger.LogError(errorMessage);
+
+                throw new GitHubControllerServerErrorException(errorMessage);
+            }
+
+            var sentFiles = request.Form.Files;
+            if (sentFiles.Count != 1)
+            {
+                throw new GitHubControllerServerErrorException("Files count is not equal to 1");
+            }
+
+            file = sentFiles.First();
+            if (file.Length <= 0)
+            {
+                throw new GitHubControllerServerErrorException("The file sent was empty");
+            }
+
+            var fileName = file.FileName;
+            var destinationPath = Path.Combine(folderPath, fileName);
+
+            if (CheckFileName(fileName))
+            {
+                return destinationPath;
+            }
+
+            throw new GitHubControllerServerErrorException("File name not acceptable");
+        }
+
+        private bool CheckFileName(string fileName)
+        {
+            var gitHubSettings = _appSettingsConfig.GitHubSettings;
+
+            var testedFileNamePatten = gitHubSettings.TestedFileNamePattern;
+            var hospitalAdmissionFileNamePatten = gitHubSettings.HospitalAdmissionFileNamePattern;
+            var vaccinationFileNamePatten = gitHubSettings.VaccinationFileNamePattern;
+
+            var testedFileNameMatches = Regex.Matches(fileName, testedFileNamePatten);
+            var hospitalAdmissionFileNameMatches = Regex.Matches(fileName, hospitalAdmissionFileNamePatten);
+            var vaccinationFileNameMatches = Regex.Matches(fileName, vaccinationFileNamePatten);
+
+            var testedMatch = testedFileNameMatches.Count == 1;
+            var hospitalAdmissionMatch = hospitalAdmissionFileNameMatches.Count == 1;
+            var vaccinationMatch = vaccinationFileNameMatches.Count == 1;
+
+            return testedMatch || hospitalAdmissionMatch || vaccinationMatch;
         }
     }
 }
