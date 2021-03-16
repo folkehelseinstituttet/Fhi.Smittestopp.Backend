@@ -37,26 +37,25 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
             while (currentEntryDate.Date < DateTime.UtcNow.Date)
             {
                 currentEntryDate = currentEntryDate.AddDays(1);
-                _dateTimeResolver.SetDateTime(currentEntryDate);
-                try
+                if (!(currentEntryDate.DayOfWeek == DayOfWeek.Saturday ||
+                      currentEntryDate.DayOfWeek == DayOfWeek.Sunday))
                 {
-                    _covidStatisticsRetrieveService.GetCovidStatistics();
-                }
-                catch (FileNotFoundException)
-                {
-                    HandleDataMissing();
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError($"Unexpected error while calculating covid statistics: {e}");
-                    throw;
+                    _dateTimeResolver.SetDateTime(currentEntryDate);
+                    try
+                    {
+                        _covidStatisticsRetrieveService.GetCovidStatistics();
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        HandleDataMissing();
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError($"Unexpected error while calculating covid statistics: {e}");
+                        throw;
+                    }
                 }
             }
-        }
-
-        private void SetDateTimeToNow()
-        {
-            _dateTimeResolver.SetDateTimeToUtcNow();
         }
 
         private void HandleDataMissing()
