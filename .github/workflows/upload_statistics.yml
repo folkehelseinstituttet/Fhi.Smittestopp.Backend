@@ -1,7 +1,7 @@
 name: Download and upload covid files 
 on:
   schedule:
-    - cron:  '0/10 13-20 * * *'
+    - cron: '0/10 13-20 * * *'
 
 jobs:
   download_dagens_tal:
@@ -83,7 +83,7 @@ jobs:
           response_hosp_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@${{env.file_hosp_admission}}" ${{secrets.UPLOAD_URL}})
           echo "Upload response: ${response_hosp_upload}"
         else
-          echo "File for ${{env.file_hosp_admission} not available yet"
+          echo "File for ${{env.file_hosp_admission}} not available yet"
         fi       
     
     # vaccination file
