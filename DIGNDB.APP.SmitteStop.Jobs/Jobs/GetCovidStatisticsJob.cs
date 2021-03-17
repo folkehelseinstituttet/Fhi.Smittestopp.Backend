@@ -32,42 +32,51 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
 
         public void ObtainCovidStatistics()
         {
-            var currentEntryDate =
-                _covidStatisticsRepository.GetNewestEntry()?.Date ?? DateTime.UtcNow.AddDays(-1);
+            var newestEntry = _covidStatisticsRepository.GetNewestEntry();
+            var currentEntryDate = newestEntry?.Date ?? DateTime.UtcNow.AddDays(-1);
+
             while (currentEntryDate.Date < DateTime.UtcNow.Date)
             {
                 currentEntryDate = currentEntryDate.AddDays(1);
-                if (!(currentEntryDate.DayOfWeek == DayOfWeek.Saturday ||
-                      currentEntryDate.DayOfWeek == DayOfWeek.Sunday))
+                if (IsWeekendDay(currentEntryDate))
                 {
-                    _dateTimeResolver.SetDateTime(currentEntryDate);
-                    try
-                    {
-                        _covidStatisticsRetrieveService.GetCovidStatistics();
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        HandleDataMissing();
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError($"Unexpected error while calculating covid statistics: {e}");
-                        throw;
-                    }
+                    continue;
+                }
+
+                _dateTimeResolver.SetDateTime(currentEntryDate);
+                try
+                {
+                    _covidStatisticsRetrieveService.GetCovidStatistics();
+                }
+                catch (FileNotFoundException)
+                {
+                    HandleDataMissing();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"Unexpected error while calculating covid statistics: {e}");
+                    throw;
                 }
             }
+        }
+
+        private static bool IsWeekendDay(DateTime currentEntryDate)
+        {
+            var dayOfWeek = currentEntryDate.DayOfWeek;
+            var weekend = dayOfWeek == DayOfWeek.Saturday || dayOfWeek == DayOfWeek.Sunday;
+            return weekend;
         }
 
         private void HandleDataMissing()
         {
             if (_dateTimeResolver.GetDateTimeNow().Hour < _config.MakeAlertIfDataIsMissingAfterHour)
             {
-                _logger.LogInformation(CovidStatisticsFilleMissingOnServerException.DataMissingInfoMessage);
+                _logger.LogInformation(CovidStatisticsFileMissingOnServerException.DataMissingInfoMessage);
             }
             else
             {
-                _logger.LogError(CovidStatisticsFilleMissingOnServerException.DataMissingErrorMessage);
-                throw new CovidStatisticsFilleMissingOnServerException();
+                _logger.LogError(CovidStatisticsFileMissingOnServerException.DataMissingErrorMessage);
+                throw new CovidStatisticsFileMissingOnServerException();
             }
         }
     }

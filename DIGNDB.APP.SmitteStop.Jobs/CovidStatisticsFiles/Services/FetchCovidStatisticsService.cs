@@ -7,7 +7,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
 {
     public class FetchCovidStatisticsService : IFetchCovidStatisticsService
     {
-
         private readonly IFileSystem _fileSystem;
         private readonly GetCovidStatisticsJobConfig _config;
 
@@ -23,23 +22,34 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
 
         public Stream FetchTestNumbersFromDate(DateTime date)
         {
-            return GetStreamOrThrow($"{_config.CovidStatisticsFolder}/{TestedFileName}{date:yyyy-MM-dd}.csv");
+            var dateFormatted = $"{date:yyyy-MM-dd}";
+            var filePath = $"{_config.CovidStatisticsFolder}/{TestedFileName}{dateFormatted}.csv";
+            var stream = GetStreamOrThrow(filePath);
+
+            return stream;
         }
 
         public Stream FetchHospitalNumbersFromDate(DateTime date)
         {
-            return GetStreamOrThrow(
-                $"{_config.CovidStatisticsFolder}/{HospitalAdmissionsFileName}{date:yyyy-MM-dd}.csv");
+            var dateFormatted = $"{date:yyyy-MM-dd}";
+            var filePath = $"{_config.CovidStatisticsFolder}/{HospitalAdmissionsFileName}{dateFormatted}.csv";
+            var stream = GetStreamOrThrow(filePath);
+
+            return stream;
         }
 
         public Stream FetchVaccineNumbersFromDate(DateTime date)
         {
-            return GetStreamOrThrow($"{_config.CovidStatisticsFolder}/{VaccinationFileName}{date:yyyy-MM-dd}.csv");
+            var dateFormatted = $"{date:yyyy-MM-dd}";
+            var filePath = $"{_config.CovidStatisticsFolder}/{VaccinationFileName}{dateFormatted}.csv";
+
+            return GetStreamOrThrow(filePath);
         }
 
         private Stream GetStreamOrThrow(string path)
         {
-            return _fileSystem.GetFileStream(path);
+            var stream = _fileSystem.GetFileStream(path);
+            return stream;
         }
     }
 }

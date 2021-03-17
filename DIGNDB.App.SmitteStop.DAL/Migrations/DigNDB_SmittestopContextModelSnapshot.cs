@@ -35,7 +35,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                     b.Property<int>("PositiveTestsResultsTotal")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalSmittestopDownloads")
+                    b.Property<int>("SmittestopDownloadsTotal")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

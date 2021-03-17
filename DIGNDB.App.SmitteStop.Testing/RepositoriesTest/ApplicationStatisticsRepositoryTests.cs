@@ -36,7 +36,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
                     Id = 1,
                     PositiveResultsLast7Days = 100,
                     PositiveTestsResultsTotal = 200,
-                    TotalSmittestopDownloads = 300
+                    SmittestopDownloadsTotal = 300
                 },
                 new ApplicationStatistics()
                 {
@@ -44,7 +44,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
                     Id = 2,
                     PositiveResultsLast7Days = 1100,
                     PositiveTestsResultsTotal = 2100,
-                    TotalSmittestopDownloads = 3100
+                    SmittestopDownloadsTotal = 3100
                 }
             };
         }

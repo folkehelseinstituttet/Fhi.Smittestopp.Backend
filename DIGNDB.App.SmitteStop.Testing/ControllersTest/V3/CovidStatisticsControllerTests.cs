@@ -41,7 +41,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V2
                 Id = 1,
                 PositiveResultsLast7Days = 1000,
                 PositiveTestsResultsTotal = 2000,
-                TotalSmittestopDownloads = 3000
+                SmittestopDownloadsTotal = 3000
             };
             _covidStatisticsEntry = new CovidStatistics()
             {

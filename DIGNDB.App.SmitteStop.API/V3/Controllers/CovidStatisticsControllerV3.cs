@@ -47,11 +47,11 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
                 {
                     throw new InvalidOperationException("No application statistics entries in the database");
                 }
+
                 CovidStatistics covidStatisticsDb;
                 if (packageDate != null)
                 {
-
-                    bool success = DateTime.TryParse(packageDate, out DateTime lastPackageDate);
+                    var success = DateTime.TryParse(packageDate, out DateTime lastPackageDate);
                     if (!success)
                     {
                         _logger.LogError("Could not parse package date");
@@ -64,14 +64,15 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
                     covidStatisticsDb = await _covidStatisticsRepository.GetNewestEntryAsync();
                 }
 
-                if (covidStatisticsDb != null)
+                if (covidStatisticsDb == null)
                 {
-                    var resultsDbTuple = new Tuple<CovidStatistics, ApplicationStatistics>(covidStatisticsDb, applicationStatisticsDb);
-                    StatisticsDto covidStatisticsDto =
-                        _mapper.Map<Tuple<CovidStatistics, ApplicationStatistics>, StatisticsDto>(resultsDbTuple);
-                    return Ok(covidStatisticsDto);
+                    return NoContent();
                 }
-                return NoContent();
+
+                var resultsDbTuple = new Tuple<CovidStatistics, ApplicationStatistics>(covidStatisticsDb, applicationStatisticsDb);
+                var covidStatisticsDto = _mapper.Map<Tuple<CovidStatistics, ApplicationStatistics>, StatisticsDto>(resultsDbTuple);
+
+                return Ok(covidStatisticsDto);
             }
             catch (InvalidOperationException e)
             {
