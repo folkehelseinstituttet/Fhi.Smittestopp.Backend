@@ -19,7 +19,7 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
         {
             _authOptions = authOptions;
             _logger = logger;
-            _gitHubTokenEncrypted = appSettingsConfig.AuthorizationGitHub;
+            _gitHubTokenEncrypted = appSettingsConfig.GitHubSettings.AuthorizationGitHub;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

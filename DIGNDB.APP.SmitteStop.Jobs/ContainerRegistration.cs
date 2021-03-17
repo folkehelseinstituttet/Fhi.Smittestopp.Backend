@@ -6,8 +6,8 @@ using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using DIGNDB.APP.SmitteStop.Jobs.Config;
-using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Services;
-using DIGNDB.APP.SmitteStop.Jobs.CovidStatistics.Utils;
+using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services;
+using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Utils;
 using DIGNDB.APP.SmitteStop.Jobs.Services;
 using FederationGatewayApi.Contracts;
 using FederationGatewayApi.Mappers;
@@ -73,7 +73,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             services.AddScoped<IGatewaySyncStateSettingsDao, GatewaySyncStateSettingsDao>();
             services.AddScoped<IEuGatewayService, EuGatewayService>();
             services.AddScoped<IAddTemporaryExposureKeyService, AddTemporaryExposureKeyService>();
-            services.AddScoped<IWebServiceWrapper, WebServiceWrapper>();
             services.AddScoped<IFetchCovidStatisticsService, FetchCovidStatisticsService>();
             services.AddScoped<ICovidStatisticsFilePackageBuilder, CovidStatisticsFilePackageBuilder>();
             services.AddScoped<IDateTimeResolver, DateTimeResolver>();

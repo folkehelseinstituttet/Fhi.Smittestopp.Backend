@@ -6,5 +6,8 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Config
     {
         [Range(0, 23, ErrorMessage = "Please enter correct MakeAlertIfDataIsMissingAfterHour")]
         public int MakeAlertIfDataIsMissingAfterHour { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        public string CovidStatisticsFolder { get; set; }
     }
 }
