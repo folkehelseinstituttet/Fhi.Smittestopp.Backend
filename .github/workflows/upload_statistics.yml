@@ -1,6 +1,5 @@
 name: Download and upload covid files 
 on:
-  workflow_dispatch:
   schedule:
     - cron:  '0/10 14-20 * * *'
 
