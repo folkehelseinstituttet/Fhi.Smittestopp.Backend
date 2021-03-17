@@ -1,6 +1,8 @@
 name: Download and upload covid files 
 on:
   workflow_dispatch:
+  schedule:
+    - cron:  '0/10 14-20 * * *'
 
 jobs:
   download_dagens_tal:
@@ -13,7 +15,7 @@ jobs:
     - name: Set base url
       id: step_base_url
       run: |
-        echo "base_url=https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19" >> $GITHUB_ENV
+        echo "base_url=${{secrets.UPLOAD_STATS_BASE_URL}}" >> $GITHUB_ENV
     - name: Set tested file name
       id: step_tested_file_name
       run: |
