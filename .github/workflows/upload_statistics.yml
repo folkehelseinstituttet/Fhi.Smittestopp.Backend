@@ -1,0 +1,115 @@
+name: Download and upload covid files 
+on:
+  schedule:
+    - cron:  '0/10 13-20 * * *'
+
+jobs:
+  download_dagens_tal:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set date env
+      id: step_date
+      run: |
+        echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Set base url
+      id: step_base_url
+      run: |
+        echo "base_url=https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19" >> $GITHUB_ENV
+    - name: Set tested file name
+      id: step_tested_file_name
+      run: |
+        echo "file_tested=data_covid19_lab_by_time_${{ env.date }}.csv" >> $GITHUB_ENV
+    - name: Set hospital admission file name
+      id: step_hospital_admission
+      run: |
+        echo "file_hosp_admission=data_covid19_hospital_by_time_${{ env.date }}.csv" >> $GITHUB_ENV
+    - name: Set vaccination file name
+      id: step_vaccination_file_name
+      run: |
+        echo "file_vaccination=data_covid19_sysvak_by_time_location_${{ env.date }}.csv" >> $GITHUB_ENV
+    
+    #############################
+    # Download and upload files #
+    #############################
+    
+    # tested file
+    - name: Download tested file
+      id: download_tested_file
+      run: |
+        response_tested=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_tested}}")
+        echo "Download tested file response: $response_tested"
+        if [ "200" == "${response_tested}" ]
+        then
+          curl "${{env.base_url}}/${{env.file_tested}}" -o ${{env.file_tested}}          
+          echo "Download of ${{env.file_tested}} completed"
+        else
+          echo "Download failure: ${response_tested}"
+        fi
+        echo "tested_response=${response_tested}" >> $GITHUB_ENV
+    - name: Upload tested file
+      id: upload_tested_file
+      run: |
+        echo "Download of ${{env.file_tested}} response: ${{env.tested_response}}"
+        if [ "200" == "${{env.tested_response}}" ]
+        then
+          echo "Uploading file: ${{env.file_tested}}"
+          response_tested_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@${{env.file_tested}}" ${{secrets.UPLOAD_URL}})
+          echo "Upload response: ${response_tested_upload}"
+        else
+          echo "File for ${{env.file_tested}} not available yet"
+        fi       
+    
+    # hospital admission file
+    - name: Download hospital admission file
+      id: download_hospital_admission_file
+      run: |
+        response_hosp=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_hosp_admission}}")
+        echo "Download hospital admission file response: $response_hosp"
+        if [ "200" == "${response_hosp}" ]
+        then
+          curl "${{env.base_url}}/${{env.file_hosp_admission}}" -o ${{env.file_hosp_admission}}          
+          echo "Download of ${{env.file_hosp_admission}} completed"
+        else
+          echo "Download failure: ${response_hosp}"
+        fi
+        echo "hosp_response=${response_hosp}" >> $GITHUB_ENV
+    - name: Upload hospital admission file
+      id: upload_hospital_admission_file
+      run: |
+        echo "Download of ${{env.file_hosp_admission}} response: ${{env.hosp_response}}"
+        if [ "200" == "${{env.hosp_response}}" ]
+        then
+          echo "Uploading file: ${{env.file_hosp_admission}}"
+          response_hosp_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@${{env.file_hosp_admission}}" ${{secrets.UPLOAD_URL}})
+          echo "Upload response: ${response_hosp_upload}"
+        else
+          echo "File for ${{env.file_hosp_admission} not available yet"
+        fi       
+    
+    # vaccination file
+    - name: Download vaccination file
+      id: download_vaccination_file
+      run: |
+        response_vaccination=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_vaccination}}")
+        echo "Download vaccination file response: $response_vaccination"
+        if [ "200" == "${response_vaccination}" ]
+        then
+          curl "${{env.base_url}}/${{env.file_vaccination}}" -o ${{env.file_vaccination}}          
+          echo "Download of ${{env.file_vaccination}} completed"
+        else
+          echo "Download failure: ${response_vaccination}"
+        fi
+        echo "vaccination_response=${response_vaccination}" >> $GITHUB_ENV
+    - name: Upload vaccination file
+      id: upload_vaccination_file
+      run: |
+        echo "Download of ${{env.file_vaccination}} response: ${{env.vaccination_response}}"
+        if [ "200" == "${{env.vaccination_response}}" ]
+        then
+          echo "Uploading file: ${{env.file_vaccination}}"
+          response_vaccination_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@${{env.file_vaccination}}" ${{secrets.UPLOAD_URL}})
+          echo "Upload response: ${response_vaccination_upload}"
+        else
+          echo "File for ${{env.file_vaccination}} not available yet"
+        fi       
+    

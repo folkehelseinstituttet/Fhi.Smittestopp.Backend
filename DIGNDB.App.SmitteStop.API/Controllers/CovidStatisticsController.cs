@@ -47,7 +47,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
 
                     _logger.LogInformation($"File uploaded completed successfully: {file.FileName}");
 
-                    return Ok();
+                    return Ok("File uploaded");
                 }
                 catch (Exception e)
                 {
