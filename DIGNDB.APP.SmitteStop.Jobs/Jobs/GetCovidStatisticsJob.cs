@@ -46,7 +46,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
                 _dateTimeResolver.SetDateTime(currentEntryDate);
                 try
                 {
-                    _covidStatisticsRetrieveService.GetCovidStatistics();
+                    _covidStatisticsRetrieveService.ReadAndProcessCovidStatistics();
                 }
                 catch (FileNotFoundException)
                 {

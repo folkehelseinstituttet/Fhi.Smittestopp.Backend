@@ -4,6 +4,8 @@
     {
         Test,
         Hospital,
-        Vaccination
+        Vaccination,
+        ConfirmedToday,
+        ConfirmedTotal
     }
 }

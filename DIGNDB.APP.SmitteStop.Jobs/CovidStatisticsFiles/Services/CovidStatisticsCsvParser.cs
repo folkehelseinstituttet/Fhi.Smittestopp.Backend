@@ -31,12 +31,31 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
 
         public CovidStatisticsCsvContent ParsePackage(FileStreamsPackageDto package)
         {
-            CovidStatisticsCsvContent parsedPackage = new CovidStatisticsCsvContent();
-            parsedPackage.AddFile(RetrieveDataFromCsvFile(GetFileOrThrow(package.Files, CovidStatisticsFileName.Hospital), new HospitalMap()));
-            parsedPackage.AddFile(RetrieveDataFromCsvFile(GetFileOrThrow(package.Files, CovidStatisticsFileName.Test), new TestedMap()));
-            parsedPackage.AddFile(RetrieveDataFromCsvFile(GetFileOrThrow(package.Files, CovidStatisticsFileName.Vaccination), new VaccinationMap()));
+            var parsedPackage = new CovidStatisticsCsvContent();
+
+            var hospitalFile = GetFileOrThrow(package.Files, CovidStatisticsFileName.Hospital);
+            var hospitalFileContent = RetrieveDataFromCsvFile(hospitalFile, new HospitalMap());
+            parsedPackage.AddFileContent(hospitalFileContent);
+
+            var testedFile = GetFileOrThrow(package.Files, CovidStatisticsFileName.Test);
+            var testedFileContent = RetrieveDataFromCsvFile(testedFile, new TestedMap());
+            parsedPackage.AddFileContent(testedFileContent);
+
+            var vaccinationFile = GetFileOrThrow(package.Files, CovidStatisticsFileName.Vaccination);
+            var vaccinationFileContent = RetrieveDataFromCsvFile(vaccinationFile, new VaccinationMap());
+            parsedPackage.AddFileContent(vaccinationFileContent);
+
+            var confirmedTodayFile = GetFileOrThrow(package.Files, CovidStatisticsFileName.ConfirmedToday);
+            var confirmedTodayFileContent = RetrieveDataFromCsvFile(confirmedTodayFile, new ConfirmedCasesTodayMap());
+            parsedPackage.AddFileContent(confirmedTodayFileContent);
+
+            var confirmedTotalFile = GetFileOrThrow(package.Files, CovidStatisticsFileName.ConfirmedTotal);
+            var confirmedTotalFileContent = RetrieveDataFromCsvFile(confirmedTotalFile, new ConfirmedCasesTotalMap());
+            parsedPackage.AddFileContent(confirmedTotalFileContent);
+
             return parsedPackage;
         }
+
         private IEnumerable<T> RetrieveDataFromCsvFile<T>(Stream csvStream, ClassMap<T> classMap)
         {
             using var streamReader = GetStreamReaderForStream(csvStream);
@@ -76,7 +95,9 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
 
         private static Stream GetFileOrThrow(List<CsvFileDto> packageFiles, CovidStatisticsFileName fileName)
         {
-            return packageFiles.SingleOrDefault(x => x.Name == fileName)?.File ?? throw new CovidStatisticsParsingFileNotFoundException(fileName);
+            var retVal = packageFiles.SingleOrDefault(x => x.Name == fileName)?.File ??
+                         throw new CovidStatisticsParsingFileNotFoundException(fileName);
+            return retVal;
         }
     }
 }
