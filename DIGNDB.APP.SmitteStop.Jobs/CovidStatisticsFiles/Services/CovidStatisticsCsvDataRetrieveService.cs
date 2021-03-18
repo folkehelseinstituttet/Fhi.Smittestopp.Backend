@@ -16,28 +16,21 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
         {
             _dateTimeResolver = dateTimeResolver;
         }
-        public double GetMostRecentEntry(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, double> fieldSelector)
+        public int GetFromMostRecentEntry(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, int> fieldSelector)
         {
             var newestRecord = GetRecord(fileContent, _dateTimeResolver.GetDateXDaysAgo(NewestRecordAgeInDays));
             return fieldSelector(newestRecord);
         }
 
-        public double GetSumOfEntries(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, double> fieldSelector)
+        public int GetSumFromEntries(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, int> fieldSelector)
         {
-            double total = 0;
+            int total = 0;
             foreach (var record in fileContent)
             {
                 total += fieldSelector(record);
             }
 
             return total;
-        }
-
-        public double GetDifferenceBetweenMostRecentEntries(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, double> fieldSelector)
-        {
-            var newestRecord = GetRecord(fileContent, _dateTimeResolver.GetDateXDaysAgo(NewestRecordAgeInDays));
-            var secondNewestRecord = GetRecord(fileContent, _dateTimeResolver.GetDateXDaysAgo(NewestRecordAgeInDays + 1));
-            return fieldSelector(newestRecord) - fieldSelector(secondNewestRecord);
         }
 
         private static CovidStatisticCsvFileContent GetRecord(IEnumerable<CovidStatisticCsvFileContent> fileContent, DateTime dateTime)

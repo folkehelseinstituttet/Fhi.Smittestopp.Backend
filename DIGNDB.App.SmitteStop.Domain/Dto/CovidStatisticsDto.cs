@@ -10,10 +10,10 @@ namespace DIGNDB.App.SmitteStop.Domain.Dto
         public int TestsConductedTotal { get; set; }
         public int PatientsAdmittedToday { get; set; }
         public int IcuAdmittedToday { get; set; }
-        public double VaccinatedFirstDoseTotal { get; set; }
-        public double VaccinatedFirstDoseToday { get; set; }
-        public double VaccinatedSecondDoseTotal { get; set; }
-        public double VaccinatedSecondDoseToday { get; set; }
+        public int VaccinatedFirstDoseTotal { get; set; }
+        public int VaccinatedFirstDoseToday { get; set; }
+        public int VaccinatedSecondDoseTotal { get; set; }
+        public int VaccinatedSecondDoseToday { get; set; }
         public DateTime Date { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace DIGNDB.App.SmitteStop.API.Mappers
         {
             CreateMap<CovidStatistics, CovidStatisticsDto>()
                 .ForMember(x => x.Date,
-                    opts => opts.MapFrom(x => x.Date));
+                    opts => opts.MapFrom(x => x.ModificationDate));
         }
     }
 }

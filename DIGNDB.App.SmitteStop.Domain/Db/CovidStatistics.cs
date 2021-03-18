@@ -11,11 +11,12 @@ namespace DIGNDB.App.SmitteStop.Domain.Db
         public int TestsConductedTotal { get; set; }
         public int PatientsAdmittedToday { get; set; }
         public int IcuAdmittedToday { get; set; }
-        public double VaccinatedFirstDoseTotal { get; set; }
-        public double VaccinatedFirstDoseToday { get; set; }
-        public double VaccinatedSecondDoseTotal { get; set; }
-        public double VaccinatedSecondDoseToday { get; set; }
-        public DateTime Date { get; set; }
+        public int VaccinatedFirstDoseTotal { get; set; }
+        public int VaccinatedFirstDoseToday { get; set; }
+        public int VaccinatedSecondDoseTotal { get; set; }
+        public int VaccinatedSecondDoseToday { get; set; }
+        public DateTime ModificationDate { get; set; }
+        public DateTime EntryDate { get; set; }
         public override bool Equals(object? other)
         {
             CovidStatistics otherObject = other as CovidStatistics;
@@ -29,7 +30,8 @@ namespace DIGNDB.App.SmitteStop.Domain.Db
                                         && VaccinatedFirstDoseToday.Equals(otherObject.VaccinatedFirstDoseToday)
                                         && VaccinatedSecondDoseTotal.Equals(otherObject.VaccinatedSecondDoseTotal)
                                         && VaccinatedSecondDoseToday.Equals(otherObject.VaccinatedSecondDoseToday)
-                                        && Date.Equals(otherObject.Date);
+                                        && ModificationDate.Equals(otherObject.ModificationDate)
+                                        && EntryDate.Equals(otherObject.EntryDate);
         }
 
         public override int GetHashCode()
@@ -46,7 +48,8 @@ namespace DIGNDB.App.SmitteStop.Domain.Db
             hashCode.Add(VaccinatedFirstDoseToday);
             hashCode.Add(VaccinatedSecondDoseTotal);
             hashCode.Add(VaccinatedSecondDoseToday);
-            hashCode.Add(Date);
+            hashCode.Add(ModificationDate);
+            hashCode.Add(EntryDate);
             return hashCode.ToHashCode();
         }
     }

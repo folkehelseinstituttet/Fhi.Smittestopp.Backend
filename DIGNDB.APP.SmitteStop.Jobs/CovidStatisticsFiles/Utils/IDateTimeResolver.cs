@@ -8,6 +8,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Utils
         DateTime GetDateXDaysAgo(int X);
         DateTime GetDateToday();
         void SetDateTimeToUtcNow();
-        public DateTime GetDateTimeNow();
+        public DateTime GetDateTime();
     }
 }
