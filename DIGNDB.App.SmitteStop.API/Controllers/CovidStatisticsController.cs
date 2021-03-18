@@ -128,5 +128,6 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             var locationMatch = locationFileNameMatches.Count == 1;
 
             return testedMatch || hospitalAdmissionMatch || vaccinationMatch || timeLocationMatch || locationMatch;
+        }
     }
 }
