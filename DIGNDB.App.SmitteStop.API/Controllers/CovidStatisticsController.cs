@@ -19,7 +19,8 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
         private readonly ILogger<CovidStatisticsUploadController> _logger;
         private readonly AppSettingsConfig _appSettingsConfig;
 
-        public CovidStatisticsUploadController(ILogger<CovidStatisticsUploadController> logger, AppSettingsConfig appSettingsConfig)
+        public CovidStatisticsUploadController(ILogger<CovidStatisticsUploadController> logger,
+            AppSettingsConfig appSettingsConfig)
         {
             _appSettingsConfig = appSettingsConfig;
             _logger = logger;
@@ -33,7 +34,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             try
             {
                 var destinationPath = VerifyOrThrow(out var file, Request);
-                
+
                 if (System.IO.File.Exists(destinationPath))
                 {
                     return Ok("File already uploaded");
@@ -63,7 +64,8 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             }
             catch (Exception e)
             {
-                var errorMessage = $"Internal server error when trying to process request with covid statistics from GitHub. Error: {e}";
+                var errorMessage =
+                    $"Internal server error when trying to process request with covid statistics from GitHub. Error: {e}";
                 _logger.LogError(errorMessage);
 
                 return StatusCode(500, e.Message);
@@ -112,16 +114,21 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             var testedFileNamePatten = gitHubSettings.TestedFileNamePattern;
             var hospitalAdmissionFileNamePatten = gitHubSettings.HospitalAdmissionFileNamePattern;
             var vaccinationFileNamePatten = gitHubSettings.VaccinationFileNamePattern;
+            var timeLocationFileNamePatten = gitHubSettings.TimeLocationFileNamePattern;
+            var locationFileNamePatten = gitHubSettings.LocationFileNamePattern;
 
             var testedFileNameMatches = Regex.Matches(fileName, testedFileNamePatten);
             var hospitalAdmissionFileNameMatches = Regex.Matches(fileName, hospitalAdmissionFileNamePatten);
             var vaccinationFileNameMatches = Regex.Matches(fileName, vaccinationFileNamePatten);
+            var timeLocationFileNameMatches = Regex.Matches(fileName, timeLocationFileNamePatten);
+            var locationFileNameMatches = Regex.Matches(fileName, locationFileNamePatten);
 
             var testedMatch = testedFileNameMatches.Count == 1;
             var hospitalAdmissionMatch = hospitalAdmissionFileNameMatches.Count == 1;
             var vaccinationMatch = vaccinationFileNameMatches.Count == 1;
+            var timeLocationMatch = timeLocationFileNameMatches.Count == 1;
+            var locationMatch = locationFileNameMatches.Count == 1;
 
-            return testedMatch || hospitalAdmissionMatch || vaccinationMatch;
-        }
+            return testedMatch || hospitalAdmissionMatch || vaccinationMatch || timeLocationMatch || locationMatch;
     }
 }
