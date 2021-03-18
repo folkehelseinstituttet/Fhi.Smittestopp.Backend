@@ -151,6 +151,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
             Assert.IsTrue(_statisticsObjectThatMatchesSampleCsvContent.Equals(result));
         }
 
+        [Ignore("Awaits clarification 2021-03-18")]
         [Test]
         public void BuildStatistics_FileMissing_ShouldThrowAppropriateException()
         {
@@ -164,6 +165,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
             Assert.Throws<CovidStatisticsCsvDataPartiallyMissingException>(() => covidStatisticsBuilder.BuildStatistics(_sampleCsvContent));
         }
 
+        [Ignore("Awaits clarification 2021-03-18")]
         [Test]
         public void BuildStatistics_DataNotUnique_ShouldThrowAppropriateException()
         {
@@ -176,6 +178,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
             Assert.Throws<CovidStatisticsCsvDataNotUniqueException>(() => covidStatisticsBuilder.BuildStatistics(_sampleCsvContent));
         }
 
+        [Ignore("Awaits clarification 2021-03-18")]
         [Test]
         public void BuildStatistics_DataMissingForToday_ShouldThrowAppropriateException()
         {
