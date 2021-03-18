@@ -33,9 +33,9 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
         public void ObtainCovidStatistics()
         {
             var newestEntry = _covidStatisticsRepository.GetNewestEntry();
-            var currentEntryDate = newestEntry?.Date ?? DateTime.UtcNow.AddDays(-1);
+            var currentEntryDate = newestEntry?.EntryDate.Date ?? DateTime.UtcNow.Date.AddDays(-1);
 
-            while (currentEntryDate.Date < DateTime.UtcNow.Date)
+            while (currentEntryDate < DateTime.UtcNow.Date)
             {
                 currentEntryDate = currentEntryDate.AddDays(1);
                 if (IsWeekendDay(currentEntryDate))
@@ -69,7 +69,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
 
         private void HandleDataMissing()
         {
-            if (_dateTimeResolver.GetDateTimeNow().Hour < _config.MakeAlertIfDataIsMissingAfterHour)
+            if (_dateTimeResolver.GetDateTime().Hour < _config.MakeAlertIfDataIsMissingAfterHour)
             {
                 _logger.LogInformation(CovidStatisticsFileMissingOnServerException.DataMissingInfoMessage);
             }

@@ -35,17 +35,17 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
                 new CovidStatistics()
                 {
                     Id = 200,
-                    Date = _exampleDate.AddDays(-1)
+                    EntryDate = _exampleDate.AddDays(-1)
                 },
                 new CovidStatistics()
                 {
                     Id = 300,
-                    Date = _exampleDate.AddDays(-2)
+                    EntryDate = _exampleDate.AddDays(-2)
                 },
                 new CovidStatistics()
                 {
                     Id = 400,
-                    Date = _exampleDate.AddDays(-3)
+                    EntryDate = _exampleDate.AddDays(-3)
                 },
             };
         }
@@ -62,7 +62,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
             var expectedResult = new CovidStatistics()
             {
                 Id = 5,
-                Date = _exampleDate
+                EntryDate = _exampleDate
             };
             _covidStatisticsMockData.Add(expectedResult);
             _context.Add(expectedResult);
@@ -100,7 +100,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
             var expectedResult = new CovidStatistics()
             {
                 Id = 5,
-                Date = _exampleDate
+                EntryDate = _exampleDate
             };
             _context.Add(expectedResult);
             _context.SaveChanges();
@@ -155,7 +155,7 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
             var expectedResult = new CovidStatistics()
             {
                 Id = 5,
-                Date = _exampleDate
+                EntryDate = _exampleDate
             };
             _context.Add(expectedResult);
             _context.SaveChanges();

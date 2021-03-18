@@ -14,12 +14,12 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         public CovidStatistics GetEntryByDate(DateTime date)
         {
-            return Get(filter: c => c.Date.Date.CompareTo(date.Date) == 0).SingleOrDefault();
+            return Get(filter: c => c.EntryDate.Date.CompareTo(date.Date) == 0).SingleOrDefault();
         }
 
         public async Task<CovidStatistics> GetEntryByDateAsync(DateTime date)
         {
-            return (await GetAsync(filter: c => c.Date.Date == date.Date)).SingleOrDefault();
+            return (await GetAsync(filter: c => c.EntryDate.Date == date.Date)).SingleOrDefault();
         }
 
         public void CreateEntry(CovidStatistics entry)
@@ -30,12 +30,12 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         public async Task<CovidStatistics> GetNewestEntryAsync()
         {
-            return (await GetAsync(orderBy: x => x.OrderByDescending(x => x.Date))).First();
+            return (await GetAsync(orderBy: x => x.OrderByDescending(x => x.EntryDate))).First();
         }
 
         public CovidStatistics GetNewestEntry()
         {
-            var entries = Get(orderBy: x => x.OrderByDescending(x => x.Date));
+            var entries = Get(orderBy: x => x.OrderByDescending(x => x.EntryDate));
             return entries.FirstOrDefault();
         }
     }

@@ -25,7 +25,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Utils
             _dateTime = DateTime.UtcNow;
         }
 
-        public DateTime GetDateTimeNow()
+        public DateTime GetDateTime()
         {
             return _dateTime;
         }

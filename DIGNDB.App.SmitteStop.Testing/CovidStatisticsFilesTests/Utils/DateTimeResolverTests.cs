@@ -48,7 +48,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Utils
             var dateTimeResolver = CreateDateTimeResolver();
             // Act
             dateTimeResolver.SetDateTime(_sampleDateTime);
-            var result = dateTimeResolver.GetDateTimeNow();
+            var result = dateTimeResolver.GetDateTime();
 
             // Assert
             Assert.AreEqual(_sampleDateTime, result);

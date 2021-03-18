@@ -32,7 +32,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
             mockRepository = new MockRepository(MockBehavior.Strict);
 
             _mockDateTimeResolver = mockRepository.Create<IDateTimeResolver>();
-            _mockDateTimeResolver.Setup(x => x.GetDateTimeNow()).Returns(DateTimeToday);
+            _mockDateTimeResolver.Setup(x => x.GetDateTime()).Returns(DateTimeToday);
             _mockDateTimeResolver.Setup(x => x.GetDateXDaysAgo(1)).Returns(DateToday);
             _mockDateTimeResolver.Setup(x => x.GetDateXDaysAgo(2)).Returns(DateYesterday);
             _covidStatisticsCsvDataRetrieveService =
@@ -86,22 +86,22 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
                 new VaccinatedCsvContent()
                 {
                     Date = DateYesterday,
-                    FirstDose = 0.1,
-                    SecondDose = 0.2,
+                    FirstDose = 1,
+                    SecondDose = 2,
                     Region = VaccinatedCsvContent.NorwayRegionName
                 },
                 new VaccinatedCsvContent()
                 {
                     Date = DateToday,
-                    FirstDose = 0.4,
-                    SecondDose = 0.6,
+                    FirstDose = 3,
+                    SecondDose = 4,
                     Region = VaccinatedCsvContent.NorwayRegionName
                 },
                 new VaccinatedCsvContent()
                 {
                     Date = DateToday,
-                    FirstDose = 0.111,
-                    SecondDose = 0.222,
+                    FirstDose = 5,
+                    SecondDose = 6,
                     Region = "otherRegionShouldBeIgnored"
                 },
             };
@@ -122,7 +122,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
         {
             _statisticsObjectThatMatchesSampleCsvContent = new CovidStatistics
             {
-                Date = DateTimeToday,
+                ModificationDate = DateTimeToday,
                 ConfirmedCasesToday = _sampleTestedCsvContent[1].Positive,
                 ConfirmedCasesTotal = _sampleTestedCsvContent[1].Positive + _sampleTestedCsvContent[0].Positive,
                 IcuAdmittedToday = _sampleHospitalCsvContent[1].IcuPatients,

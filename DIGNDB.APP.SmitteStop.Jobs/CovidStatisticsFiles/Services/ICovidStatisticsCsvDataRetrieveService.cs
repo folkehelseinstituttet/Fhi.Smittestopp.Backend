@@ -6,8 +6,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
 {
     public interface ICovidStatisticsCsvDataRetrieveService
     {
-        double GetMostRecentEntry(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, double> fieldSelector);
-        double GetSumOfEntries(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, double> fieldSelector);
-        double GetDifferenceBetweenMostRecentEntries(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, double> fieldSelector);
+        int GetFromMostRecentEntry(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, int> fieldSelector);
+        int GetSumFromEntries(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, int> fieldSelector);
     }
 }
