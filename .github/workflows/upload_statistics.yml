@@ -7,27 +7,49 @@ jobs:
   download_dagens_tal:
     runs-on: ubuntu-latest
     steps:
+    
+    # Set env.date
     - name: Set date env
       id: step_date
       run: |
         echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    
+    # Set env.base=base_url
     - name: Set base url
       id: step_base_url
       run: |
         echo "base_url=https://raw.githubusercontent.com/folkehelseinstituttet/surveillance_data/master/covid19" >> $GITHUB_ENV
+    
+    # Set env.file_tested
     - name: Set tested file name
       id: step_tested_file_name
       run: |
         echo "file_tested=data_covid19_lab_by_time_${{ env.date }}.csv" >> $GITHUB_ENV
+    
+    # Set env.file_hosp_admission
     - name: Set hospital admission file name
       id: step_hospital_admission
       run: |
         echo "file_hosp_admission=data_covid19_hospital_by_time_${{ env.date }}.csv" >> $GITHUB_ENV
+    
+    # Set env.file_vaccination
     - name: Set vaccination file name
       id: step_vaccination_file_name
       run: |
         echo "file_vaccination=data_covid19_sysvak_by_time_location_${{ env.date }}.csv" >> $GITHUB_ENV
     
+    # Set env.file_time_location
+    - name: Set time location file name
+      id: step_time_location_file_name
+      run: |
+        echo "file_time_location=data_covid19_msis_by_time_location_${{ env.date }}.csv" >> $GITHUB_ENV
+    
+    # Set env.file_location
+    - name: Set location file name
+      id: step_location_file_name
+      run: |
+        echo "file_location=data_covid19_msis_by_location_${{ env.date }}.csv" >> $GITHUB_ENV
+        
     #############################
     # Download and upload files #
     #############################
@@ -84,8 +106,8 @@ jobs:
           echo "Upload response: ${response_hosp_upload}"
         else
           echo "File for ${{env.file_hosp_admission}} not available yet"
-        fi       
-    
+        fi
+        
     # vaccination file
     - name: Download vaccination file
       id: download_vaccination_file
@@ -111,5 +133,58 @@ jobs:
           echo "Upload response: ${response_vaccination_upload}"
         else
           echo "File for ${{env.file_vaccination}} not available yet"
-        fi       
+        fi
     
+    # time location file
+    - name: Download time location file
+      id: download_time_location_file
+      run: |
+        response_time_location=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_time_location}}")
+        echo "Download time location file response: $response_time_location"
+        if [ "200" == "${response_time_location}" ]
+        then
+          curl "${{env.base_url}}/${{env.file_time_location}}" -o ${{env.file_time_location}}          
+          echo "Download of ${{env.file_time_location}} completed"
+        else
+          echo "Download failure: ${response_time_location}"
+        fi
+        echo "time_location_response=${response_time_location}" >> $GITHUB_ENV
+    - name: Upload time location file
+      id: upload_time_location_file
+      run: |
+        echo "Download of ${{env.file_time_location}} response: ${{env.time_location_response}}"
+        if [ "200" == "${{env.time_location_response}}" ]
+        then
+          echo "Uploading file: ${{env.file_time_location}}"
+          response_time_location_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@${{env.file_time_location}}" ${{secrets.UPLOAD_URL}})
+          echo "Upload response: ${response_time_location_upload}"
+        else
+          echo "File for ${{env.file_time_location}} not available yet"
+        fi
+    
+    # location file
+    - name: Download location file
+      id: download_location_file
+      run: |
+        response_location=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_location}}")
+        echo "Download location file response: $response_location"
+        if [ "200" == "${response_location}" ]
+        then
+          curl "${{env.base_url}}/${{env.file_location}}" -o ${{env.file_location}}          
+          echo "Download of ${{env.file_location}} completed"
+        else
+          echo "Download failure: ${response_location}"
+        fi
+        echo "location_response=${response_location}" >> $GITHUB_ENV
+    - name: Upload location file
+      id: upload_location_file
+      run: |
+        echo "Download of ${{env.file_location}} response: ${{env.location_response}}"
+        if [ "200" == "${{env.location_response}}" ]
+        then
+          echo "Uploading file: ${{env.file_location}}"
+          response_location_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@${{env.file_location}}" ${{secrets.UPLOAD_URL}})
+          echo "Upload response: ${response_location_upload}"
+        else
+          echo "File for ${{env.file_location}} not available yet"
+        fi

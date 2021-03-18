@@ -65,5 +65,9 @@ namespace DIGNDB.App.SmitteStop.API
         public string HospitalAdmissionFileNamePattern { get; set; }
         [Required]
         public string VaccinationFileNamePattern { get; set; }
+        [Required]
+        public string TimeLocationFileNamePattern { get; set; }
+        [Required]
+        public string LocationFileNamePattern { get; set; }
     }
 }
