@@ -24,34 +24,52 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
             _inputData = inputData;
             _statistics = new App.SmitteStop.Domain.Db.CovidStatistics
             {
+                ConfirmedCasesToday = CalculateConfirmedToday(),
+                ConfirmedCasesTotal = CalculateConfirmedTotal(),
+
+                TestsConductedToday = CalculateTestedToday(),
+                TestsConductedTotal = CalculateTestedTotal(),
+
+                PatientsAdmittedToday = CalculateAdmittedToday(),
+                IcuAdmittedToday = CalculateIcuAdmittedToday(),
+
+                VaccinatedFirstDoseTotal = CalculateVaccinatedFirstDoseTotal(),
+                VaccinatedFirstDoseToday = CalculateVaccinatedFirstDoseToday(),
+                VaccinatedSecondDoseTotal = CalculateVaccinatedSecondDoseTotal(),
+                VaccinatedSecondDoseToday = CalculateVaccinatedSecondDoseToday(),
+                
                 ModificationDate = DateTime.UtcNow,
                 EntryDate = _dateTimeResolver.GetDateTime().Date,
-                PatientsAdmittedToday = CalculateAdmittedToday(),
-                ConfirmedCasesToday = CalculateConfirmedToday(),
-                TestsConductedToday = CalculateTestedToday(),
-                IcuAdmittedToday = CalculateIcuAdmittedToday(),
-                VaccinatedFirstDoseToday = CalculateVaccinatedFirstDoseToday(),
-                VaccinatedSecondDoseToday = CalculateVaccinatedSecondDoseToday(),
-                ConfirmedCasesTotal = CalculateConfirmedTotal(),
-                TestsConductedTotal = CalculateTestedTotal(),
-                VaccinatedFirstDoseTotal = CalculateVaccinatedFirstDoseTotal(),
-                VaccinatedSecondDoseTotal = CalculateVaccinatedSecondDoseTotal()
             };
-            return (_statistics);
+
+            return _statistics;
         }
 
-        private int CalculateAdmittedToday()
-        {
-            return _covidStatisticsCsvDataRetrieveService.GetFromMostRecentEntry(_inputData?.FileContents
-                    .SingleOrDefault(x => x is IEnumerable<HospitalCsvContent>),
-                x => ((HospitalCsvContent)x).HospitalAdmitted);
-        }
+        #region Calculation methods
 
         private int CalculateConfirmedToday()
         {
-            return _covidStatisticsCsvDataRetrieveService.GetFromMostRecentEntry(_inputData?.FileContents
-                    .Single(x => x is IEnumerable<TestedCsvContent>),
-                x => ((TestedCsvContent)x).Positive);
+            var confirmedToday =
+                _inputData?.FileContents.Single(x => x is IEnumerable<TimeLocationCsvContent>)?
+                    .Where(x => (x as TimeLocationCsvContent)?.Region == TimeLocationCsvContent.NorwayRegionName);
+            
+            var retVal = _covidStatisticsCsvDataRetrieveService.GetFromMostRecentEntry(confirmedToday,
+                x => ((TimeLocationCsvContent) x).ConfirmedCasesToday);
+
+            return retVal;
+        }
+
+        private int CalculateConfirmedTotal()
+        {
+            var confirmedTotal =
+                _inputData?.FileContents.Single(x => x is IEnumerable<LocationCsvContent>)?
+                    .Where(x => (x as LocationCsvContent)?.Region == LocationCsvContent.NorwayRegionName); ;
+            
+            var retVal = 
+                _covidStatisticsCsvDataRetrieveService.GetEntryByDate(confirmedTotal, LocationCsvContent.LocationDateTime, 
+                    x => ((LocationCsvContent) x).ConfirmedCasesTotal);
+            
+            return retVal;
         }
 
         private int CalculateTestedToday()
@@ -65,6 +83,24 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
             return negativeTested + positiveTested;
         }
 
+        private int CalculateTestedTotal()
+        {
+            var positiveTested = _covidStatisticsCsvDataRetrieveService.GetSumFromEntries(_inputData?.FileContents
+                    .Single(x => x is IEnumerable<TestedCsvContent>),
+                x => ((TestedCsvContent)x).Positive);
+            var negativeTested = _covidStatisticsCsvDataRetrieveService.GetSumFromEntries(_inputData?.FileContents
+                    .Single(x => x is IEnumerable<TestedCsvContent>),
+                x => ((TestedCsvContent)x).Negative);
+            return negativeTested + positiveTested;
+        }
+
+        private int CalculateAdmittedToday()
+        {
+            return _covidStatisticsCsvDataRetrieveService.GetFromMostRecentEntry(_inputData?.FileContents
+                    .SingleOrDefault(x => x is IEnumerable<HospitalCsvContent>),
+                x => ((HospitalCsvContent)x).HospitalAdmitted);
+        }
+        
         private int CalculateIcuAdmittedToday()
         {
             return _covidStatisticsCsvDataRetrieveService.GetFromMostRecentEntry(_inputData?.FileContents
@@ -80,6 +116,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
                 x => ((VaccinatedCsvContent)x).FirstDoseTotal);
         }
 
+        private int CalculateVaccinatedFirstDoseToday()
+        {
+            return _covidStatisticsCsvDataRetrieveService.GetFromMostRecentEntry(_inputData?.FileContents
+                    .Single(x => x is IEnumerable<VaccinatedCsvContent>)
+                    ?.Where(x => (x as VaccinatedCsvContent)?.Region == VaccinatedCsvContent.NorwayRegionName),
+                x => ((VaccinatedCsvContent)x).FirstDose);
+        }
+        
         private int CalculateVaccinatedSecondDoseTotal()
         {
             return _covidStatisticsCsvDataRetrieveService.GetFromMostRecentEntry(_inputData?.FileContents
@@ -96,30 +140,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
                 x => ((VaccinatedCsvContent)x).SecondDose);
         }
 
-        private int CalculateVaccinatedFirstDoseToday()
-        {
-            return _covidStatisticsCsvDataRetrieveService.GetFromMostRecentEntry(_inputData?.FileContents
-                    .Single(x => x is IEnumerable<VaccinatedCsvContent>)
-                    ?.Where(x => (x as VaccinatedCsvContent)?.Region == VaccinatedCsvContent.NorwayRegionName),
-                x => ((VaccinatedCsvContent)x).FirstDose);
-        }
-
-        private int CalculateConfirmedTotal()
-        {
-            return _covidStatisticsCsvDataRetrieveService.GetSumFromEntries(_inputData?.FileContents
-                    .Single(x => x is IEnumerable<TestedCsvContent>),
-                x => ((TestedCsvContent)x).Positive);
-        }
-
-        private int CalculateTestedTotal()
-        {
-            var positiveTested = _covidStatisticsCsvDataRetrieveService.GetSumFromEntries(_inputData?.FileContents
-                    .Single(x => x is IEnumerable<TestedCsvContent>),
-                x => ((TestedCsvContent)x).Positive);
-            var negativeTested = _covidStatisticsCsvDataRetrieveService.GetSumFromEntries(_inputData?.FileContents
-                    .Single(x => x is IEnumerable<TestedCsvContent>),
-                x => ((TestedCsvContent)x).Negative);
-            return negativeTested + positiveTested;
-        }
+        #endregion
     }
 }

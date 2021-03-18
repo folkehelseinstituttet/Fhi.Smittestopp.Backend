@@ -15,7 +15,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.CsvContentModels
             _fileContents = new List<IEnumerable<CovidStatisticCsvFileContent>>();
         }
 
-        public void AddFile(IEnumerable<CovidStatisticCsvFileContent> fileContent)
+        public void AddFileContent(IEnumerable<CovidStatisticCsvFileContent> fileContent)
         {
             var existingFileOfGivenType = _fileContents.FirstOrDefault(x => fileContent.GetType() == x.GetType());
             if (existingFileOfGivenType == null)

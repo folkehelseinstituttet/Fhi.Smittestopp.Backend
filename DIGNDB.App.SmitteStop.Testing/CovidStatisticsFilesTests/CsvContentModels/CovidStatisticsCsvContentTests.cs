@@ -29,9 +29,9 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.CsvContentMode
             };
 
             // Act
-            covidStatisticsCsvContent.AddFile(
+            covidStatisticsCsvContent.AddFileContent(
                 fileContent);
-            covidStatisticsCsvContent.AddFile(
+            covidStatisticsCsvContent.AddFileContent(
                 fileContent2);
 
             // Assert
@@ -54,11 +54,11 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.CsvContentMode
             };
 
             // Act
-            covidStatisticsCsvContent.AddFile(
+            covidStatisticsCsvContent.AddFileContent(
                 fileContent);
 
             // Assert
-            Assert.Throws<CovidStatisticsCsvContentMultipleContentsOfTheSameTypeException>(() => covidStatisticsCsvContent.AddFile(fileContent2));
+            Assert.Throws<CovidStatisticsCsvContentMultipleContentsOfTheSameTypeException>(() => covidStatisticsCsvContent.AddFileContent(fileContent2));
         }
     }
 }

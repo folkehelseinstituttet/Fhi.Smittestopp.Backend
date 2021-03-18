@@ -16,7 +16,16 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
         {
             _dateTimeResolver = dateTimeResolver;
         }
-        public int GetFromMostRecentEntry(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, int> fieldSelector)
+
+        public int GetEntryByDate(IEnumerable<CovidStatisticCsvFileContent> fileContent, DateTime dateTime,
+            Func<CovidStatisticCsvFileContent, int> fieldSelector)
+        {
+            var newestRecord = GetRecord(fileContent, dateTime);
+            return fieldSelector(newestRecord);
+        }
+
+        public int GetFromMostRecentEntry(IEnumerable<CovidStatisticCsvFileContent> fileContent,
+            Func<CovidStatisticCsvFileContent, int> fieldSelector)
         {
             var newestRecord = GetRecord(fileContent, _dateTimeResolver.GetDateXDaysAgo(NewestRecordAgeInDays));
             return fieldSelector(newestRecord);
@@ -24,7 +33,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
 
         public int GetSumFromEntries(IEnumerable<CovidStatisticCsvFileContent> fileContent, Func<CovidStatisticCsvFileContent, int> fieldSelector)
         {
-            int total = 0;
+            var total = 0;
             foreach (var record in fileContent)
             {
                 total += fieldSelector(record);
@@ -33,12 +42,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
             return total;
         }
 
-        private static CovidStatisticCsvFileContent GetRecord(IEnumerable<CovidStatisticCsvFileContent> fileContent, DateTime dateTime)
+        private static CovidStatisticCsvFileContent GetRecord(IEnumerable<CovidStatisticCsvFileContent> fileContent,
+            DateTime dateTime)
         {
             try
             {
-                return fileContent.SingleOrDefault(x => x.Date == dateTime) ??
-                               throw new CovidStatisticsCsvDataPartiallyMissingException(dateTime);
+                var retVal = fileContent.SingleOrDefault(x => x.Date == dateTime) ??
+                             throw new CovidStatisticsCsvDataPartiallyMissingException(dateTime);
+                return retVal;
             }
             catch (InvalidOperationException e)
             {

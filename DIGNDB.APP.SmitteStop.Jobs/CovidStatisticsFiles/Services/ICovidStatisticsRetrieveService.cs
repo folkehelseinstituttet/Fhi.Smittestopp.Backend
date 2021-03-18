@@ -2,6 +2,6 @@
 {
     public interface ICovidStatisticsRetrieveService
     {
-        void GetCovidStatistics();
+        void ReadAndProcessCovidStatistics();
     }
 }

@@ -9,8 +9,6 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Exceptions
         public CovidStatisticsParsingFileNotFoundException(CovidStatisticsFileName name)
             : base(String.Format("Could not find file with name: {0}", name))
         {
-
         }
-
     }
 }
