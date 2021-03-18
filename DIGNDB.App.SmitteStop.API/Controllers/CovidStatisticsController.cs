@@ -1,5 +1,6 @@
 ﻿using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.APP.SmitteStop.API.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace DIGNDB.App.SmitteStop.API.Controllers
 {
@@ -19,8 +19,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
         private readonly ILogger<CovidStatisticsUploadController> _logger;
         private readonly AppSettingsConfig _appSettingsConfig;
 
-        public CovidStatisticsUploadController(ILogger<CovidStatisticsUploadController> logger,
-            AppSettingsConfig appSettingsConfig)
+        public CovidStatisticsUploadController(ILogger<CovidStatisticsUploadController> logger, AppSettingsConfig appSettingsConfig)
         {
             _appSettingsConfig = appSettingsConfig;
             _logger = logger;
@@ -64,8 +63,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             }
             catch (Exception e)
             {
-                var errorMessage =
-                    $"Internal server error when trying to process request with covid statistics from GitHub. Error: {e}";
+                var errorMessage = $"Internal server error when trying to process request with covid statistics from GitHub. Error: {e}";
                 _logger.LogError(errorMessage);
 
                 return StatusCode(500, e.Message);
