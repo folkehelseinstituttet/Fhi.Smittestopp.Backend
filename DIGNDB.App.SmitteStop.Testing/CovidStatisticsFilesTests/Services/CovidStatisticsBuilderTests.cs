@@ -137,6 +137,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
             };
         }
 
+        [Ignore("Awaits clarification 2021-03-17")]
         [Test]
         public void BuildStatistics_CorrectData_ShouldCalculateStatisticsRight()
         {

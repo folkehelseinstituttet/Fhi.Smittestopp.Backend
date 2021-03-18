@@ -35,7 +35,8 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         public CovidStatistics GetNewestEntry()
         {
-            return (Get(orderBy: x => x.OrderByDescending(x => x.Date))).First();
+            var entries = Get(orderBy: x => x.OrderByDescending(x => x.Date));
+            return entries.FirstOrDefault();
         }
     }
 }

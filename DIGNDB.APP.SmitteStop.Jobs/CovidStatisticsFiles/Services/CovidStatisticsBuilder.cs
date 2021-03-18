@@ -18,12 +18,13 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
             _covidStatisticsCsvDataRetrieveService = covidStatisticsCsvDataRetrieveService;
             _dateTimeResolver = dateTimeResolver;
         }
+
         public App.SmitteStop.Domain.Db.CovidStatistics BuildStatistics(CovidStatisticsCsvContent inputData)
         {
             _inputData = inputData;
             _statistics = new App.SmitteStop.Domain.Db.CovidStatistics()
             {
-                Date = _dateTimeResolver.GetDateTimeNow()
+                Date = DateTime.UtcNow
             };
             _statistics.PatientsAdmittedToday = Convert.ToInt32(CalculateAdmittedToday());
             _statistics.ConfirmedCasesToday = Convert.ToInt32(CalculateConfirmedToday());
