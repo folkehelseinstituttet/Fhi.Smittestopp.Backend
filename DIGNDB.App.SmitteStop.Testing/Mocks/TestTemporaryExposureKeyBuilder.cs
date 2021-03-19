@@ -10,7 +10,7 @@ namespace DIGNDB.App.SmitteStop.Testing.Mocks
 {
     public class TestTemporaryExposureKeyBuilder
     {
-        private TemporaryExposureKey _prototype;
+        private readonly TemporaryExposureKey _prototype;
         private IList<Country> _visitedCountries = new List<Country>(0);
 
         public static class Default
@@ -57,7 +57,10 @@ namespace DIGNDB.App.SmitteStop.Testing.Mocks
             return new TestTemporaryExposureKeyBuilder(defaultPrototype);
         }
 
-
+        public IList<TemporaryExposureKey> BuildNormalized(IList<string> keyData)
+        {
+            return Build(keyData, true);
+        }
 
         public TestTemporaryExposureKeyBuilder Copy()
         {
@@ -112,6 +115,28 @@ namespace DIGNDB.App.SmitteStop.Testing.Mocks
             }).ToList();
 
             return key;
+        }
+
+        private IList<TemporaryExposureKey> Build(IList<string> keyData, bool force16BytesLength)
+        {
+            return keyData.Select(keyDataStr => Encoding.ASCII.GetBytes(keyDataStr))
+                .Select(keyDataBytes => force16BytesLength ? NormalizeKeyDataTo16BytesOrThrow(keyDataBytes) : keyDataBytes)
+                .Select(keyData => Build(keyData))
+                .ToList();
+        }
+
+        private byte[] NormalizeKeyDataTo16BytesOrThrow(byte[] originalBytes)
+        {
+            byte[] keyDate = new byte[16];
+            if (originalBytes.Length > 16)
+            {
+                throw new ArgumentException("KeyData has Length > 16!");
+            }
+            for (int i = 0; i < Default.KeyData.Length; ++i)
+            {
+                keyDate[i] = i >= originalBytes.Length ? Default.KeyData[i] : originalBytes[i];
+            }
+            return keyDate;
         }
 
         #region setters
