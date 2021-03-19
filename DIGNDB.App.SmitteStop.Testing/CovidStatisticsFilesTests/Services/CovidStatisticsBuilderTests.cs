@@ -25,6 +25,8 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
         private List<TestedCsvContent> _sampleTestedCsvContent;
         private List<VaccinatedCsvContent> _sampleVaccinatedCsvContent;
         private List<HospitalCsvContent> _sampleHospitalCsvContent;
+        private List<TimeLocationCsvContent> _sampleConfirmedCasesTodayCsvContent;
+        private List<LocationCsvContent> _sampleConfirmedCasesTotalCsvContent;
 
         [SetUp]
         public void SetUp()
@@ -35,29 +37,28 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
             _mockDateTimeResolver.Setup(x => x.GetDateTime()).Returns(DateTimeToday);
             _mockDateTimeResolver.Setup(x => x.GetDateXDaysAgo(1)).Returns(DateToday);
             _mockDateTimeResolver.Setup(x => x.GetDateXDaysAgo(2)).Returns(DateYesterday);
-            _covidStatisticsCsvDataRetrieveService =
-                new CovidStatisticsCsvDataRetrieveService(_mockDateTimeResolver.Object);
+            
+            _covidStatisticsCsvDataRetrieveService = new CovidStatisticsCsvDataRetrieveService(_mockDateTimeResolver.Object);
+
             BuildSampleCsvContentAndCorrespondingStatisticsEntry();
         }
 
         private CovidStatisticsBuilder CreateCovidStatisticsBuilder()
         {
-            return new CovidStatisticsBuilder(
-                _mockDateTimeResolver.Object,
-                _covidStatisticsCsvDataRetrieveService);
+            return new CovidStatisticsBuilder(_mockDateTimeResolver.Object, _covidStatisticsCsvDataRetrieveService);
         }
 
         private void BuildSampleCsvContentAndCorrespondingStatisticsEntry()
         {
-            _sampleTestedCsvContent = new List<TestedCsvContent>()
+            _sampleTestedCsvContent = new List<TestedCsvContent>
             {
-                new TestedCsvContent()
+                new TestedCsvContent
                 {
                     Date = DateYesterday,
                     Negative = 1,
                     Positive = 2
                 },
-                new TestedCsvContent()
+                new TestedCsvContent
                 {
                     Date = DateToday,
                     Negative = 10,
@@ -65,15 +66,15 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
                 }
             };
 
-            _sampleHospitalCsvContent = new List<HospitalCsvContent>()
+            _sampleHospitalCsvContent = new List<HospitalCsvContent>
             {
-                new HospitalCsvContent()
+                new HospitalCsvContent
                 {
                     Date = DateYesterday,
                     HospitalAdmitted = 3,
                     IcuPatients = 4
                 },
-                new HospitalCsvContent()
+                new HospitalCsvContent
                 {
                     Date = DateToday,
                     HospitalAdmitted = 30,
@@ -81,23 +82,25 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
                 }
             };
 
-            _sampleVaccinatedCsvContent = new List<VaccinatedCsvContent>()
+            _sampleVaccinatedCsvContent = new List<VaccinatedCsvContent>
             {
-                new VaccinatedCsvContent()
-                {
-                    Date = DateYesterday,
-                    FirstDose = 1,
-                    SecondDose = 2,
-                    Region = VaccinatedCsvContent.NorwayRegionName
-                },
-                new VaccinatedCsvContent()
+                new VaccinatedCsvContent
                 {
                     Date = DateToday,
+                    FirstDose = 3,
+                    FirstDoseTotal = 4,
+                    SecondDose = 1,
+                    SecondDoseTotal = 2,
+                    Region = VaccinatedCsvContent.NorwayRegionName
+                },
+                new VaccinatedCsvContent
+                {
+                    Date = DateYesterday,
                     FirstDose = 3,
                     SecondDose = 4,
                     Region = VaccinatedCsvContent.NorwayRegionName
                 },
-                new VaccinatedCsvContent()
+                new VaccinatedCsvContent
                 {
                     Date = DateToday,
                     FirstDose = 5,
@@ -106,15 +109,39 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
                 },
             };
 
+            _sampleConfirmedCasesTodayCsvContent = new List<TimeLocationCsvContent>
+            {
+                new TimeLocationCsvContent
+                {
+                    Date = DateToday,
+                    ConfirmedCasesToday = 7,
+                    Region = "norge",
+                }
+            };
+
+            _sampleConfirmedCasesTotalCsvContent = new List<LocationCsvContent>
+            {
+                new LocationCsvContent
+                {
+                    Date = new DateTime(1900, 01, 01),
+                    ConfirmedCasesTotal = 14,
+                    Region = "norge",
+                }
+            };
+
             BuildSampleCsvContentFromSampleFilesAndCorrespondingStatisticsEntry();
         }
 
         private void BuildSampleCsvContentFromSampleFilesAndCorrespondingStatisticsEntry()
         {
             _sampleCsvContent = new CovidStatisticsCsvContent();
+
             _sampleCsvContent.AddFileContent(_sampleTestedCsvContent);
             _sampleCsvContent.AddFileContent(_sampleHospitalCsvContent);
             _sampleCsvContent.AddFileContent(_sampleVaccinatedCsvContent);
+            _sampleCsvContent.AddFileContent(_sampleConfirmedCasesTodayCsvContent);
+            _sampleCsvContent.AddFileContent(_sampleConfirmedCasesTotalCsvContent);
+
             BuildStatisticsEntryFromSampleCsvContent();
         }
 
@@ -122,69 +149,77 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
         {
             _statisticsObjectThatMatchesSampleCsvContent = new CovidStatistics
             {
-                ModificationDate = DateTimeToday,
-                ConfirmedCasesToday = _sampleTestedCsvContent[1].Positive,
-                ConfirmedCasesTotal = _sampleTestedCsvContent[1].Positive + _sampleTestedCsvContent[0].Positive,
+                ConfirmedCasesToday = _sampleConfirmedCasesTodayCsvContent[0].ConfirmedCasesToday,
+                ConfirmedCasesTotal = _sampleConfirmedCasesTotalCsvContent[0].ConfirmedCasesTotal,
+
                 IcuAdmittedToday = _sampleHospitalCsvContent[1].IcuPatients,
                 PatientsAdmittedToday = _sampleHospitalCsvContent[1].HospitalAdmitted,
+
                 TestsConductedToday = _sampleTestedCsvContent[1].Positive + _sampleTestedCsvContent[1].Negative,
                 TestsConductedTotal = _sampleTestedCsvContent[1].Positive + _sampleTestedCsvContent[1].Negative +
                                       _sampleTestedCsvContent[0].Positive + _sampleTestedCsvContent[0].Negative,
-                VaccinatedFirstDoseToday = _sampleVaccinatedCsvContent[1].FirstDose - _sampleVaccinatedCsvContent[0].FirstDose,
-                VaccinatedFirstDoseTotal = _sampleVaccinatedCsvContent[1].FirstDose,
-                VaccinatedSecondDoseToday = _sampleVaccinatedCsvContent[1].SecondDose - _sampleVaccinatedCsvContent[0].SecondDose,
-                VaccinatedSecondDoseTotal = _sampleVaccinatedCsvContent[1].SecondDose
+                
+                VaccinatedFirstDoseToday = _sampleVaccinatedCsvContent[0].FirstDose,
+                VaccinatedFirstDoseTotal = _sampleVaccinatedCsvContent[0].FirstDoseTotal,
+                VaccinatedSecondDoseToday = _sampleVaccinatedCsvContent[0].SecondDose,
+                VaccinatedSecondDoseTotal = _sampleVaccinatedCsvContent[0].SecondDoseTotal,
+                
+                ModificationDate = DateTimeToday,
+                EntryDate = DateTimeToday.Date,
             };
         }
 
-        [Ignore("Awaits clarification 2021-03-17")]
         [Test]
         public void BuildStatistics_CorrectData_ShouldCalculateStatisticsRight()
         {
             // Arrange
             var covidStatisticsBuilder = CreateCovidStatisticsBuilder();
+
             // Act
-            var result = covidStatisticsBuilder.BuildStatistics(
-                _sampleCsvContent);
+            var result = covidStatisticsBuilder.BuildStatistics(_sampleCsvContent);
+            
+            _statisticsObjectThatMatchesSampleCsvContent.ModificationDate = result.ModificationDate;
 
             // Assert
             Assert.IsTrue(_statisticsObjectThatMatchesSampleCsvContent.Equals(result));
         }
 
-        [Ignore("Awaits clarification 2021-03-18")]
         [Test]
         public void BuildStatistics_FileMissing_ShouldThrowAppropriateException()
         {
             // Arrange
             _sampleCsvContent = new CovidStatisticsCsvContent();
+            _sampleCsvContent.AddFileContent(_sampleConfirmedCasesTodayCsvContent);
+            _sampleCsvContent.AddFileContent(_sampleConfirmedCasesTotalCsvContent);
             _sampleCsvContent.AddFileContent(_sampleTestedCsvContent);
             var covidStatisticsBuilder = CreateCovidStatisticsBuilder();
+
             // Act
 
             // Assert
             Assert.Throws<CovidStatisticsCsvDataPartiallyMissingException>(() => covidStatisticsBuilder.BuildStatistics(_sampleCsvContent));
         }
 
-        [Ignore("Awaits clarification 2021-03-18")]
         [Test]
         public void BuildStatistics_DataNotUnique_ShouldThrowAppropriateException()
         {
             // Arrange
             _sampleHospitalCsvContent[0].Date = DateToday;
             var covidStatisticsBuilder = CreateCovidStatisticsBuilder();
+        
             // Act
 
             // Assert
             Assert.Throws<CovidStatisticsCsvDataNotUniqueException>(() => covidStatisticsBuilder.BuildStatistics(_sampleCsvContent));
         }
 
-        [Ignore("Awaits clarification 2021-03-18")]
         [Test]
         public void BuildStatistics_DataMissingForToday_ShouldThrowAppropriateException()
         {
             // Arrange
             _sampleHospitalCsvContent[1].Date = DateToday.AddDays(-2);
             var covidStatisticsBuilder = CreateCovidStatisticsBuilder();
+
             // Act
 
             // Assert
