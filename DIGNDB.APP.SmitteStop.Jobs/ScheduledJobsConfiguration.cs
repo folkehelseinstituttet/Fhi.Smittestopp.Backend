@@ -28,7 +28,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             RecurringJob.AddOrUpdate<RemoveOldZipFilesJob>(recurringJobId: removeOldZipFilesConfig.Name, methodCall: job => job.RemoveOldZipFiles(hangfireConfig), removeOldZipFilesConfig.CronExpression);
 
             var getCovidStatisticsConfig = jobsConfig.GetCovidStatistics;
-            RecurringJob.AddOrUpdate<GetCovidStatisticsJob>(recurringJobId: getCovidStatisticsConfig.Name, methodCall: job => job.GetCovidStatisticsIfEntryDoesNotExists(), getCovidStatisticsConfig.CronExpression);
+            RecurringJob.AddOrUpdate<GetCovidStatisticsJob>(recurringJobId: getCovidStatisticsConfig.Name, methodCall: job => job.ObtainCovidStatistics(), getCovidStatisticsConfig.CronExpression);
 
             // This job entry should be removed after the problem with rolingStart, that is causing keys to be rejected by Google Exposure Notifcation, have been resolved.
             RecurringJob.AddOrUpdate<CleanupDatabaseJob>(recurringJobId: "maintenance-rollingStart-check-on-datbase-keys", methodCall: job => job.ValidateRollingStartOnDatabaseKeys(1000), Cron.Never);

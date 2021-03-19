@@ -7,13 +7,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
 {
     public class FetchCovidStatisticsService : IFetchCovidStatisticsService
     {
-
         private readonly IFileSystem _fileSystem;
         private readonly GetCovidStatisticsJobConfig _config;
 
         private const string TestedFileName = "data_covid19_lab_by_time_";
         private const string HospitalAdmissionsFileName = "data_covid19_hospital_by_time_";
         private const string VaccinationFileName = "data_covid19_sysvak_by_time_location_";
+        private const string TimeLocationFileName = "data_covid19_msis_by_time_location_";
+        private const string LocationFileName = "data_covid19_msis_by_location_";
 
         public FetchCovidStatisticsService(IFileSystem fileSystem, GetCovidStatisticsJobConfig config)
         {
@@ -23,23 +24,50 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
 
         public Stream FetchTestNumbersFromDate(DateTime date)
         {
-            return GetStreamOrThrow($"{_config.CovidStatisticsFolder}/{TestedFileName}{date:yyyy-MM-dd}.csv");
+            var dateFormatted = $"{date:yyyy-MM-dd}";
+            var filePath = $"{_config.CovidStatisticsFolder}/{TestedFileName}{dateFormatted}.csv";
+            var stream = GetStreamOrThrow(filePath);
+
+            return stream;
         }
 
         public Stream FetchHospitalNumbersFromDate(DateTime date)
         {
-            return GetStreamOrThrow(
-                $"{_config.CovidStatisticsFolder}/{HospitalAdmissionsFileName}{date:yyyy-MM-dd}.csv");
+            var dateFormatted = $"{date:yyyy-MM-dd}";
+            var filePath = $"{_config.CovidStatisticsFolder}/{HospitalAdmissionsFileName}{dateFormatted}.csv";
+            var stream = GetStreamOrThrow(filePath);
+
+            return stream;
         }
 
         public Stream FetchVaccineNumbersFromDate(DateTime date)
         {
-            return GetStreamOrThrow($"{_config.CovidStatisticsFolder}/{VaccinationFileName}{date:yyyy-MM-dd}.csv");
+            var dateFormatted = $"{date:yyyy-MM-dd}";
+            var filePath = $"{_config.CovidStatisticsFolder}/{VaccinationFileName}{dateFormatted}.csv";
+
+            return GetStreamOrThrow(filePath);
+        }
+
+        public Stream FetchConfirmedCasesTodayNumbersFromDate(DateTime date)
+        {
+            var dateFormatted = $"{date:yyyy-MM-dd}";
+            var filePath = $"{_config.CovidStatisticsFolder}/{TimeLocationFileName}{dateFormatted}.csv";
+
+            return GetStreamOrThrow(filePath);
+        }
+
+        public Stream FetchConfirmedCasesTotalNumbersFromDate(DateTime date)
+        {
+            var dateFormatted = $"{date:yyyy-MM-dd}";
+            var filePath = $"{_config.CovidStatisticsFolder}/{LocationFileName}{dateFormatted}.csv";
+
+            return GetStreamOrThrow(filePath);
         }
 
         private Stream GetStreamOrThrow(string path)
         {
-            return _fileSystem.GetFileStream(path);
+            var stream = _fileSystem.GetFileStream(path);
+            return stream;
         }
     }
 }

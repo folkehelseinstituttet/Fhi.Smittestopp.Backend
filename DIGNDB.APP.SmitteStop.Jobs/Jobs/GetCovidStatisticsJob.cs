@@ -30,18 +30,23 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
             _logger = logger;
         }
 
-        public void GetCovidStatisticsIfEntryDoesNotExists()
+        public void ObtainCovidStatistics()
         {
-            SetDateTimeToNow();
-            if (StatisticsRecordAlreadyExists())
+            var newestEntry = _covidStatisticsRepository.GetNewestEntry();
+            var currentEntryDate = newestEntry?.EntryDate.Date ?? DateTime.UtcNow.Date.AddDays(-1);
+
+            while (currentEntryDate < DateTime.UtcNow.Date)
             {
-                _logger.LogInformation("Statistics entry already exists. Aborting.");
-            }
-            else
-            {
+                currentEntryDate = currentEntryDate.AddDays(1);
+                if (IsWeekendDay(currentEntryDate))
+                {
+                    continue;
+                }
+
+                _dateTimeResolver.SetDateTime(currentEntryDate);
                 try
                 {
-                    _covidStatisticsRetrieveService.GetCovidStatistics();
+                    _covidStatisticsRetrieveService.ReadAndProcessCovidStatistics();
                 }
                 catch (FileNotFoundException)
                 {
@@ -55,26 +60,23 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
             }
         }
 
-        private bool StatisticsRecordAlreadyExists()
+        private static bool IsWeekendDay(DateTime currentEntryDate)
         {
-            return !(_covidStatisticsRepository.GetEntryByDate(_dateTimeResolver.GetDateToday()) is null);
-        }
-
-        private void SetDateTimeToNow()
-        {
-            _dateTimeResolver.SetDateTimeToUtcNow();
+            var dayOfWeek = currentEntryDate.DayOfWeek;
+            var weekend = dayOfWeek == DayOfWeek.Saturday || dayOfWeek == DayOfWeek.Sunday;
+            return weekend;
         }
 
         private void HandleDataMissing()
         {
-            if (_dateTimeResolver.GetDateTimeNow().Hour < _config.MakeAlertIfDataIsMissingAfterHour)
+            if (_dateTimeResolver.GetDateTime().Hour < _config.MakeAlertIfDataIsMissingAfterHour)
             {
-                _logger.LogInformation(CovidStatisticsFilleMissingOnServerException.DataMissingInfoMessage);
+                _logger.LogInformation(CovidStatisticsFileMissingOnServerException.DataMissingInfoMessage);
             }
             else
             {
-                _logger.LogError(CovidStatisticsFilleMissingOnServerException.DataMissingErrorMessage);
-                throw new CovidStatisticsFilleMissingOnServerException();
+                _logger.LogError(CovidStatisticsFileMissingOnServerException.DataMissingErrorMessage);
+                throw new CovidStatisticsFileMissingOnServerException();
             }
         }
     }

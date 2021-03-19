@@ -41,21 +41,21 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V2
                 Id = 1,
                 PositiveResultsLast7Days = 1000,
                 PositiveTestsResultsTotal = 2000,
-                TotalSmittestopDownloads = 3000
+                SmittestopDownloadsTotal = 3000
             };
             _covidStatisticsEntry = new CovidStatistics()
             {
                 ConfirmedCasesTotal = 100,
                 ConfirmedCasesToday = 200,
-                Date = _covidStatisticsPackageDate,
+                EntryDate = _covidStatisticsPackageDate,
                 Id = 1,
                 PatientsAdmittedToday = 500,
                 TestsConductedToday = 600,
                 TestsConductedTotal = 700,
-                VaccinatedFirstDoseToday = 0.1,
-                VaccinatedSecondDoseToday = 0.05,
-                VaccinatedFirstDoseTotal = 0.1,
-                VaccinatedSecondDoseTotal = 0.05
+                VaccinatedFirstDoseToday = 800,
+                VaccinatedSecondDoseToday = 900,
+                VaccinatedFirstDoseTotal = 1000,
+                VaccinatedSecondDoseTotal = 1100
             };
         }
 

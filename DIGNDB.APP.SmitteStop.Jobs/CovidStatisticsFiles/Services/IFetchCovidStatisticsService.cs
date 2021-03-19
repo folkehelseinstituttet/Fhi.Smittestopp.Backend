@@ -8,6 +8,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
         Stream FetchTestNumbersFromDate(DateTime date);
         Stream FetchHospitalNumbersFromDate(DateTime date);
         Stream FetchVaccineNumbersFromDate(DateTime date);
-
+        Stream FetchConfirmedCasesTodayNumbersFromDate(DateTime date);
+        Stream FetchConfirmedCasesTotalNumbersFromDate(DateTime date);
     }
 }

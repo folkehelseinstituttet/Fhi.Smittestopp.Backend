@@ -35,7 +35,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                     b.Property<int>("PositiveTestsResultsTotal")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalSmittestopDownloads")
+                    b.Property<int>("SmittestopDownloadsTotal")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -346,11 +346,14 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                     b.Property<int>("ConfirmedCasesTotal")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("EntryDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("IcuAdmittedToday")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("ModificationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("PatientsAdmittedToday")
                         .HasColumnType("int");
@@ -361,17 +364,17 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                     b.Property<int>("TestsConductedTotal")
                         .HasColumnType("int");
 
-                    b.Property<double>("VaccinatedFirstDoseToday")
-                        .HasColumnType("float");
+                    b.Property<int>("VaccinatedFirstDoseToday")
+                        .HasColumnType("int");
 
-                    b.Property<double>("VaccinatedFirstDoseTotal")
-                        .HasColumnType("float");
+                    b.Property<int>("VaccinatedFirstDoseTotal")
+                        .HasColumnType("int");
 
-                    b.Property<double>("VaccinatedSecondDoseToday")
-                        .HasColumnType("float");
+                    b.Property<int>("VaccinatedSecondDoseToday")
+                        .HasColumnType("int");
 
-                    b.Property<double>("VaccinatedSecondDoseTotal")
-                        .HasColumnType("float");
+                    b.Property<int>("VaccinatedSecondDoseTotal")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

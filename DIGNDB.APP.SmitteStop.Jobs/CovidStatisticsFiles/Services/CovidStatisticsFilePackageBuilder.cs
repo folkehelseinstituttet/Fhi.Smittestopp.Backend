@@ -18,24 +18,30 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
         public FileStreamsPackageDto GetCovidStatisticsFilesPackage()
         {
             var package = new FileStreamsPackageDto();
-            package.Files.Add(
-                new CsvFileDto()
-                {
-                    File = _fetchCovidStatisticsService.FetchHospitalNumbersFromDate(_dateTimeResolver.GetDateToday()),
-                    Name = CovidStatisticsFileName.Hospital
-                });
-            package.Files.Add(
-                new CsvFileDto()
-                {
-                    File = _fetchCovidStatisticsService.FetchVaccineNumbersFromDate(_dateTimeResolver.GetDateToday()),
-                    Name = CovidStatisticsFileName.Vaccination
-                });
-            package.Files.Add(
-                new CsvFileDto()
-                {
-                    File = _fetchCovidStatisticsService.FetchTestNumbersFromDate(_dateTimeResolver.GetDateToday()),
-                    Name = CovidStatisticsFileName.Test
-                });
+
+            var today = _dateTimeResolver.GetDateToday();
+
+            var hospitalFile = _fetchCovidStatisticsService.FetchHospitalNumbersFromDate(today);
+            var hospitalNumbers = new CsvFileDto {File = hospitalFile, Name = CovidStatisticsFileName.Hospital};
+            package.Files.Add(hospitalNumbers);
+
+            var vaccineFile = _fetchCovidStatisticsService.FetchVaccineNumbersFromDate(today);
+            var vaccineNumbers = new CsvFileDto {File = vaccineFile, Name = CovidStatisticsFileName.Vaccination};
+            package.Files.Add(vaccineNumbers);
+
+            var testFile = _fetchCovidStatisticsService.FetchTestNumbersFromDate(today);
+            var testNumbers = new CsvFileDto {File = testFile, Name = CovidStatisticsFileName.Test};
+            package.Files.Add(testNumbers);
+
+            var timeLocationFile = _fetchCovidStatisticsService.FetchConfirmedCasesTodayNumbersFromDate(today);
+            var timeLocationNumbers = new CsvFileDto
+                {File = timeLocationFile, Name = CovidStatisticsFileName.ConfirmedToday};
+            package.Files.Add(timeLocationNumbers);
+
+            var locationFile = _fetchCovidStatisticsService.FetchConfirmedCasesTotalNumbersFromDate(today);
+            var locationNumbers = new CsvFileDto {File = locationFile, Name = CovidStatisticsFileName.ConfirmedTotal};
+            package.Files.Add(locationNumbers);
+
             return package;
         }
     }

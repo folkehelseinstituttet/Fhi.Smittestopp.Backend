@@ -20,7 +20,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
             _covidStatisticsFilePackageBuilder = covidStatisticsFilePackageBuilder;
         }
 
-        public void GetCovidStatistics()
+        public void ReadAndProcessCovidStatistics()
         {
             using var covidStatisticsSourceFileStreamsPackage = _covidStatisticsFilePackageBuilder.GetCovidStatisticsFilesPackage();
             var covidStatisticsFilesContent = _covidStatisticsCsvParser.ParsePackage(covidStatisticsSourceFileStreamsPackage);
