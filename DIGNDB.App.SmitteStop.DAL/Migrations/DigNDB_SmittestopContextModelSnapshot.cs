@@ -1297,7 +1297,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                             EntityId = 9L,
                             EntityName = "Country",
                             LanguageCountryId = 35L,
-                            Value = "فنلندة"
+                            Value = "فنلندا"
                         },
                         new
                         {

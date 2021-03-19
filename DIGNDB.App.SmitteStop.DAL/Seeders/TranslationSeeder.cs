@@ -110,7 +110,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Seeders
                 new {Id = 96L, EntityId = 6L, EntityName = nameof(Country), Value = "تشیکیا", LanguageCountryId = CountrySeeder.ArabiaDialectId},
                 new {Id = 97L, EntityId = 7L, EntityName = nameof(Country), Value = "دانمارك", LanguageCountryId = CountrySeeder.ArabiaDialectId},
                 new {Id = 98L, EntityId = 8L, EntityName = nameof(Country), Value = "استونیا", LanguageCountryId = CountrySeeder.ArabiaDialectId},
-                new {Id = 99L, EntityId = 9L, EntityName = nameof(Country), Value = "فنلندة", LanguageCountryId = CountrySeeder.ArabiaDialectId},
+                new {Id = 99L, EntityId = 9L, EntityName = nameof(Country), Value = "فنلندا", LanguageCountryId = CountrySeeder.ArabiaDialectId},
                 new {Id = 100L, EntityId = 10L, EntityName = nameof(Country), Value = "فرنسا", LanguageCountryId = CountrySeeder.ArabiaDialectId},
                 new {Id = 101L, EntityId = 11L, EntityName = nameof(Country), Value = "ألمانیا", LanguageCountryId = CountrySeeder.ArabiaDialectId},
                 new {Id = 102L, EntityId = 12L, EntityName = nameof(Country), Value = "الیونان", LanguageCountryId = CountrySeeder.ArabiaDialectId},
