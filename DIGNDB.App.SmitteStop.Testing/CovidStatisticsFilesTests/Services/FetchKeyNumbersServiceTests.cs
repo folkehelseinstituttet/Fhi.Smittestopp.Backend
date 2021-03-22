@@ -17,7 +17,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
         private GetCovidStatisticsJobConfig _config;
 
         [SetUp]
-        public void setupConfig()
+        public void SetupConfig()
         {
             _config = new GetCovidStatisticsJobConfig()
             {
@@ -25,6 +25,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
                 CovidStatisticsFolder = "test"
             };
         }
+
         [Test]
         public async Task FetchTestNumbersFromDate_Correct_URL_Format()
         {

@@ -1,4 +1,5 @@
-﻿using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.CsvContentModels;
+﻿using DIGNDB.APP.SmitteStop.Jobs.Config;
+using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.CsvContentModels;
 using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Utils;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,15 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
         private CovidStatisticsCsvContent _inputData;
         private readonly IDateTimeResolver _dateTimeResolver;
         private readonly ICovidStatisticsCsvDataRetrieveService _covidStatisticsCsvDataRetrieveService;
+        private readonly GetCovidStatisticsJobConfig _config;
 
         public CovidStatisticsBuilder(IDateTimeResolver dateTimeResolver,
-            ICovidStatisticsCsvDataRetrieveService covidStatisticsCsvDataRetrieveService)
+            ICovidStatisticsCsvDataRetrieveService covidStatisticsCsvDataRetrieveService,
+            GetCovidStatisticsJobConfig config)
         {
             _covidStatisticsCsvDataRetrieveService = covidStatisticsCsvDataRetrieveService;
             _dateTimeResolver = dateTimeResolver;
+            _config = config;
         }
 
         public App.SmitteStop.Domain.Db.CovidStatistics BuildStatistics(CovidStatisticsCsvContent inputData)
@@ -84,7 +88,10 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
             var negativeTested = _covidStatisticsCsvDataRetrieveService.GetSumFromEntries(_inputData?.FileContents
                     .Single(x => x is IEnumerable<TestedCsvContent>),
                 x => ((TestedCsvContent) x).Negative);
-            return negativeTested + positiveTested;
+
+            var extra = _config.TestsConductedTotalExtra;
+
+            return negativeTested + positiveTested + extra;
         }
 
         private int CalculateAdmittedToday()

@@ -7,16 +7,21 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using DIGNDB.APP.SmitteStop.Jobs.Config;
+using Microsoft.Extensions.Configuration;
 
 namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
 {
     [TestFixture]
     public class CovidStatisticsBuilderTests
     {
+        private int _extraTestsTotal = 20000;
+
         private MockRepository mockRepository;
 
         private Mock<IDateTimeResolver> _mockDateTimeResolver;
         private ICovidStatisticsCsvDataRetrieveService _covidStatisticsCsvDataRetrieveService;
+        private GetCovidStatisticsJobConfig _config;
         private static readonly DateTime DateTimeToday = new DateTime(2020, 10, 10, 10, 22, 20);
         private static readonly DateTime DateToday = DateTimeToday.Date;
         private static readonly DateTime DateYesterday = DateToday.AddDays(-1);
@@ -43,9 +48,20 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
             BuildSampleCsvContentAndCorrespondingStatisticsEntry();
         }
 
+        [SetUp]
+        public void SetupConfig()
+        {
+            _config = new GetCovidStatisticsJobConfig()
+            {
+                MakeAlertIfDataIsMissingAfterHour = 16,
+                CovidStatisticsFolder = "test",
+                TestsConductedTotalExtra = 20000
+            };
+        }
+
         private CovidStatisticsBuilder CreateCovidStatisticsBuilder()
         {
-            return new CovidStatisticsBuilder(_mockDateTimeResolver.Object, _covidStatisticsCsvDataRetrieveService);
+            return new CovidStatisticsBuilder(_mockDateTimeResolver.Object, _covidStatisticsCsvDataRetrieveService, _config);
         }
 
         private void BuildSampleCsvContentAndCorrespondingStatisticsEntry()
@@ -157,7 +173,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
 
                 TestsConductedToday = _sampleTestedCsvContent[1].Positive + _sampleTestedCsvContent[1].Negative,
                 TestsConductedTotal = _sampleTestedCsvContent[1].Positive + _sampleTestedCsvContent[1].Negative +
-                                      _sampleTestedCsvContent[0].Positive + _sampleTestedCsvContent[0].Negative,
+                                      _sampleTestedCsvContent[0].Positive + _sampleTestedCsvContent[0].Negative + _extraTestsTotal,
                 
                 VaccinatedFirstDoseToday = _sampleVaccinatedCsvContent[0].FirstDose,
                 VaccinatedFirstDoseTotal = _sampleVaccinatedCsvContent[0].FirstDoseTotal,

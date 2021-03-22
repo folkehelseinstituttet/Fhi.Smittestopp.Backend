@@ -9,5 +9,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Config
 
         [Required(AllowEmptyStrings = false)]
         public string CovidStatisticsFolder { get; set; }
+
+        public int TestsConductedTotalExtra { get; set; }
     }
 }
