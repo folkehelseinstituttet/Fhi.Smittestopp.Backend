@@ -23,7 +23,6 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
     [Route("api/logging")]
     public class LoggingController : ControllerBase
     {
-
         private readonly ILogger<LoggingController> _logger;
         private readonly ILogMessageValidator _logMessageValidator;
         private readonly IDictionary<string, string> _logMobilePatternsDictionary;

@@ -66,7 +66,12 @@ namespace DIGNDB.App.SmitteStop.Testing.RepositoriesTest
             var result = await applicationStatisticsRepository.GetNewestEntryAsync();
 
             // Assert
-            Assert.AreEqual(_appStatisticsMockData[1], result);
+            var expected = _appStatisticsMockData[1];
+            Assert.AreEqual(expected.EntryDate, result.EntryDate);
+            Assert.AreEqual(expected.Id, result.Id);
+            Assert.AreEqual(expected.PositiveResultsLast7Days, result.PositiveResultsLast7Days);
+            Assert.AreEqual(expected.PositiveTestsResultsTotal, result.PositiveTestsResultsTotal);
+            Assert.AreEqual(expected.SmittestopDownloadsTotal, result.SmittestopDownloadsTotal);
         }
 
         [Test]
