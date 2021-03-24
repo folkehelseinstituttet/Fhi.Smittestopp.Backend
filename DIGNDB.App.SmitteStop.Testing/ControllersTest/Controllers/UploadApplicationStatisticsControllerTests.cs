@@ -1,47 +1,33 @@
-﻿using DIGNDB.App.SmitteStop.API;
-using DIGNDB.App.SmitteStop.API.Controllers;
-using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using DIGNDB.App.SmitteStop.API.Controllers;
+using DIGNDB.App.SmitteStop.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System.IO;
 using System.Text;
 
-namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
+namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.Controllers
 {
     [TestFixture]
-    public class LoggingControllerTests
+    public class UploadApplicationStatisticsControllerTests
     {
-        private Mock<ILogMessageValidator> _logMessageValidator;
-        private Mock<IConfiguration> _configuration;
-        private Mock<ILogger<LoggingController>> _logger;
+        private MockRepository _mockRepository;
+        private Mock<IApplicationStatisticsRepository> _mockApplicationStatisticsRepository;
+        private Mock<ILogger<ApplicationStatisticsController>> _logger;
 
-        private LoggingController _controller;
+        private ApplicationStatisticsController _controller;
 
         [SetUp]
         public void Init()
         {
             SetupMockServices();
 
-            var appSettingsConfig = new AppSettingsConfig()
-            {
-                LogEndpointOverride = false
-            };
+            _mockRepository = new MockRepository(MockBehavior.Strict);
+            _mockApplicationStatisticsRepository = _mockRepository.Create<IApplicationStatisticsRepository>();
 
-            var logValidationRulesConfig = new LogValidationRulesConfig()
-            {
-                SeverityRegex = "^(ERROR|INFO|WARNING)$",
-                PositiveNumbersRegex = "^[0-9]\\d*$",
-                BuildVersionRegex = "^[1-9]{1}[0-9]*([.][0-9]*){1,2}?$",
-                OperationSystemRegex = "^(IOS|Android-Google|Android-Huawei|Unknown)$",
-                DeviceOSVersionRegex = "[1-9]{1}[0-9]{0,2}([.][0-9]{1,3}){1,2}?$",
-                MaxTextFieldLength = 500,
-            };
-
-            _controller = new LoggingController(_logMessageValidator.Object, _logger.Object, logValidationRulesConfig, appSettingsConfig)
+            _controller = new ApplicationStatisticsController(_mockApplicationStatisticsRepository.Object, _logger.Object)
             {
                 ControllerContext = new ControllerContext() { HttpContext = MakeFakeContext(true).Object }
             };    
@@ -49,9 +35,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
 
         private void SetupMockServices()
         {
-            _logger = new Mock<ILogger<LoggingController>>();
-            _logMessageValidator = new Mock<ILogMessageValidator>(MockBehavior.Strict);
-            _configuration = new Mock<IConfiguration>(MockBehavior.Strict);
+            _logger = new Mock<ILogger<ApplicationStatisticsController>>();
 
         }
 
@@ -70,8 +54,8 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             var mockContext = new Mock<HttpContext>();
             mockContext.Setup(c => c.Request).Returns(mockRequest.Object);
             mockContext.Setup(c => c.Response).Returns(mockResponse.Object);
+
             return mockContext;
-           
         }
 
         [Test]
@@ -85,12 +69,12 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
             _controller.ControllerContext.HttpContext = contextWithoutCacheControl.Object;
 
             //Act
-            var result = _controller.UploadMobileLogs().Result;
+            var result = _controller.UpdateApplicationStatistics().Result;
 
             //Assert
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
             contextWithoutCacheControl.Verify(c => c.Request.Body, Times.Once);
-            Assert.That(((BadRequestObjectResult)result).Value.ToString(), Does.StartWith("No logs found in body or unable to parse logs data"));
+            Assert.That(((BadRequestObjectResult)result).Value.ToString(), Does.StartWith("No application statistics found in body or unable to parse data"));
         }
     }
 }
