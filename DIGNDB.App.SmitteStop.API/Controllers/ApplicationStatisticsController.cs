@@ -50,7 +50,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
 
                 var newest = await _applicationStatisticsRepository.GetNewestEntryAsync();
                 applicationStatisticsDeserialized.Id = newest.Id;
-                applicationStatisticsDeserialized.EntryDate = DateTime.Now;
+                applicationStatisticsDeserialized.EntryDate = DateTime.UtcNow;
                 _applicationStatisticsRepository.UpdateEntry(applicationStatisticsDeserialized);
             }
             catch (HttpResponseException ex)
