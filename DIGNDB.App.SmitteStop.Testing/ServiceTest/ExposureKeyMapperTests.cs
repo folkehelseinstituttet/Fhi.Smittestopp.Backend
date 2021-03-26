@@ -43,7 +43,9 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                     RollingPeriod = 144,
                     RollingStartNumber = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMinutes / 10,
                     CreatedOn = DateTime.UtcNow,
-                    TransmissionRiskLevel = RiskLevel.RISK_LEVEL_LOW
+                    TransmissionRiskLevel = RiskLevel.RISK_LEVEL_LOW,
+                    ReportType = ReportType.CONFIRMED_TEST,
+                    DaysSinceOnsetOfSymptoms = 1
                 });
             }
             return keys;
@@ -81,7 +83,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
             Assert.AreEqual(protoBatch.BatchSize, 1);
             Assert.AreEqual(protoBatch.StartTimestamp, startTimes.ToUnixTimeSeconds());
             Assert.AreEqual(protoBatch.EndTimestamp, endTimes.ToUnixTimeSeconds());
-            Assert.AreEqual(protoBatch.Region, "DK");
+            Assert.AreEqual(protoBatch.Region, "NO");
             Assert.IsInstanceOf<Domain.Proto.TemporaryExposureKeyExport>(protoBatch);
         }
 

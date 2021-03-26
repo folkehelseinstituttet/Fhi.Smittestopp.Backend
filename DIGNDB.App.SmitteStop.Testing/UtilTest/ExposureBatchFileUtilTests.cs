@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using TemporaryExposureKey = DIGNDB.App.SmitteStop.Domain.Db.TemporaryExposureKey;
 
@@ -51,19 +52,23 @@ YHc1cKvIIi6/H56AJS/kZEYQnfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
         private void SetupTemporaryExposureKeyExport()
         {
             var data = new List<TemporaryExposureKey> {
-                new TemporaryExposureKey()
+                new TemporaryExposureKey
                 {
                     CreatedOn = DateTime.UtcNow.Date,
                     Id = Guid.NewGuid(),
                     KeyData = Encoding.ASCII.GetBytes("keyData1"),
                     TransmissionRiskLevel = RiskLevel.RISK_LEVEL_LOW,
+                    ReportType = ReportType.CONFIRMED_TEST,
+                    DaysSinceOnsetOfSymptoms = 1
                 },
-                new TemporaryExposureKey()
+                new TemporaryExposureKey
                 {
                     CreatedOn = DateTime.UtcNow.Date.AddDays(-12),
                     Id = Guid.NewGuid(),
                     KeyData = Encoding.ASCII.GetBytes("keyData2"),
                     TransmissionRiskLevel = RiskLevel.RISK_LEVEL_HIGH,
+                    ReportType = ReportType.CONFIRMED_TEST,
+                    DaysSinceOnsetOfSymptoms = 2
                 }
             };
             ExposureKeyMapper mapper = new ExposureKeyMapper(_epochConverter);
@@ -103,6 +108,7 @@ YHc1cKvIIi6/H56AJS/kZEYQnfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
                     fileNameInZipStreams.Add(entry.Name);
                 }
             }
+
             CollectionAssert.AreEqual(expectFileNameInZip, fileNameInZipStreams);
         }
 
@@ -124,6 +130,104 @@ YHc1cKvIIi6/H56AJS/kZEYQnfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
             signer.Init(false, publicKey);
             signer.BlockUpdate(data, 0, data.Length);
             return signer.VerifySignature(signedData);
+        }
+
+        [Test]
+        public void CreateSignedFileAsync_HaveData_AppDeserializationEqualsOriginalKeys()
+        {
+            // Arrange
+            var utils = new ExposureBatchFileUtil(_pemFilePath);
+
+            // Act
+            var returnStream = utils.CreateSignedFileAsync(_exportBatch);
+            returnStream.Wait();
+            var result = returnStream.Result;
+            
+            // Assert
+            Assert.IsNotNull(result);
+
+            // Arrange
+            using var archive = new ZipArchive(result);
+
+            // Act
+            var tempExposureKeyExport = ZipToTemporaryExposureKeyExport(archive);
+
+            // Assert
+            var keys = tempExposureKeyExport.Keys;
+            using var enumerator = keys.GetEnumerator();
+            var i = 0;
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                var batchKey = _exportBatch.Keys[i];
+                Assert.AreEqual(current.RollingStartIntervalNumber, batchKey.RollingStartIntervalNumber);
+                Assert.AreEqual(current.RollingPeriod, batchKey.RollingPeriod);
+                Assert.AreEqual(current.KeyData, batchKey.KeyData);
+                Assert.AreEqual(current.DaysSinceOnsetOfSymptoms, batchKey.DaysSinceOnsetOfSymptoms);
+                Assert.AreEqual(current.ReportType, batchKey.ReportType);
+                i++;
+            }
+        }
+
+        public static TemporaryExposureKeyExport ZipToTemporaryExposureKeyExport(ZipArchive zipArchive)
+        {
+            ZipArchiveEntry zipArchiveEntry = zipArchive.GetEntry("export.bin");
+            Stream stream = zipArchiveEntry.Open();
+            byte[] bytes = ReadToEnd(stream);
+            IEnumerable<byte> bytesSliced = bytes.Skip(16);
+            return TemporaryExposureKeyExport.Parser.ParseFrom(bytesSliced.ToArray());
+        }
+
+        private static byte[] ReadToEnd(System.IO.Stream stream)
+        {
+            long originalPosition = 0;
+
+            if (stream.CanSeek)
+            {
+                originalPosition = stream.Position;
+                stream.Position = 0;
+            }
+
+            try
+            {
+                byte[] readBuffer = new byte[4096];
+
+                int totalBytesRead = 0;
+                int bytesRead;
+
+                while ((bytesRead = stream.Read(readBuffer, totalBytesRead, readBuffer.Length - totalBytesRead)) > 0)
+                {
+                    totalBytesRead += bytesRead;
+
+                    if (totalBytesRead == readBuffer.Length)
+                    {
+                        int nextByte = stream.ReadByte();
+                        if (nextByte != -1)
+                        {
+                            byte[] temp = new byte[readBuffer.Length * 2];
+                            Buffer.BlockCopy(readBuffer, 0, temp, 0, readBuffer.Length);
+                            Buffer.SetByte(temp, totalBytesRead, (byte)nextByte);
+                            readBuffer = temp;
+                            totalBytesRead++;
+                        }
+                    }
+                }
+
+                byte[] buffer = readBuffer;
+                if (readBuffer.Length != totalBytesRead)
+                {
+                    buffer = new byte[totalBytesRead];
+                    Buffer.BlockCopy(readBuffer, 0, buffer, 0, totalBytesRead);
+                }
+                return buffer;
+            }
+            finally
+            {
+                if (stream.CanSeek)
+                {
+                    stream.Position = originalPosition;
+                }
+            }
         }
     }
 }
