@@ -50,6 +50,29 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
         #region Smitte|stop API
 
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
+        [HttpGet("dailysummaryconfiguration")]
+        public ActionResult GetDailySummaryConfiguration()
+        {
+            try
+            {
+                _logger.LogInformation("GetDailySummaryConfiguration endpoint called");
+                var exposureConfiguration = _exposureConfigurationService.GetDailySummaryConfiguration();
+                _logger.LogInformation("DailySummaryConfiguration fetched successfully");
+                return Ok(exposureConfiguration);
+            }
+            catch (ArgumentException e)
+            {
+                _logger.LogError("Error: " + e);
+                return BadRequest("Invalid DailySummaryConfiguration or uninitialized");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Error returning DailySummaryConfiguration:" + e);
+                return StatusCode(500);
+            }
+        }
+
+        [ServiceFilter(typeof(MobileAuthorizationAttribute))]
         [HttpGet("exposureconfiguration")]
         public ActionResult GetExposureConfiguration()
         {
@@ -200,7 +223,7 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
         {
             if (packageDate < DateTime.UtcNow.Date.AddDays(-14) || packageDate > DateTime.UtcNow)
             {
-                _logger.LogError($"Package Date is invalid date: {packageDate} packageName: {packageName}");
+                _logger.LogWarning($"Package Date is invalid date: {packageDate} packageName: {packageName}");
                 return false;
             }
             return true;

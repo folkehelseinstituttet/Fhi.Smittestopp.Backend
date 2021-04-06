@@ -10,10 +10,10 @@ namespace DIGNDB.App.SmitteStop.API
         [Required(AllowEmptyStrings = false)]
         public string OriginCountryCode { get; set; }
 
-        // [Required(AllowEmptyStrings = false)] //TODO uncomment when will be provided by mobile team
+        [Required(AllowEmptyStrings = false)]
         public string AuthorizationMobile { get; set; }
 
-        // [Required(AllowEmptyStrings = false)] //TODO uncomment when will be provided by mobile team
+        [Required(AllowEmptyStrings = false)]
         public string ZipCertificatePath { get; set; }
 
         [Required]
