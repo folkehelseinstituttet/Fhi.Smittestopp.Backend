@@ -51,19 +51,23 @@ nfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
         private IList<TemporaryExposureKey> CreateMockedListExposureKeys(DateTime expectDate)
         {
             var data = new List<TemporaryExposureKey> {
-                new TemporaryExposureKey()
+                new TemporaryExposureKey
                 {
                     CreatedOn = expectDate.Date,
                     Id = Guid.NewGuid(),
                     KeyData = Encoding.ASCII.GetBytes("keyData1"),
                     TransmissionRiskLevel = RiskLevel.RISK_LEVEL_LOW,
+                    ReportType = ReportType.CONFIRMED_TEST,
+                    DaysSinceOnsetOfSymptoms = 1
                 },
-                new TemporaryExposureKey()
+                new TemporaryExposureKey
                 {
                     CreatedOn = expectDate.Date.AddDays(-12),
                     Id = Guid.NewGuid(),
                     KeyData = Encoding.ASCII.GetBytes("keyData2"),
                     TransmissionRiskLevel = RiskLevel.RISK_LEVEL_HIGH,
+                    ReportType = ReportType.CONFIRMED_TEST,
+                    DaysSinceOnsetOfSymptoms = 2
                 }
             };
             return data;
@@ -72,7 +76,7 @@ nfDpxrgyGhdAm+pNN2GAJ3XdnQZ1Sk4amg==
         [Test]
         public void ExportDiagnosisKeys_HaveKeys_ShouldReturnStream()
         {
-            DatabaseKeysToBinaryStreamMapperService toBinaryStreamMapperService = new DatabaseKeysToBinaryStreamMapperService(_mapper, _appSettingsConfig);
+            var toBinaryStreamMapperService = new DatabaseKeysToBinaryStreamMapperService(_mapper, _appSettingsConfig);
             var expectDate = DateTime.UtcNow;
             var data = CreateMockedListExposureKeys(expectDate);
             var streamResult = toBinaryStreamMapperService.ExportDiagnosisKeys(data);

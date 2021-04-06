@@ -41,7 +41,9 @@ namespace DIGNDB.App.SmitteStop.Core.Services
                     source.KeyData,
                     (int)source.RollingStartNumber / secTo10min,
                     (int)source.RollingPeriod,
-                    (int)source.TransmissionRiskLevel
+                    (int)source.TransmissionRiskLevel,
+                    (Domain.Proto.TemporaryExposureKey.Types.ReportType)source.ReportType,
+                    (int)source.DaysSinceOnsetOfSymptoms
                 );
         }
 
@@ -56,7 +58,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
                 BatchSize = 1,
                 StartTimestamp = (ulong)(startTimes.ToUnixTimeSeconds()),
                 EndTimestamp = (ulong)(endTimes.ToUnixTimeSeconds()),
-                Region = "DK"
+                Region = "NO"
             };
             batch.Keys.AddRange(dtoKeys.Select(x => FromEntityToProto(x)).ToList());
 
