@@ -21,7 +21,9 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
         public Task<bool> ExistsAsync(byte[] tokenSeed)
         {
-            return Task.FromResult(_jwtTokenRepository.HasTokenBeenUsed(ToTokenId(tokenSeed)));
+            var tokenId = ToTokenId(tokenSeed);
+            var hasBeenUsed = _jwtTokenRepository.HasTokenBeenUsed(tokenId);
+            return Task.FromResult(hasBeenUsed);
         }
 
         public Task<bool> SaveAsync(byte[] tokenSeed)
