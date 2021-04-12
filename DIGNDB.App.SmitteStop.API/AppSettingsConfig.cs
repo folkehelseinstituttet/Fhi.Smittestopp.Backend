@@ -58,6 +58,12 @@ namespace DIGNDB.App.SmitteStop.API
         public string GitHubStatisticsZipFileFolder { get; set; }
         [Required]
         public string AuthorizationGitHub { get; set; }
+        [Required]
+        public int DaysToSaveFiles { get; set; }
+        [Required]
+        public string FileNameDatePattern { get; set; }
+        [Required]
+        public string FileNameDateParsingFormat { get; set; }
 
         [Required]
         public string TestedFileNamePattern { get; set; }

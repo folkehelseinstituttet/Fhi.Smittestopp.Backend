@@ -18,7 +18,7 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
             return fileInfo.CreationTimeUtc;
         }
 
-        public string[] GetFilenamesFromDirectory(string directoryPath)
+        public string[] GetFileNamesFromDirectory(string directoryPath)
         {
             return Directory.GetFiles(directoryPath);
         }
@@ -52,7 +52,7 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
         public string[] GetAllTemporaryFilesFromFolder(string currentZipFilesFolder)
         {
             List<string> temporaryZipFiles = new List<string>();
-            var allZipFiles = GetFilenamesFromDirectory(currentZipFilesFolder);
+            var allZipFiles = GetFileNamesFromDirectory(currentZipFilesFolder);
             foreach (var file in allZipFiles)
             {
                 var fileName = GetFileNameFromPath(file);

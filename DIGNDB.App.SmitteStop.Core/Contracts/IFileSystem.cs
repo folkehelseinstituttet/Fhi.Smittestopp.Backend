@@ -6,7 +6,7 @@ namespace DIGNDB.App.SmitteStop.Core.Contracts
     public interface IFileSystem
     {
         DateTime GetCreationDateUTC(string fileName);
-        string[] GetFilenamesFromDirectory(string directoryPath);
+        string[] GetFileNamesFromDirectory(string directoryPath);
 
         string JoinPaths(params string?[] paths);
 
