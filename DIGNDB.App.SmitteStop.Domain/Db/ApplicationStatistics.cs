@@ -37,7 +37,7 @@ namespace DIGNDB.App.SmitteStop.Domain.Db
             var a = applicationStatistics.PositiveResultsLast7Days == default;
             var b = applicationStatistics.PositiveTestsResultsTotal == default;
             var c = applicationStatistics.SmittestopDownloadsTotal == default;
-            return a && b && c
+            return a || b || c
                 ? throw new JsonException("Required property not received in the JSON")
                 : applicationStatistics;
         }
