@@ -36,7 +36,4 @@
     <ProjectReference Include="..\FederationGatewayApi\FederationGatewayApi.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CovidStatisticsFiles\" />
-  </ItemGroup>
 </Project>
