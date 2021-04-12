@@ -77,7 +77,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Services
                     _currentZipFilesFolder = _fileSystem.JoinPaths(_rootZipFilesFolder, originPostfix.ToString());
                     //We get rid of any files that has been created but not renamed. This would be the case if any exception occurred during creation of any zip file
                     ClearTemporaryFiles(_currentZipFilesFolder);
-                    string[] paths = _fileSystem.GetFilenamesFromDirectory(_currentZipFilesFolder);
+                    string[] paths = _fileSystem.GetFileNamesFromDirectory(_currentZipFilesFolder);
                     int nextBatchNumber = _zipFileInfoService.GetNextBatchNumberForGivenDay(paths, _currentDateTime);
                     var zipFilesContents = _packageBuilder.BuildPackageContentV2(packageBeginDateTime, originPostfix);
                     CreateZipFiles(originPostfix, zipFilesContents, nextBatchNumber);
