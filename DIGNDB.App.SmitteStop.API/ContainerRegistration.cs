@@ -113,6 +113,8 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddSingleton<IAnonymousTokenKeySource, AnonymousTokenKeySource>();
             services.AddScoped<IAnonymousTokenValidationService, AnonymousTokenValidationService>();
 
+            services.AddScoped<IStatisticsFileService, StatisticsFileService>();
+
             return services;
         }
 

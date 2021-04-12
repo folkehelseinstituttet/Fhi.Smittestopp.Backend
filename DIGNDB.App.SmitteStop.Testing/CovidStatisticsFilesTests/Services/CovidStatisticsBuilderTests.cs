@@ -1,4 +1,5 @@
 using DIGNDB.App.SmitteStop.Domain.Db;
+using DIGNDB.APP.SmitteStop.Jobs.Config;
 using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.CsvContentModels;
 using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Exceptions;
 using DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services;
@@ -7,8 +8,6 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using DIGNDB.APP.SmitteStop.Jobs.Config;
-using Microsoft.Extensions.Configuration;
 
 namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
 {

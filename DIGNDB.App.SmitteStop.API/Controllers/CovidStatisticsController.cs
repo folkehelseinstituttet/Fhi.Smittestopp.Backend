@@ -1,4 +1,5 @@
 ﻿using DIGNDB.App.SmitteStop.API.Attributes;
+using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.APP.SmitteStop.API.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +19,13 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
     {
         private readonly ILogger<CovidStatisticsUploadController> _logger;
         private readonly AppSettingsConfig _appSettingsConfig;
+        private readonly IStatisticsFileService _statisticsFileService;
 
-        public CovidStatisticsUploadController(ILogger<CovidStatisticsUploadController> logger, AppSettingsConfig appSettingsConfig)
+        public CovidStatisticsUploadController(ILogger<CovidStatisticsUploadController> logger, AppSettingsConfig appSettingsConfig, IStatisticsFileService statisticsFileService)
         {
             _appSettingsConfig = appSettingsConfig;
             _logger = logger;
+            _statisticsFileService = statisticsFileService;
         }
 
         [HttpPost]
@@ -47,6 +50,8 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
 
                     _logger.LogInformation($"File uploaded completed successfully: {file.FileName}");
 
+                    DeleteOldStatisticsFiles(destinationPath);
+
                     return Ok("File uploaded");
                 }
                 catch (Exception e)
@@ -68,6 +73,18 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
 
                 return StatusCode(500, e.Message);
             }
+        }
+
+        private void DeleteOldStatisticsFiles(string path)
+        {
+            var gitHubSettings = _appSettingsConfig.GitHubSettings;
+            var daysToSaveFiles = gitHubSettings.DaysToSaveFiles;
+            var fileDatePattern = gitHubSettings.FileNameDatePattern;
+            var fileDateParsingFormat = gitHubSettings.FileNameDateParsingFormat;
+            var count = _statisticsFileService.DeleteOldFiles(path, daysToSaveFiles, fileDatePattern, fileDateParsingFormat);
+
+            var file = Path.GetFileName(path);
+            _logger.LogInformation($"Old statistics files deleted after upload of {file}: {count}");
         }
 
         private string VerifyOrThrow(out IFormFile file, HttpRequest request)

@@ -43,9 +43,9 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Jobs
         private void RemoveOldZipFilesFromSubfolder(string path, int daysToInvalidateZipFile)
         {
             var deleteFilesOlderThanDate = DateTime.UtcNow.Date.AddDays(-daysToInvalidateZipFile);
-            var allFilenames = _fileSystem.GetFilenamesFromDirectory(path);
-            var oldZipFilenames = allFilenames.Where(x => _zipFileInfoService.CreateZipFileInfoFromPackageName(new FileInfo(x).Name).PackageDate < deleteFilesOlderThanDate);
-            foreach (var filename in oldZipFilenames)
+            var allFileNames = _fileSystem.GetFileNamesFromDirectory(path);
+            var oldZipFileNames = allFileNames.Where(x => _zipFileInfoService.CreateZipFileInfoFromPackageName(new FileInfo(x).Name).PackageDate < deleteFilesOlderThanDate);
+            foreach (var filename in oldZipFileNames)
             {
                 _fileSystem.DeleteFile(filename);
             }
