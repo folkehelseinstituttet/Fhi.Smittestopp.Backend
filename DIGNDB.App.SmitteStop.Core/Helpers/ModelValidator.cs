@@ -19,7 +19,10 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
 
         public static void ValidateContract(object instance)
         {
-            if (instance == null) throw new ArgumentNullException(nameof(instance));
+            if (instance == null)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
 
             var result = new List<ValidationResult>();
             var context = new ValidationContext(instance);
