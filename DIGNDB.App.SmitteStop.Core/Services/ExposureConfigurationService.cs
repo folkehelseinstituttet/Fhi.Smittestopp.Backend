@@ -11,7 +11,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
     {
         private ExposureConfiguration _exposureConfiguration;
         private ExposureConfigurationV1_2 _exposureConfigurationV1_2;
-        private DailySummaryConfiguration _dailySummaryConfiguration;
+        private DailySummaryExposureConfiguration _dailySummaryConfiguration;
 
         public ExposureConfigurationService(IConfiguration configuration)
         {
@@ -28,18 +28,28 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             ModelValidator.ValidateContract(_exposureConfigurationV1_2);
 
             // DailySummaryConfiguration
-            _dailySummaryConfiguration = RetrieveDailySummaryConfiguration(configuration.GetSection("DailySummaryConfiguration"));
+            _dailySummaryConfiguration = RetrieveDailySummaryConfiguration(configuration);
             ModelValidator.ValidateContract(_dailySummaryConfiguration);
         }
 
-        public ExposureConfiguration RetrieveExposureConfigurationFromConfig(IConfiguration configuration)
+        private ExposureConfiguration RetrieveExposureConfigurationFromConfig(IConfiguration configuration)
         {
            return  configuration.Get<ExposureConfiguration>();
         }
 
-        public DailySummaryConfiguration RetrieveDailySummaryConfiguration(IConfiguration configuration)
+        private DailySummaryExposureConfiguration RetrieveDailySummaryConfiguration(IConfiguration configuration)
         {
-            return configuration.Get<DailySummaryConfiguration>();
+            var dailySummaryConfigurationSection = configuration.GetSection("DailySummaryConfiguration");
+            var dailySummaryConfiguration = dailySummaryConfigurationSection.Get<DailySummaryConfiguration>();
+            var maximumScoreThreshold = configuration.GetValue<double>("MaximumScoreThreshold");
+
+            var retVal = new DailySummaryExposureConfiguration
+            {
+                DailySummaryConfiguration = dailySummaryConfiguration, 
+                MaximumScoreThreshold = maximumScoreThreshold
+            };
+
+            return retVal;
         }
 
         public ExposureConfiguration GetConfiguration()
@@ -52,7 +62,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             return _exposureConfigurationV1_2;
         }
 
-        public DailySummaryConfiguration GetDailySummaryConfiguration()
+        public DailySummaryExposureConfiguration GetDailySummaryConfiguration()
         {
             return _dailySummaryConfiguration;
         }

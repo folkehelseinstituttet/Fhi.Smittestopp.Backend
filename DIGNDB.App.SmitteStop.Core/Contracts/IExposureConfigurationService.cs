@@ -1,6 +1,5 @@
 ﻿using DIGNDB.App.SmitteStop.Core.Models;
 using DIGNDB.App.SmitteStop.Domain.Dto;
-using DIGNDB.App.SmitteStop.Domain.Dto.DailySummaryConfiguration;
 
 namespace DIGNDB.App.SmitteStop.Core.Contracts
 {
@@ -10,6 +9,6 @@ namespace DIGNDB.App.SmitteStop.Core.Contracts
 
         ExposureConfigurationV1_2 GetConfigurationR1_2();
 
-        DailySummaryConfiguration GetDailySummaryConfiguration();
+        DailySummaryExposureConfiguration GetDailySummaryConfiguration();
     }
 }
