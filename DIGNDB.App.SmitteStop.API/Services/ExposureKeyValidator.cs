@@ -29,24 +29,9 @@ namespace DIGNDB.App.SmitteStop.API.Services
             ValidateKeyDataLength(parameter);
             ValidateRollingStartDate(parameter, configuration);
             ValidateRollingDurationSpan(parameter);
-            ValidateRollingStartDateIntervals(parameter);
             ValidateRegions(parameter);
             ValidateVisitedCountries(parameter);
             ValidatePackageNames(parameter, configuration);
-        }
-
-        private void ValidateRollingStartDateIntervals(TemporaryExposureKeyBatchDto parameter)
-        {
-            //Any ENIntervalNumber values from the same user are not unique
-            var rollingStartGroupsHavingMoreThan1Key =
-                parameter.keys.GroupBy(k => k.rollingStart).Where(group => group.Count() > 1).ToList();
-            if (!rollingStartGroupsHavingMoreThan1Key.Any()) return;
-
-            var rollingStartDates = rollingStartGroupsHavingMoreThan1Key.Select(group => @group.Key);
-            var errorMessage =
-                $"Incorrect intervals. Dates having more than one key: {string.Join(", ", rollingStartDates)}";
-
-            throw new ArgumentException(errorMessage);
         }
 
         private void ValidateKeyCount(TemporaryExposureKeyBatchDto parameter, KeyValidationConfiguration configuration)
