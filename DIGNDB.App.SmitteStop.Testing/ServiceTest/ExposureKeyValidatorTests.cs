@@ -121,21 +121,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         }
 
         [Test]
-        public void TestValidateParameterAndThrowIfIncorrect_ShouldThrowIncorrectIntervals()
-        {
-
-            _parameterArgument.keys.Add(
-                new TemporaryExposureKeyDto()
-                {
-                    key = new byte[TemporaryExposureKeyDto.KeyLength] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 },
-                    rollingDuration = "1.00:00:00",
-                    rollingStart = DateTime.UtcNow.Date.AddDays(-1),
-                    transmissionRiskLevel = RiskLevel.RISK_LEVEL_MEDIUM_HIGH
-                });
-            Assert.Throws<ArgumentException>(() => _exposureKeyValidator.ValidateParameterAndThrowIfIncorrect(_parameterArgument, _configurationArgument), $"Incorrect intervals. {_parameterArgument.keys[0].ToJson()}");
-        }
-
-        [Test]
         public void TestValidateParameterAndThrowIfIncorrect_ShouldThrowNotFoundVisitedCountry()
         {
             _parameterArgument.visitedCountries = new List<string> { "PL" };
