@@ -41,12 +41,12 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         {
             var dailySummaryConfigurationSection = configuration.GetSection("DailySummaryConfiguration");
             var dailySummaryConfiguration = dailySummaryConfigurationSection.Get<DailySummaryConfiguration>();
-            var maximumScoreThreshold = configuration.GetValue<double>("MaximumScoreThreshold");
+            var scoreSumThreshold = configuration.GetValue<double>("ScoreSumThreshold");
 
             var retVal = new DailySummaryExposureConfiguration
             {
                 DailySummaryConfiguration = dailySummaryConfiguration, 
-                MaximumScoreThreshold = maximumScoreThreshold
+                ScoreSumThreshold = scoreSumThreshold
             };
 
             return retVal;
