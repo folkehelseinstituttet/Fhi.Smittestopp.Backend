@@ -8,6 +8,6 @@ namespace DIGNDB.App.SmitteStop.Domain.Dto
         public DailySummaryConfiguration.DailySummaryConfiguration DailySummaryConfiguration { get; set; }
 
         [Required]
-        public double MaximumScoreThreshold { get; set; }
+        public double ScoreSumThreshold { get; set; }
     }
 }
