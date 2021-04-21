@@ -33,6 +33,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ModelTest
             var innerExceptionType = "123[.]";
             var innerExceptionMessage = "test desciption";
             var innerExceptionStackTrace = "123123";
+            var correlationId = "correlationsId";
             var api = "pull keys";
             var apiErrorCode = 204;
             var apiErrorMessage = "no content";
@@ -72,6 +73,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ModelTest
             _log.innerExceptionType = innerExceptionType;
             _log.innerExceptionMessage = innerExceptionMessage;
             _log.innerExceptionStackTrace = innerExceptionStackTrace;
+            _log.correlationId = correlationId;
             _log.api = api;
             _log.apiErrorCode = apiErrorCode;
             _log.apiErrorMessage = apiErrorMessage;
