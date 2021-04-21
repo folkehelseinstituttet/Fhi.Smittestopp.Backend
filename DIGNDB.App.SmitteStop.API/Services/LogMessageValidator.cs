@@ -60,6 +60,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
             SanitizeAndShortenField(lm.innerExceptionType, s => lm.innerExceptionType = s, maxLength);
             SanitizeAndShortenField(lm.innerExceptionMessage, s => lm.innerExceptionMessage = s, maxLength);
             SanitizeAndShortenField(lm.innerExceptionStackTrace, s => lm.innerExceptionStackTrace = s, maxLength);
+            SanitizeAndShortenField(lm.correlationId, s => lm.correlationId = s, maxLength);
             SanitizeAndShortenField(lm.severity, s => lm.severity = s, maxLength);
             SanitizeAndShortenField(lm.description, s => lm.description = s, maxLength);
             SanitizeAndShortenField(lm.buildVersion, s => lm.buildVersion = s, maxLength);

@@ -21,6 +21,10 @@ namespace DIGNDB.App.SmitteStop.Domain.Dto
         public string innerExceptionType { get; set; }
         public string innerExceptionMessage { get; set; }
         public string innerExceptionStackTrace { get; set; }
+
+        //Used for the authentication/submission flow
+        public string correlationId { get; set; }
+
         public string api { get; set; }
         public int? apiErrorCode { get; set; }
         public string apiErrorMessage { get; set; }
@@ -63,6 +67,7 @@ namespace DIGNDB.App.SmitteStop.Domain.Dto
             sb.AppendLine($"innerExceptionType:{innerExceptionType}");
             sb.AppendLine($"innerExceptionMessage:{innerExceptionMessage}");
             sb.AppendLine($"innerExceptionStackTrace:{innerExceptionStackTrace}");
+            sb.AppendLine($"correlationId:{correlationId}");
             sb.AppendLine($"api:{api}");
             sb.AppendLine($"apiErrorCode:{apiErrorCode}");
             sb.AppendLine($"apiErrorMessage:{apiErrorMessage}");
