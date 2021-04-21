@@ -53,6 +53,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ModelTest
             sb.AppendLine($"innerExceptionType:{innerExceptionType}");
             sb.AppendLine($"innerExceptionMessage:{innerExceptionMessage}");
             sb.AppendLine($"innerExceptionStackTrace:{innerExceptionStackTrace}");
+            sb.AppendLine($"correlationId:{correlationId}");
             sb.AppendLine($"api:{api}");
             sb.AppendLine($"apiErrorCode:{apiErrorCode}");
             sb.AppendLine($"apiErrorMessage:{apiErrorMessage}");
