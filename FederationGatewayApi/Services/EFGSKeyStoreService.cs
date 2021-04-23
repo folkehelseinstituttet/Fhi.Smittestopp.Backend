@@ -65,10 +65,14 @@ namespace FederationGatewayApi.Services
                     CalulateDaysAndRisk(key);
 
                 }
-                _logger.LogInformation($"Starting key validation.");
+                _logger.LogInformation("Starting key validation.");
                 acceptedKeys = _keyFilter.ValidateKeys(mappedKeys, out validationErrors);
                 _logger.LogInformation($"Keys validated with {validationErrors?.Count} error.");
-                _logger.LogInformation($"Saving...");
+                if (validationErrors?.Count > 0)
+                {
+                    InformationLogValidationErrors(validationErrors);
+                }
+                _logger.LogInformation("Saving...");
                 acceptedKeys = _addTemporaryExposureKeyService.FilterDuplicateKeysAsync(acceptedKeys).Result;
                 _tempKeyRepository.AddTemporaryExposureKeysAsync(acceptedKeys).Wait();
                 _logger.LogInformation($"{acceptedKeys?.Count} keys saved.");
@@ -87,6 +91,14 @@ namespace FederationGatewayApi.Services
                 _logger.LogWarning($"Received {keys.Count} keys. Accepted and saved { acceptedKeysCount } of them. Validation Errors:{Environment.NewLine}{ errors }");
             }
             return acceptedKeys ?? new List<TemporaryExposureKey>();
+        }
+
+        private void InformationLogValidationErrors(IList<string> validationErrors)
+        {
+            foreach (var validationError in validationErrors)
+            {
+                _logger.LogInformation(validationError);
+            }
         }
 
         private void CalulateDaysAndRisk(TemporaryExposureKey key)

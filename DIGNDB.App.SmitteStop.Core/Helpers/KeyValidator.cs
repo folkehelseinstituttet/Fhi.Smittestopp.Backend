@@ -59,8 +59,7 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
         public bool ValidateKeyGateway(TemporaryExposureKey exposureKey, out string errorMessage)
         {
             errorMessage = string.Empty;
-            var apiValidationErrorMessage = string.Empty;
-            if (!ValidateKeyAPI(exposureKey, out apiValidationErrorMessage))
+            if (!ValidateKeyAPI(exposureKey, out var apiValidationErrorMessage))
             {
                 errorMessage += apiValidationErrorMessage;
                 return !Valid;

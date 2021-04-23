@@ -270,7 +270,10 @@ namespace FederationGatewayApi.Services
                 using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, requestUrl))
                 {
                     // batchTag is null for the first batch
-                    if (batchTag != null) requestMessage.Headers.Add(DownloadBatchTagName, batchTag);
+                    if (batchTag != null)
+                    {
+                        requestMessage.Headers.Add(DownloadBatchTagName, batchTag);
+                    }
 
                     _logger.LogInformation($"|SmitteStop:DownloadKeysFromGateway| Calling endpoint: {requestUrl} with batchTag: {batchTag} (null for the first batch)");
                     try
