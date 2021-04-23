@@ -38,13 +38,11 @@ namespace FederationGatewayApi.Services
         public IList<TemporaryExposureKey> ValidateKeys(IList<TemporaryExposureKey> temporaryExposureKeys, out IList<string> validationErrors)
         {
             validationErrors = new List<string>();
-            var errorMessage = String.Empty;
             IList<TemporaryExposureKey> acceptedKeys = new List<TemporaryExposureKey>();
 
-            foreach (TemporaryExposureKey exposureKey in temporaryExposureKeys)
+            foreach (var exposureKey in temporaryExposureKeys)
             {
-
-                if (_keyValidator.ValidateKeyGateway(exposureKey, out errorMessage))
+                if (_keyValidator.ValidateKeyGateway(exposureKey, out var errorMessage))
                 {
                     acceptedKeys.Add(exposureKey);
                 }
