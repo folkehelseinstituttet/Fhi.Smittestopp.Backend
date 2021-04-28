@@ -30,7 +30,8 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         public async Task<CovidStatistics> GetNewestEntryAsync()
         {
-            return (await GetAsync(orderBy: x => x.OrderByDescending(x => x.EntryDate))).First();
+            var newest = await GetAsync(orderBy: x => x.OrderByDescending(x => x.EntryDate));
+            return newest?.First();
         }
 
         public CovidStatistics GetNewestEntry()
