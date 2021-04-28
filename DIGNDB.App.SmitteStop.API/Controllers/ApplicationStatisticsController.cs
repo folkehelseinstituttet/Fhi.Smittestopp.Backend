@@ -70,7 +70,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
                 return StatusCode(500);
             }
 
-            var message = "Application statistics uploaded successfully";
+            const string message = "Application statistics uploaded successfully";
             _logger.LogDebug(message);
             return Ok(message);
         }
