@@ -3,9 +3,11 @@ using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using DIGNDB.App.SmitteStop.Domain.Enums;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace DIGNDB.App.SmitteStop.Core.Services
 {
@@ -15,14 +17,16 @@ namespace DIGNDB.App.SmitteStop.Core.Services
         private readonly IGenericRepository<TemporaryExposureKeyCountry> _temporaryExposureKeyCountryRepository;
         private readonly ITemporaryExposureKeyRepository _temporaryExposureKeyRepository;
         private readonly IExposureKeyMapper _exposureKeyMapper;
+        private readonly ILogger<AddTemporaryExposureKeyService> _logger;
 
         public AddTemporaryExposureKeyService(ICountryRepository countryRepository, IGenericRepository<TemporaryExposureKeyCountry> temporaryExposureKeyCountryRepository,
-            IExposureKeyMapper exposureKeyMapper, ITemporaryExposureKeyRepository temporaryExposureKeyRepository)
+            IExposureKeyMapper exposureKeyMapper, ITemporaryExposureKeyRepository temporaryExposureKeyRepository, ILogger<AddTemporaryExposureKeyService> logger)
         {
             _countryRepository = countryRepository;
             _temporaryExposureKeyCountryRepository = temporaryExposureKeyCountryRepository;
             _temporaryExposureKeyRepository = temporaryExposureKeyRepository;
             _exposureKeyMapper = exposureKeyMapper;
+            _logger = logger;
         }
 
         public async Task CreateKeysInDatabase(TemporaryExposureKeyBatchDto parameters, KeySource apiVersion)
@@ -44,10 +48,34 @@ namespace DIGNDB.App.SmitteStop.Core.Services
 
         public async Task<List<TemporaryExposureKey>> FilterDuplicateKeysAsync(IList<TemporaryExposureKey> incomingKeys)
         {
-            var newKeyData = incomingKeys.Select(u => u.KeyData).Distinct().ToArray();
+            var distinctIncomingKeys = FilterIncomingKeysForDuplicates(incomingKeys);
+
+            var newKeyData = distinctIncomingKeys.Select(u => u.KeyData).Distinct().ToArray();
             var keysInDb = await _temporaryExposureKeyRepository.GetKeysThatAlreadyExistsInDbAsync(newKeyData);
-            var keysNotInDb = incomingKeys.Where(u => keysInDb.All(x => !x.SequenceEqual(u.KeyData))).ToList();
+            var keysNotInDb = distinctIncomingKeys.Where(u => keysInDb.All(x => !x.SequenceEqual(u.KeyData))).ToList();
             return keysNotInDb;
+        }
+
+        private IList<TemporaryExposureKey> FilterIncomingKeysForDuplicates(IList<TemporaryExposureKey> incomingKeys)
+        {
+            _logger.LogInformation($"No. of incoming keys before filtering {incomingKeys.Count}");
+
+            var retVal = new List<TemporaryExposureKey>();
+
+            foreach (var temporaryExposureKey in incomingKeys)
+            {
+                var contains = retVal.Any(x => x.KeyData.SequenceEqual(temporaryExposureKey.KeyData));
+                if (contains)
+                {
+                    continue;
+                }
+
+                retVal.Add(temporaryExposureKey);
+            }
+
+            _logger.LogInformation($"No. of keys returned {retVal.Count}");
+
+            return retVal;
         }
 
         private async Task CreateKeyCountryRelationships(List<string> visitedCountries, IList<TemporaryExposureKey> newTemporaryExposureKeys)

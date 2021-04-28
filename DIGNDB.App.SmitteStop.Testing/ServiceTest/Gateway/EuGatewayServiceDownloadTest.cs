@@ -82,12 +82,12 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
                 .SetIsPullingFromGatewayEnabled(false)
                 .Build();
 
-            _dbContext.AddRange(new Country[] { _denmark, _poland, _germany, _latviaDisabledDownload });
+            _dbContext.AddRange(_denmark, _poland, _germany, _latviaDisabledDownload);
             _dbContext.SaveChanges();
         }
-
+        
         [TestCase]
-        public void DownloadKeysFromMultipleCountries_ShouldSaveOnlyValidKeysFromEnabledOrgins()
+        public void DownloadKeysFromMultipleCountries_ShouldSaveOnlyValidKeysFromEnabledOrigins()
         {
             int maximumNumberOfDaysBack = 3;
 
