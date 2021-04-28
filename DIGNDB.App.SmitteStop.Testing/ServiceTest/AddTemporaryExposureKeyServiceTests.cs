@@ -1,9 +1,11 @@
-﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+﻿using System;
+using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Repositories;
 using DIGNDB.App.SmitteStop.Domain.Db;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using DIGNDB.App.SmitteStop.Domain.Enums;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -15,14 +17,49 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
     [TestFixture]
     public class AddTemporaryExposureKeyServiceTests
     {
+        private Mock<ILogger<AddTemporaryExposureKeyService>> _logger;
         private readonly Mock<ITemporaryExposureKeyRepository> _temporaryExposureKeyRepositoryMock =
             new Mock<ITemporaryExposureKeyRepository>();
         private readonly List<TemporaryExposureKey> _exampleKeyList = new List<TemporaryExposureKey>
         {
-            new TemporaryExposureKey(),
-            new TemporaryExposureKey(),
-            new TemporaryExposureKey()
+            new TemporaryExposureKey{ KeyData = new byte[] { 1, 2, 3 }},
+            new TemporaryExposureKey{ KeyData = new byte[] { 2, 3, 1 }},
+            new TemporaryExposureKey{ KeyData = new byte[] { 3, 2, 1 }},
         };
+
+        [SetUp]
+        public void SetUp()
+        {
+            _logger = new Mock<ILogger<AddTemporaryExposureKeyService>>();
+        }
+
+        [Test]
+        public async Task FilterDuplicateKeys_WhenDuplicateKeys_ReturnsDistinctKeys()
+        {
+            // Arrange
+            var addTemporaryExposureKeyService = CreateTestObject();
+            var key1 = new TemporaryExposureKey
+            {
+                CreatedOn = DateTime.Now,
+                DaysSinceOnsetOfSymptoms = 2,
+                KeyData = new byte[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+            };
+
+            var key2 = new TemporaryExposureKey
+            {
+                CreatedOn = DateTime.Now,
+                DaysSinceOnsetOfSymptoms = 2,
+                KeyData = new byte[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+            };
+
+            var incomingKeys = new List<TemporaryExposureKey> {key1, key2};
+            
+            // Act
+            var ret = await addTemporaryExposureKeyService.FilterDuplicateKeysAsync(incomingKeys);
+            
+            // Assert
+            Assert.That(ret.Count, Is.EqualTo(1));
+        }
 
         [Test]
         public async Task TestCreateKeysInDatabase()
@@ -55,7 +92,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                    keys.All(key => key.VisitedCountries.Any(country => country.Country.Code.ToLower() == "dk") == false))));
         }
 
-        public AddTemporaryExposureKeyService CreateTestObject()
+        private AddTemporaryExposureKeyService CreateTestObject()
         {
             _temporaryExposureKeyRepositoryMock.Setup(x => x.GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(It.IsAny<long>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new List<TemporaryExposureKey>());
             _temporaryExposureKeyRepositoryMock.Setup(x => x.GetNextBatchOfKeysWithRollingStartNumberThresholdAsync(It.IsAny<long>(), 0, It.IsAny<int>())).ReturnsAsync(new List<TemporaryExposureKey>() { new TemporaryExposureKey() });
@@ -75,7 +112,8 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
                 countryRepositoryMock.Object,
                 temporaryExposureKeyCountryRepositoryMock.Object,
                 exposureKeyMapperMock.Object,
-                _temporaryExposureKeyRepositoryMock.Object);
+                _temporaryExposureKeyRepositoryMock.Object,
+                _logger.Object);
 
             return addTemporaryExposureKeyService;
         }
