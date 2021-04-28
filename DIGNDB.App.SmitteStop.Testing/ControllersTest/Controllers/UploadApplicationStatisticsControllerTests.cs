@@ -7,6 +7,8 @@ using Moq;
 using NUnit.Framework;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using DIGNDB.App.SmitteStop.Domain.Db;
 
 namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.Controllers
 {
@@ -76,5 +78,33 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.Controllers
             contextWithoutCacheControl.Verify(c => c.Request.Body, Times.Once);
             Assert.That(((BadRequestObjectResult)result).Value.ToString(), Does.StartWith("No application statistics found in body or unable to parse data"));
         }
+
+        [Test]
+        public void UpdateApplicationStatistics_Handles_NoAppStatsEntries()
+        {
+            //Arrange
+            var applicationStatistics = new MemoryStream(Encoding.UTF8.GetBytes(AppStats));
+            var contextWithoutCacheControl = MakeFakeContext(false);
+            contextWithoutCacheControl.Setup(x => x.Request.Body).Returns(applicationStatistics);
+            contextWithoutCacheControl.Setup(x => x.Request.ContentLength).Returns(applicationStatistics.Length);
+            _controller.ControllerContext.HttpContext = contextWithoutCacheControl.Object;
+
+            _mockApplicationStatisticsRepository.Setup(a => a.GetNewestEntryAsync())
+                .Returns(Task.FromResult<ApplicationStatistics>(null));
+            _mockApplicationStatisticsRepository.Setup(a => a.UpdateEntry(It.IsAny<ApplicationStatistics>()))
+                .Verifiable();
+
+            //Act
+            var result = _controller.UpdateApplicationStatistics().Result;
+
+            //Assert
+            Assert.That(((ObjectResult) result).Value.ToString(), Is.EqualTo("Application statistics uploaded successfully"));
+        }
+
+        private const string AppStats = @"{
+    ""PositiveResultsLast7Days"": 117,
+    ""SmittestopDownloadsTotal"": 1003300,
+    ""PositiveTestsResultsTotal"": 2978
+}";
     }
 }

@@ -106,11 +106,11 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
                     new TemporaryExposureKey()
                 });
 
-            SetupMockExposureConfiugrationService();
+            SetupMockExposureConfigurationService();
             SetupMockCacheOperation(1);
         }
 
-        private void SetupMockExposureConfiugrationService()
+        private void SetupMockExposureConfigurationService()
         {
             _exposureConfigurationService.Setup(s => s.GetConfiguration()).Returns(new ExposureConfiguration());
         }
@@ -128,7 +128,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V1
         private void SetupMockCacheOperation(int count)
         {
             _cacheOperation.Setup(c => c.GetCacheValue(It.IsAny<DateTime>(), It.IsAny<bool>()))
-                .Returns(Task.FromResult(new CacheResult()
+                .Returns(Task.FromResult(new CacheResult
                 {
                     FileBytesList = MockCacheResult(count)
                 }));

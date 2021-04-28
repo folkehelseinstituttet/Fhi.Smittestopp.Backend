@@ -16,7 +16,12 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                 .Select(x => x)
                 .OrderByDescending(x => x.EntryDate)
                 .AsNoTracking();
-            
+
+            if (entries == null)
+            {
+                return null;
+            }
+
             var newest = await entries.FirstOrDefaultAsync();
             await _context.SaveChangesAsync();
             return newest;
