@@ -49,7 +49,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
                 }
 
                 var newest = await _applicationStatisticsRepository.GetNewestEntryAsync();
-                applicationStatisticsDeserialized.Id = newest.Id;
+                applicationStatisticsDeserialized.Id = newest?.Id ?? 1;
                 applicationStatisticsDeserialized.EntryDate = DateTime.UtcNow;
                 _applicationStatisticsRepository.UpdateEntry(applicationStatisticsDeserialized);
             }
