@@ -30,8 +30,7 @@ namespace DIGNDB.App.SmitteStop.API.Attributes
                 return;
             }
 
-            StringValues values = new StringValues();
-            if (context.HttpContext.Request.Headers.TryGetValue("authorization_mobile", out values))
+            if (context.HttpContext.Request.Headers.TryGetValue("authorization_mobile", out var values))
             {
                 if (!values.Any())
                 {

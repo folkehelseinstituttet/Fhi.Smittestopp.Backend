@@ -92,5 +92,10 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
         {
             return new FileStream(path, FileMode.Open);
         }
+
+        public bool DirectoryExists(string directoryName)
+        {
+            return Directory.Exists(directoryName);
+        }
     }
 }

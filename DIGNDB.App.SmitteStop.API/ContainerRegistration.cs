@@ -2,6 +2,8 @@ using AnonymousTokens.Core.Services;
 using AutoMapper;
 using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.API.Contracts;
+using DIGNDB.App.SmitteStop.API.HealthCheckAuthorization;
+using DIGNDB.App.SmitteStop.API.HealthChecks;
 using DIGNDB.App.SmitteStop.API.Mappers;
 using DIGNDB.App.SmitteStop.API.Services;
 using DIGNDB.App.SmitteStop.Core.Contracts;
@@ -11,6 +13,7 @@ using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using FederationGatewayApi.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +21,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
@@ -32,7 +36,20 @@ namespace DIGNDB.App.SmitteStop.API
         public static IServiceCollection AddAPIDependencies(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
             services.AddControllers().AddControllersAsServices();
-            services.AddAuthorization();
+
+            services.AddAuthentication(HealthCheckBasicAuthenticationHandler.HealthCheckBasicAuthenticationScheme).AddNoOperationAuthentication();
+            // Configure jwt authentication and adding policy for health check endpoints
+            services.AddAuthorization(options =>
+            {
+                // Adding policy for health check access
+                options.AddPolicy(Startup.HealthCheckAccessPolicyName, policy =>
+                    policy.AddAuthenticationSchemes(HealthCheckBasicAuthenticationHandler.HealthCheckBasicAuthenticationScheme)
+                        .Requirements.Add(new HealthCheckAuthorizationRequirement()));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, HealthCheckAuthorizationHandler>();
+
+
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(DeprecatedCheckAttribute));
@@ -72,10 +89,21 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddSingleton(new AuthOptions(environment.IsDevelopment()));
             services.AddMemoryCache();
 
+            // Health checks
+            services.AddHealthChecks()
+                .AddDbContextCheck<DigNDB_SmittestopContext>("DB Smittestop", HealthStatus.Unhealthy, new[] {Startup.DatabaseTag})
+                .AddCheck<HangFireHealthCheck>("HangFire", HealthStatus.Unhealthy, new[] {Startup.HangFireTag})
+                .AddCheck<LogFilesHealthCheck>("Log files", HealthStatus.Unhealthy, new[] {Startup.LogFilesTag})
+                //.AddCheck<ZipFilesHealthCheck>("Zip files", HealthStatus.Unhealthy, new[] {Startup.ZipFilesTag})
+                .AddCheck<NumbersTodayHealthCheck>("Numbers today", HealthStatus.Unhealthy, new[] {Startup.NumbersTodayTag})
+                .AddCheck<RollingStartNumberHealthCheck>("Rolling start number", HealthStatus.Unhealthy, new[] {Startup.RollingStartNumberTag});
+                
             var connectionString = configuration["SQLConnectionString"];
             services.AddDbContext<DigNDB_SmittestopContext>(opts =>
                 opts.UseSqlServer(connectionString, x => x.MigrationsAssembly("DIGNDB.App.SmitteStop.DAL")));
             services.AddScoped<DigNDB_SmittestopContext>();
+
+            services.AddHttpContextAccessor();
 
             services.AddAutoMapper(typeof(CountryMapper));
             services.AddAutoMapper(typeof(ApplicationStatisticsMapper));

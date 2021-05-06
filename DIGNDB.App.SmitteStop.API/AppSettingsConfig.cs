@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DIGNDB.App.SmitteStop.API
 {
+    /// <summary>
+    /// Class for appsettings configuration values
+    /// </summary>
     public class AppSettingsConfig : IOriginSpecificSettings, IZipPackageBuilderConfig
     {
         [Required(AllowEmptyStrings = false)]
@@ -27,6 +30,9 @@ namespace DIGNDB.App.SmitteStop.API
         [Required]
         public string LogsApiPath { get; set; }
 
+        [Required]
+        public string LogsJobsPath { get; set; }
+        
         [Range(minimum: 100, maximum: int.MaxValue)]
         public long LogFileSizeLimitBytes { get; set; }
 
@@ -48,7 +54,10 @@ namespace DIGNDB.App.SmitteStop.API
 
         [Required]
         public GitHubSettings GitHubSettings { get; set; }
-        
+
+        [Required]
+        public HealthCheckSettings HealthCheckSettings { get; set; }
+
         public bool EnableCacheOverride { get; set; }
     }
 
@@ -56,6 +65,9 @@ namespace DIGNDB.App.SmitteStop.API
     {
         [Required] 
         public string GitHubStatisticsZipFileFolder { get; set; }
+        /// <summary>
+        /// Appsettings value used when accessing covid statistics endpoint from GitHub
+        /// </summary>
         [Required]
         public string AuthorizationGitHub { get; set; }
         [Required]
@@ -75,5 +87,26 @@ namespace DIGNDB.App.SmitteStop.API
         public string TimeLocationFileNamePattern { get; set; }
         [Required]
         public string LocationFileNamePattern { get; set; }
+    }
+
+    public class HealthCheckSettings
+    {
+        /// <summary>
+        /// Appsettings value used when accessing health check endpoints
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public string AuthorizationHealthCheck { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public int NumbersTodayCallAfter24Hour { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public int ZipFilesCallAfter24Hour { get; set; }
     }
 }

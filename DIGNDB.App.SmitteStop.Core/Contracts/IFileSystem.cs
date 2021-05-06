@@ -21,5 +21,6 @@ namespace DIGNDB.App.SmitteStop.Core.Contracts
         string GetDirectoryNameFromPath(string path);
         string GetFileNameFromPath(string filePath);
         Stream GetFileStream(string path);
+        bool DirectoryExists(string directoryName);
     }
 }

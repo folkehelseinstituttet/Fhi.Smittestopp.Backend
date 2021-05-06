@@ -5,15 +5,23 @@ using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.DependencyInjection;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.API
 {
@@ -69,7 +77,7 @@ namespace DIGNDB.App.SmitteStop.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, AppSettingsConfig appSettingsConfig)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, AppSettingsConfig appSettingsConfig, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -110,7 +118,159 @@ namespace DIGNDB.App.SmitteStop.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                // Health checks mapped to different endpoints
+                MapHealthChecks(endpoints);
             });
         }
+
+        #region Health check mapping and response write
+
+        /// <summary>
+        /// Name of policy used for health check authorization
+        /// </summary>
+        public const string HealthCheckAccessPolicyName = "HealtCheckAccess";
+
+        public const string DatabaseTag = "database";
+        public const string DatabasePattern = "/health/database";
+        public const string HangFireTag = "hangfire";
+        public const string HangFirePattern = "/health/hangfire";
+        public const string LogFilesTag = "logfiles";
+        public const string LogFilesPattern = "/health/logfiles";
+
+        private const string ZipFilesTag = "zipfiles";
+        /// <summary>
+        /// Path to health check endpoint for checking zip files
+        /// </summary>
+        public const string ZipFilesPattern = "/health/zipfiles";
+
+        public const string NumbersTodayTag = "numberstoday";
+        /// <summary>
+        /// Path to health check endpoint for checking today's numbers
+        /// </summary>
+        public const string NumbersTodayPattern = "/health/numberstoday";
+
+        public const string RollingStartNumberTag = "rollingstartnumber";
+        /// <summary>
+        /// Path to health check endpoint for checking rolllingStartNumber
+        /// </summary>
+        public const string RollingStartNumberPattern = "/health/rollingstartnumber";
+
+        private const string SystemTag = "system";
+        private const string SystemPattern = "/health/system";
+
+        private static void MapHealthChecks(IEndpointRouteBuilder endpoints)
+        {
+            endpoints.MapHealthChecks(DatabasePattern, new HealthCheckOptions
+            {
+                Predicate = check => check.Tags.Contains(DatabaseTag),
+                ResponseWriter = WriteHealthCheckResponse
+            }).RequireAuthorization(HealthCheckAccessPolicyName);
+
+            endpoints.MapHealthChecks(HangFirePattern, new HealthCheckOptions
+            {
+                Predicate = check => check.Tags.Contains(HangFireTag),
+                ResponseWriter = WriteHealthCheckResponse
+            }).RequireAuthorization(HealthCheckAccessPolicyName);
+
+            endpoints.MapHealthChecks(LogFilesPattern, new HealthCheckOptions
+            {
+                Predicate = check => check.Tags.Contains(LogFilesTag),
+                ResponseWriter = WriteHealthCheckResponse
+            }).RequireAuthorization(HealthCheckAccessPolicyName);
+
+            endpoints.MapHealthChecks(ZipFilesPattern, new HealthCheckOptions
+            {
+                Predicate = check => check.Tags.Contains(ZipFilesTag),
+                ResponseWriter = WriteHealthCheckResponse
+            }).RequireAuthorization(HealthCheckAccessPolicyName);
+
+            endpoints.MapHealthChecks(NumbersTodayPattern, new HealthCheckOptions
+            {
+                Predicate = check => check.Tags.Contains(NumbersTodayTag),
+                ResponseWriter = WriteHealthCheckResponse
+            }).RequireAuthorization(HealthCheckAccessPolicyName);
+
+            endpoints.MapHealthChecks(RollingStartNumberPattern, new HealthCheckOptions()
+            {
+                Predicate = check => check.Tags.Contains(RollingStartNumberTag),
+                ResponseWriter = WriteHealthCheckResponse
+            }).RequireAuthorization(HealthCheckAccessPolicyName);
+
+            endpoints.MapHealthChecks(SystemPattern, new HealthCheckOptions()
+            {
+                Predicate = check => check.Tags.Contains(SystemTag),
+                ResponseWriter = WriteHealthCheckResponse
+            }).RequireAuthorization(HealthCheckAccessPolicyName);
+        }
+
+        private static Task WriteHealthCheckResponse(HttpContext context, HealthReport result)
+        {
+            context.Response.ContentType = "application/json; charset=utf-8";
+
+            var options = new JsonWriterOptions
+            {
+                Indented = true
+            };
+
+            using var stream = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(stream, options))
+            {
+                writer.WriteStartObject();
+                writer.WriteString("status", result.Status.ToString());
+                writer.WriteStartObject("results");
+                foreach (var entry in result.Entries)
+                {
+                    // Status, description, and exception (if any)
+                    writer.WriteStartObject(entry.Key);
+                    writer.WriteString("status", entry.Value.Status.ToString());
+                    writer.WriteString("description", entry.Value.Description);
+
+                    // Exception
+                    if (entry.Value.Exception != null)
+                    {
+                        writer.WriteStartObject("exception");
+                        writer.WriteString("message", entry.Value.Exception.Message);
+                        writer.WriteString("stackTrace", entry.Value.Exception.StackTrace);
+                        writer.WriteEndObject();
+                    }
+                    writer.WriteEndObject();
+
+                    // Write data from health checks to response
+                    writer.WriteStartObject("data");
+                    try
+                    {
+                        foreach (var (key, value) in entry.Value.Data)
+                        {
+                            if (value is string)
+                            {
+                                var val = value.ToString();
+                                writer.WriteString(key, val);
+                            }
+                            else
+                            {
+                                var itemValue = JsonSerializer.Serialize(value, value?.GetType() ?? typeof(object));
+                                writer.WriteString(key, itemValue);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        var errorMessage = $"Error in writing to health check response: {e.Message} - {e.StackTrace}";
+                        writer.WriteString("Error in writing health check response", errorMessage);
+                    }
+
+                    writer.WriteEndObject();
+                }
+                writer.WriteEndObject();
+                writer.WriteEndObject();
+            }
+
+            var json = Encoding.UTF8.GetString(stream.ToArray());
+
+            return context.Response.WriteAsync(json);
+        }
+
+        #endregion
     }
 }

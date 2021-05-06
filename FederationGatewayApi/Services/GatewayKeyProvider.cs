@@ -89,7 +89,7 @@ namespace FederationGatewayApi.Services
             }
 
             AuthenticationCertificateFingerprint = authenticationCertificateFingerprint;
-            ValidateCertificates(authenticationCertificateFingerprint, signingCertificateFingerprint);
+            //ValidateCertificates(authenticationCertificateFingerprint, signingCertificateFingerprint);
         }
 
         private void ValidateCertificates(string authenticationCertificateFingerprint, string signingCertificateFingerprint)
