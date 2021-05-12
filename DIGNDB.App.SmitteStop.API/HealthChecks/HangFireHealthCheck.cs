@@ -71,9 +71,6 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                 data.Add(message, servers.Count);
             }
 
-            // Check recurring jobs
-            CheckRecurringJobs(context, servers);
-
             // Check failing jobs
             var failingJobsCount = _hangFireMonitoringApi.FailedCount();
             if (failingJobsCount > 0)
@@ -123,29 +120,6 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                 status,
                 Description,
                 data: data));
-        }
-
-        private void CheckRecurringJobs(HealthCheckContext healthCheckContext, IList<ServerDto> serverDtos)
-        {
-            foreach (var serverDto in serverDtos)
-            {
-                var queues = serverDto.Queues;
-                foreach (var queue in queues)
-                {
-                    using var enumerator = queue.GetEnumerator();
-                    while (enumerator.MoveNext())
-                    {
-                        var curr = enumerator.Current;
-                        var enqJobs = _hangFireMonitoringApi.EnqueuedJobs(curr.ToString(), 0, 100);
-                        if (enqJobs.Count > 0)
-                        {
-                            // do nothing
-                        }
-                    }
-                }
-            }
-            var connection = _jobStorageCurrent.GetConnection();
-            var job = connection.GetJobParameter("", "");
         }
 
         private void InitializeHangFire()
