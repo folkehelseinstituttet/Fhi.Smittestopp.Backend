@@ -12,6 +12,7 @@ using DIGNDB.App.SmitteStop.Core.Services;
 using DIGNDB.App.SmitteStop.DAL.Context;
 using DIGNDB.App.SmitteStop.Domain;
 using DIGNDB.App.SmitteStop.Domain.Configuration;
+using DIGNDB.APP.SmitteStop.Jobs.Config;
 using FederationGatewayApi.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -91,10 +92,10 @@ namespace DIGNDB.App.SmitteStop.API
 
             // Health checks
             services.AddHealthChecks()
-                .AddDbContextCheck<DigNDB_SmittestopContext>("DB Smittestop", HealthStatus.Unhealthy, new[] {Startup.DatabaseTag})
+                .AddDbContextCheck<DigNDB_SmittestopContext>("DB Smittestopp", HealthStatus.Unhealthy, new[] {Startup.DatabaseTag})
                 .AddCheck<HangFireHealthCheck>("HangFire", HealthStatus.Unhealthy, new[] {Startup.HangFireTag})
                 .AddCheck<LogFilesHealthCheck>("Log files", HealthStatus.Unhealthy, new[] {Startup.LogFilesTag})
-                //.AddCheck<ZipFilesHealthCheck>("Zip files", HealthStatus.Unhealthy, new[] {Startup.ZipFilesTag})
+                .AddCheck<ZipFilesHealthCheck>("Zip files", HealthStatus.Unhealthy, new[] {Startup.ZipFilesTag})
                 .AddCheck<NumbersTodayHealthCheck>("Numbers today", HealthStatus.Unhealthy, new[] {Startup.NumbersTodayTag})
                 .AddCheck<RollingStartNumberHealthCheck>("Rolling start number", HealthStatus.Unhealthy, new[] {Startup.RollingStartNumberTag});
                 
@@ -149,8 +150,11 @@ namespace DIGNDB.App.SmitteStop.API
         private static IServiceCollection AddAPIConfiguration(this IServiceCollection services,
             IConfiguration configuration)
         {
-            var appsettingsConfig = configuration.GetSection("AppSettings").Get<AppSettingsConfig>();
-            ModelValidator.ValidateContract(appsettingsConfig);
+            var appSettingsConfig = configuration.GetSection("AppSettings").Get<AppSettingsConfig>();
+            ModelValidator.ValidateContract(appSettingsConfig);
+
+            var hangFireConfig = configuration.Get<HangFireConfig>();
+            ModelValidator.ValidateContract(hangFireConfig);
 
             var logValidationRulesConfig = configuration.GetSection("LogValidationRules").Get<LogValidationRulesConfig>();
             ModelValidator.ValidateContract(logValidationRulesConfig);
@@ -158,9 +162,10 @@ namespace DIGNDB.App.SmitteStop.API
             var keyValidationRulesConfig = configuration.GetSection("KeyValidationRules").Get<KeyValidationConfiguration>();
             ModelValidator.ValidateContract(logValidationRulesConfig);
 
-            services.AddSingleton(appsettingsConfig);
-            services.AddSingleton<IOriginSpecificSettings>(appsettingsConfig);
-            services.AddSingleton<IZipPackageBuilderConfig>(appsettingsConfig);
+            services.AddSingleton(appSettingsConfig);
+            services.AddSingleton<IOriginSpecificSettings>(appSettingsConfig);
+            services.AddSingleton<IZipPackageBuilderConfig>(appSettingsConfig);
+            services.AddSingleton(hangFireConfig);
             services.AddSingleton(logValidationRulesConfig);
             services.AddSingleton(keyValidationRulesConfig);
 

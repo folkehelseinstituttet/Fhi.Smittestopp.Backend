@@ -23,6 +23,12 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Config
         public int DaysToInvalidateZipFile { get; set; }
 
         [Required]
+        public int JobsMaxRetryAttempts { get; set; }
+
+        [Required]
+        public int JobsRetryInterval { get; set; }
+
+        [Required]
         public JobsConfig Jobs { get; set; }
 
         [Required]

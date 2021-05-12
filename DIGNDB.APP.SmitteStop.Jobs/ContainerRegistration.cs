@@ -26,10 +26,19 @@ namespace DIGNDB.APP.SmitteStop.Jobs
     {
         public static IServiceCollection AddJobsDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            var hangfireConfig = configuration.Get<HangfireConfig>();
-            ModelValidator.ValidateContract(hangfireConfig);
-            var gateWayConfig = hangfireConfig.EuGateway;
-            var eventLogConfig = hangfireConfig.Logging.EventLog;
+            var hangFireConfig = configuration.Get<HangfireConfig>();
+            ModelValidator.ValidateContract(hangFireConfig);
+            
+            int DelayInSecondsByAttemptFunc(long attempt) => hangFireConfig.JobsRetryInterval;
+            GlobalJobFilters.Filters.Add(
+                new AutomaticRetryAttribute
+                {
+                    Attempts = hangFireConfig.JobsMaxRetryAttempts, 
+                    DelayInSecondsByAttemptFunc = DelayInSecondsByAttemptFunc
+                });
+
+            var gateWayConfig = hangFireConfig.EuGateway;
+            var eventLogConfig = hangFireConfig.Logging.EventLog;
             services.Configure<EventLogSettings>(config =>
             {
                 config.SourceName = eventLogConfig.SourceName;
@@ -37,13 +46,13 @@ namespace DIGNDB.APP.SmitteStop.Jobs
                 config.MachineName = eventLogConfig.MachineName;
             });
             services.AddSingleton(gateWayConfig);
-            services.AddSingleton(hangfireConfig.Jobs.UploadKeysToTheGateway);
-            services.AddSingleton(hangfireConfig.Jobs.DownloadKeysFromTheGateway);
-            services.AddSingleton(hangfireConfig.Jobs.GetCovidStatistics);
+            services.AddSingleton(hangFireConfig.Jobs.UploadKeysToTheGateway);
+            services.AddSingleton(hangFireConfig.Jobs.DownloadKeysFromTheGateway);
+            services.AddSingleton(hangFireConfig.Jobs.GetCovidStatistics);
 
-            services.AddHangfire(x => x.UseSqlServerStorage(hangfireConfig.HangFireConnectionString));
+            services.AddHangfire(x => x.UseSqlServerStorage(hangFireConfig.HangFireConnectionString));
             services.AddDbContext<DigNDB_SmittestopContext>(opts =>
-                opts.UseSqlServer(hangfireConfig.SmittestopConnectionString));
+                opts.UseSqlServer(hangFireConfig.SmittestopConnectionString));
 
             services.AddControllers().AddControllersAsServices();
             services.AddLogging();
@@ -54,9 +63,9 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             services.AddScoped<IZipFileService, ZipFileService>();
             services.AddScoped<ISettingsService, SettingsService>();
 
-            services.AddSingleton(hangfireConfig);
-            services.AddSingleton<IOriginSpecificSettings>(hangfireConfig);
-            services.AddSingleton<IZipPackageBuilderConfig>(hangfireConfig);
+            services.AddSingleton(hangFireConfig);
+            services.AddSingleton<IOriginSpecificSettings>(hangFireConfig);
+            services.AddSingleton<IZipPackageBuilderConfig>(hangFireConfig);
             services.AddScoped<IZipFileService, ZipFileService>();
 
             services.AddScoped<IGatewayHttpClient, GatewayHttpClient>();

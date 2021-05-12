@@ -136,9 +136,12 @@ namespace DIGNDB.App.SmitteStop.API
         public const string HangFireTag = "hangfire";
         public const string HangFirePattern = "/health/hangfire";
         public const string LogFilesTag = "logfiles";
+        /// <summary>
+        /// Path to health check endpoint for checking log files
+        /// </summary>
         public const string LogFilesPattern = "/health/logfiles";
 
-        private const string ZipFilesTag = "zipfiles";
+        public const string ZipFilesTag = "zipfiles";
         /// <summary>
         /// Path to health check endpoint for checking zip files
         /// </summary>

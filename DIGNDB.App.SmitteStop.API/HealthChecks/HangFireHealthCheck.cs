@@ -1,9 +1,9 @@
 ﻿using DIGNDB.App.SmitteStop.API.HealthCheckAuthorization;
+using DIGNDB.APP.SmitteStop.Jobs.Config;
 using Hangfire;
 using Hangfire.SqlServer;
 using Hangfire.Storage;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Hangfire.Storage.Monitoring;
 
 namespace DIGNDB.App.SmitteStop.API.HealthChecks
 {
@@ -22,7 +23,7 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
     {
         private const string Description = "HangFire health check inspects No. of servers and failed jobs";
 
-        private readonly IConfiguration _configuration;
+        private readonly HangFireConfig _hangFireConfig;
         private readonly ILogger<HangFireHealthCheck> _logger;
 
         private readonly IMonitoringApi _hangFireMonitoringApi;
@@ -31,9 +32,9 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
         /// <summary>
         /// Ctor initializing HangFire monitoring API object
         /// </summary>
-        public HangFireHealthCheck(IConfiguration configuration, ILogger<HangFireHealthCheck> logger)
+        public HangFireHealthCheck(HangFireConfig hangFireConfiguration, ILogger<HangFireHealthCheck> logger)
         {
-            _configuration = configuration;
+            _hangFireConfig = hangFireConfiguration;
             _logger = logger;
 
             if (_jobStorageCurrent == null)
@@ -70,6 +71,9 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                 data.Add(message, servers.Count);
             }
 
+            // Check recurring jobs
+            CheckRecurringJobs(context, servers);
+
             // Check failing jobs
             var failingJobsCount = _hangFireMonitoringApi.FailedCount();
             if (failingJobsCount > 0)
@@ -78,7 +82,7 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                 data.Add("failed jobs count", failingJobsCount);
 
                 _logger.LogWarning("HangFire has one or more failed jobs");
-                
+
                 var jobs = _hangFireMonitoringApi.FailedJobs(0, 10);
                 foreach (var job in jobs)
                 {
@@ -107,6 +111,7 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                             data));
                     }
                 }
+
             }
 
             if (data.Count == 0)
@@ -120,10 +125,32 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                 data: data));
         }
 
+        private void CheckRecurringJobs(HealthCheckContext healthCheckContext, IList<ServerDto> serverDtos)
+        {
+            foreach (var serverDto in serverDtos)
+            {
+                var queues = serverDto.Queues;
+                foreach (var queue in queues)
+                {
+                    using var enumerator = queue.GetEnumerator();
+                    while (enumerator.MoveNext())
+                    {
+                        var curr = enumerator.Current;
+                        var enqJobs = _hangFireMonitoringApi.EnqueuedJobs(curr.ToString(), 0, 100);
+                        if (enqJobs.Count > 0)
+                        {
+                            // do nothing
+                        }
+                    }
+                }
+            }
+            var connection = _jobStorageCurrent.GetConnection();
+            var job = connection.GetJobParameter("", "");
+        }
+
         private void InitializeHangFire()
         {
-            var connectionString = _configuration["HangFireConnectionString"];
-            JobStorage.Current = new SqlServerStorage(connectionString);
+            JobStorage.Current = new SqlServerStorage(_hangFireConfig.HangFireConnectionString);
             _jobStorageCurrent = JobStorage.Current;
         }
     }

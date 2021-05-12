@@ -53,15 +53,13 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
         /// <returns></returns>
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Health check HangFire");
+            _logger.LogInformation($"Health check {Startup.LogFilesPattern}");
 
             var status = HealthStatus.Healthy;
             var data = new Dictionary<string, object>();
 
             try
             {
-
-
                 // Api log files
                 var apiLogFilesNamePrefix = _appSettingsConfig.LogsApiPath;
                 CheckLogFiles(apiLogFilesNamePrefix, _apiRegex, ref status, data, LogFilesDatePattern);
@@ -79,7 +77,7 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                     "D:\\logs\\SmitteStop\\Mobile_Logs_.txt"; // see log4net.config where this is configured
 #if DEBUG
                 mobileLogFilesNamePrefix =
-                    "C:\\projects\\smittestop\\dk\\logs\\SmitteStop\\Mobile_Logs_.txt"; // see log4net.config where this is configured
+                    "C:\\projects\\smittestop\\no\\logs\\SmitteStop\\Mobile_Logs_.txt"; // see log4net.config where this is configured
 #endif
 
                 CheckLogFiles(mobileLogFilesNamePrefix, _mobileRegex, ref status, data, MobileLogFilesDatePattern);
