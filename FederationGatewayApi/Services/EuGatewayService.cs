@@ -68,14 +68,7 @@ namespace FederationGatewayApi.Services
 
         public void UploadKeysToTheGateway(int fromLastNumberOfDays, int batchSize, int? batchCountLimit = null)
         {
-            if (fromLastNumberOfDays <= 0) throw new ArgumentException($"UploadKeysToTheGateway: Incorrect fromLastNumberOfDays {fromLastNumberOfDays}");
-            if (batchSize <= 0) throw new ArgumentException($"UploadKeysToTheGateway: Incorrect batchSize {batchSize}");
-            if (batchCountLimit.HasValue && batchCountLimit.Value <= 0) throw new ArgumentException($"UploadKeysToTheGateway: Incorrect batchCountLimit {batchCountLimit}");
-
-            if (batchCountLimit.HasValue)
-            {
-                _logger.LogInformation($"Number of batches to process are limited to {batchCountLimit}");
-            }
+            ValidateParameters(fromLastNumberOfDays, batchSize, batchCountLimit);
 
             var stats = new BatchUploadStats();
             BatchStatus lastStatus = new BatchStatus();
@@ -102,6 +95,29 @@ namespace FederationGatewayApi.Services
             {
                 _logger.LogError($"Upload interrupted. Last batch processed with error. Upload status: {stats.TotalKeysSent} keys ({ stats.CurrentBatchNumber - 1} batches) has been sent from {stats.TotalKeysProcessed} records processed.");
                 throw new InvalidOperationException($"Upload interrupted! Error occurred while sending batch {stats.CurrentBatchNumber}.");
+            }
+        }
+
+        private void ValidateParameters(int fromLastNumberOfDays, int batchSize, int? batchCountLimit = null)
+        {
+            if (fromLastNumberOfDays <= 0)
+            {
+                throw new ArgumentException($"UploadKeysToTheGateway: Incorrect fromLastNumberOfDays {fromLastNumberOfDays}");
+            }
+
+            if (batchSize <= 0)
+            {
+                throw new ArgumentException($"UploadKeysToTheGateway: Incorrect batchSize {batchSize}");
+            }
+
+            if (batchCountLimit.HasValue && batchCountLimit.Value <= 0)
+            {
+                throw new ArgumentException($"UploadKeysToTheGateway: Incorrect batchCountLimit {batchCountLimit}");
+            }
+
+            if (batchCountLimit.HasValue)
+            {
+                _logger.LogInformation($"Number of batches to process are limited to {batchCountLimit}");
             }
         }
 
