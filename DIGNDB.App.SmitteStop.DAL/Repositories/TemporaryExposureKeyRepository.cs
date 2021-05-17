@@ -114,18 +114,22 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             int maxCount,
             KeySource[] sources)
         {
-            if (maxCount <= 0) throw new ArgumentException($"Incorrect argument maxCount= {maxCount}");
+            if (maxCount <= 0)
+            {
+                throw new ArgumentException($"Incorrect argument maxCount= {maxCount}");
+            }
 
             Country apiOrigin = _countryRepository.GetApiOriginCountry();
 
             var query = _dbContext.TemporaryExposureKey
-               .Include(k => k.Origin)
-               .Where(k => k.Origin == apiOrigin)
-               .Where(k => k.CreatedOn >= uploadedOnAndLater)
-               .Where(k => sources.Contains(k.KeySource))
-               .Where(k => k.SharingConsentGiven)
-               .OrderBy(c => c.CreatedOn)
-                    .ThenBy(c => c.RollingStartNumber);
+                .Include(k => k.Origin)
+                .Where(k => k.Origin == apiOrigin)
+                .Where(k => k.CreatedOn >= uploadedOnAndLater)
+                .Where(k => sources.Contains(k.KeySource))
+                .Where(k => k.SharingConsentGiven)
+                .Include(k => k.VisitedCountries).ThenInclude(k => k.Country)
+                .OrderBy(c => c.CreatedOn)
+                .ThenBy(c => c.RollingStartNumber);
 
             return TakeNextBatch(query, numberOfRecordToSkip, maxCount).ToList();
         }
@@ -183,7 +187,10 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
 
         private IQueryable<TemporaryExposureKey> TakeNextBatch(IQueryable<TemporaryExposureKey> keys, int numberOfRecordsToSkip, int batchSize)
         {
-            if (batchSize <= 0) throw new ArgumentException($"Incorrect argument batchSize= {batchSize}");
+            if (batchSize <= 0)
+            {
+                throw new ArgumentException($"Incorrect argument batchSize= {batchSize}");
+            }
 
             return keys
                 .Skip(numberOfRecordsToSkip)
