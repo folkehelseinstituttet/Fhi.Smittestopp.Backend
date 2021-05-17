@@ -7,11 +7,9 @@ namespace DIGNDB.APP.SmitteStop.Jobs
 {
     public class ScheduledJobsConfiguration
     {
-        private const string TestJobPrefix = "[Test]";
-
-        public static void ConfigureScheduledJobs(HangfireConfig hangfireConfig)
+        public static void ConfigureScheduledJobs(HangfireConfig hangFireConfig)
         {
-            var jobsConfig = hangfireConfig.Jobs;
+            var jobsConfig = hangFireConfig.Jobs;
             var ValidateKeysOnDatabaseConfig = jobsConfig.ValidateKeysOnDatabase;
             RecurringJob.AddOrUpdate<CleanupDatabaseJob>(recurringJobId: ValidateKeysOnDatabaseConfig.Name, methodCall: job => job.ValidateKeysOnDatabase(ValidateKeysOnDatabaseConfig.BatchSize), ValidateKeysOnDatabaseConfig.CronExpression);
 
@@ -25,7 +23,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs
             RecurringJob.AddOrUpdate<DownloadTemporaryExposureKeysEuGatewayJob>(recurringJobId: downloadConfig.Name, methodCall: job => job.Invoke(), downloadConfig.CronExpression);
 
             var removeOldZipFilesConfig = jobsConfig.RemoveOldZipFiles;
-            RecurringJob.AddOrUpdate<RemoveOldZipFilesJob>(recurringJobId: removeOldZipFilesConfig.Name, methodCall: job => job.RemoveOldZipFiles(hangfireConfig), removeOldZipFilesConfig.CronExpression);
+            RecurringJob.AddOrUpdate<RemoveOldZipFilesJob>(recurringJobId: removeOldZipFilesConfig.Name, methodCall: job => job.RemoveOldZipFiles(hangFireConfig), removeOldZipFilesConfig.CronExpression);
 
             var getCovidStatisticsConfig = jobsConfig.GetCovidStatistics;
             RecurringJob.AddOrUpdate<GetCovidStatisticsJob>(recurringJobId: getCovidStatisticsConfig.Name, methodCall: job => job.ObtainCovidStatistics(), getCovidStatisticsConfig.CronExpression);

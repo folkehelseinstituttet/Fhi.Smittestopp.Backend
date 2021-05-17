@@ -143,7 +143,9 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
             try
             {
                 if (packageName == "today")
+                {
                     packageName = ReplacePackageNameWithToday();
+                }
 
                 ZipFileInfo packageInfo = _zipFileInfoService.CreateZipFileInfoFromPackageName(packageName);
                 string zipFilesFolder = _appSettingsConfig.ZipFilesFolder;
