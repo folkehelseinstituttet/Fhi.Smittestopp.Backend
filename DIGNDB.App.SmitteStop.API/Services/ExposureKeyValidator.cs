@@ -37,22 +37,25 @@ namespace DIGNDB.App.SmitteStop.API.Services
         private void ValidateKeyCount(TemporaryExposureKeyBatchDto parameter, KeyValidationConfiguration configuration)
         {
             //The period of time covered by the data file exceeds 14 days
-            if (parameter.keys.Count <= configuration.OutdatedKeysDayOffset) return;
+            if (parameter.keys.Count <= configuration.OutdatedKeysDayOffset)
+            {
+                return;
+            }
 
-            var errorMessage =
-                $"Incorrect key count. Given key count: {parameter.keys.Count}. Expected: {configuration.OutdatedKeysDayOffset}";
+            var errorMessage = $"Incorrect key count. Given key count: {parameter.keys.Count}. Expected: {configuration.OutdatedKeysDayOffset}";
             throw new ArgumentException(errorMessage);
         }
 
         private void ValidateKeyDuplication(TemporaryExposureKeyBatchDto parameter)
         {
             var duplicatedKeys = GetDuplicatedKeys(parameter.keys.Select(k => k.key).ToList());
-            if (!duplicatedKeys.Any()) return;
+            if (!duplicatedKeys.Any())
+            {
+                return;
+            }
 
-            var stringOfDuplicatedKeys = string.Join(", ",
-                duplicatedKeys.Select(key => BitConverter.ToString(key).Replace("-", "")));
-            var errorMessage =
-                $"Duplicate key values. Duplicated keys: {stringOfDuplicatedKeys}";
+            var stringOfDuplicatedKeys = string.Join(", ", duplicatedKeys.Select(key => BitConverter.ToString(key).Replace("-", "")));
+            var errorMessage = $"Duplicate key values. Duplicated keys: {stringOfDuplicatedKeys}";
 
             throw new ArgumentException(errorMessage);
         }
@@ -75,7 +78,10 @@ namespace DIGNDB.App.SmitteStop.API.Services
                 k.rollingDurationSpan > maximumValidSpan ||
                 k.rollingDurationSpan < minimumValidSpan).ToList();
 
-            if (!incorrectRollingDurationSpans.Any()) return;
+            if (!incorrectRollingDurationSpans.Any())
+            {
+                return;
+            }
 
             var spansString = string.Join(", ", incorrectRollingDurationSpans.Select(key => key.rollingDurationSpan));
             var errorMessage = $"Incorrect spans: {spansString}. Expecting span to be > {minimumValidSpan} and < {maximumValidSpan}";
@@ -91,13 +97,15 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
             var keysWithInvalidRollingStart =
                 parameter.keys.Where(key => key.rollingStart < outdatedKeysDate || key.rollingStart > todaysDateUtcMidnight).ToList();
-            if (!keysWithInvalidRollingStart.Any()) return;
+            if (!keysWithInvalidRollingStart.Any())
+            {
+                return;
+            }
 
             var invalidRollingStartDates = keysWithInvalidRollingStart.Select(key => key.rollingStart);
             var invalidRollingStartDatesString = string.Join(", ", invalidRollingStartDates);
 
-            var errorMessage =
-                $"Incorrect start date. Incorrect dates: {invalidRollingStartDatesString}. OutdatedKeysDayOffset from configuration: {configuration.OutdatedKeysDayOffset}";
+            var errorMessage = $"Incorrect start date. Incorrect dates: {invalidRollingStartDatesString}. OutdatedKeysDayOffset from configuration: {configuration.OutdatedKeysDayOffset}";
             throw new ArgumentException(errorMessage);
         }
 
@@ -105,18 +113,27 @@ namespace DIGNDB.App.SmitteStop.API.Services
         {
             var originCountry = _countryRepository.GetApiOriginCountry();
 
-            if (!parameter.keys.Any()) return;
+            if (!parameter.keys.Any())
+            {
+                return;
+            }
+
             if (parameter.regions == null)
+            {
                 throw new ArgumentException("Regions array is null.");
+            }
 
             var expectedRegionCode = originCountry.Code;
             var regions = parameter.regions;
 
-            if (regions.Count == 1 && regions.Any(r => r.ToLower() == expectedRegionCode.ToLower())) return;
+            if (regions.Count == 1 && regions.Any(r => r.ToLower() == expectedRegionCode.ToLower()))
+            {
+                return;
+            }
 
             var regionsString = string.Join(",", parameter.regions);
-            throw new ArgumentException(
-                $"Incorrect regions: {regionsString}. Expected single value: {expectedRegionCode}");
+            var message = $"Incorrect regions: {regionsString}. Expected single value: {expectedRegionCode}";
+            throw new ArgumentException(message);
         }
 
         private void ValidatePackageNames(TemporaryExposureKeyBatchDto parameter, KeyValidationConfiguration configuration)
@@ -124,21 +141,24 @@ namespace DIGNDB.App.SmitteStop.API.Services
             var packageName = parameter.appPackageName.ToLower();
 
             if (packageName == configuration.PackageNames.Apple ||
-                packageName == configuration.PackageNames.Google) return;
+                packageName == configuration.PackageNames.Google)
+            {
+                return;
+            }
 
-            var errorMessage =
-                $"Incorrect package name. Given: {packageName}.";
-            errorMessage +=
-                $"Expected for {nameof(configuration.PackageNames.Apple)}: {configuration.PackageNames.Apple}";
-            errorMessage +=
-                $"Expected for {nameof(configuration.PackageNames.Google)}: {configuration.PackageNames.Google}";
+            var errorMessage = $"Incorrect package name. Given: {packageName}.";
+            errorMessage += $"Expected for {nameof(configuration.PackageNames.Apple)}: {configuration.PackageNames.Apple}";
+            errorMessage += $"Expected for {nameof(configuration.PackageNames.Google)}: {configuration.PackageNames.Google}";
 
             throw new ArgumentException(errorMessage);
         }
         
         private void ValidateVisitedCountries(TemporaryExposureKeyBatchDto parameter)
         {
-            if (parameter.visitedCountries == null) return;
+            if (parameter.visitedCountries == null)
+            {
+                return;
+            }
 
             var notFoundVisitedCountries = new List<string>();
             var disabledVisitedCountries = new List<string>();
@@ -147,25 +167,30 @@ namespace DIGNDB.App.SmitteStop.API.Services
                 var foundCountry = _countryRepository.FindByIsoCode(visitedCountry);
 
                 if (foundCountry == null)
+                {
                     notFoundVisitedCountries.Add(visitedCountry);
+                }
                 else if (!foundCountry.VisitedCountriesEnabled)
+                {
                     disabledVisitedCountries.Add(visitedCountry);
+                }
             }
 
             var errorMessage = string.Empty;
             if (notFoundVisitedCountries.Any())
             {
-                errorMessage +=
-                    $"ISO codes of countries not found in the database: {string.Join(", ", notFoundVisitedCountries)}. ";
+                errorMessage += $"ISO codes of countries not found in the database: {string.Join(", ", notFoundVisitedCountries)}. ";
             }
+
             if (disabledVisitedCountries.Any())
             {
-                errorMessage +=
-                    $"ISO codes of countries marked as disabled in the database: {string.Join(", ", disabledVisitedCountries)}. ";
+                errorMessage += $"ISO codes of countries marked as disabled in the database: {string.Join(", ", disabledVisitedCountries)}. ";
             }
 
             if (notFoundVisitedCountries.Any() || disabledVisitedCountries.Any())
+            {
                 throw new ArgumentException(errorMessage);
+            }
         }
 
         private List<TemporaryExposureKeyDto> GetKeysWithValidSize(IEnumerable<TemporaryExposureKeyDto> keys, ILogger logger)
@@ -176,9 +201,13 @@ namespace DIGNDB.App.SmitteStop.API.Services
             foreach (var exposureKeyDto in keys)
             {
                 if (exposureKeyDto.key.Length == TemporaryExposureKeyDto.KeyLength)
+                {
                     newValidExposureKeys.Add(exposureKeyDto);
+                }
                 else
+                {
                     newNonValidExposureKeys.Add(exposureKeyDto);
+                }
             }
 
             // Logging keys with non valid size in a json format.
@@ -192,15 +221,19 @@ namespace DIGNDB.App.SmitteStop.API.Services
             return newValidExposureKeys;
         }
 
-        private IList<byte[]> GetDuplicatedKeys(IList<byte[]> keys)
+        private static IList<byte[]> GetDuplicatedKeys(IList<byte[]> keys)
         {
             IList<byte[]> duplicatedKeys = new List<byte[]>();
 
-            for (int i = 0; i < keys.Count - 1; i++)
+            for (var i = 0; i < keys.Count - 1; i++)
             {
-                for (int j = i + 1; j < keys.Count; j++)
+                for (var j = i + 1; j < keys.Count; j++)
+                {
                     if (StructuralComparisons.StructuralEqualityComparer.Equals(keys[i], keys[j]))
+                    {
                         duplicatedKeys.Add(keys[j]);
+                    }
+                }
             }
 
             return duplicatedKeys;

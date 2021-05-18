@@ -52,21 +52,26 @@ namespace DIGNDB.App.SmitteStop.API.Services
         {
             var algorithmInToken = jwtToken.Header.Alg;
             if (algorithmInToken != _supportedAlgorithm)
-                throw new NotSupportedException(
-                    $"Provided algorithm is not supported. Algorithm in token: {algorithmInToken}. Supported algorithm: {_supportedAlgorithm}");
+            {
+                var message = $"Provided algorithm is not supported. Algorithm in token: {algorithmInToken}. Supported algorithm: {_supportedAlgorithm}";
+                throw new NotSupportedException(message);
+            }
         }
 
         private void ValidateClientId(SecurityToken token)
         {
-            if (!(token is JwtSecurityToken jwtToken)) return;
-
-            string clientIdInToken = jwtToken.Claims.Single(c => c.Type == ClientIdClaimType).Value;
-
+            if (!(token is JwtSecurityToken jwtToken))
+            {
+                return;
+            }
+            
+            var clientIdInToken = jwtToken.Claims.Single(c => c.Type == ClientIdClaimType).Value;
             var validationResult = clientIdInToken == _validClientIdValue;
-
             if (!validationResult)
-                throw new SecurityTokenException(
-                    $"client_id claim is invalid. Expected: {_validClientIdValue}, Got: {clientIdInToken}");
+            {
+                var message = $"client_id claim is invalid. Expected: {_validClientIdValue}, Got: {clientIdInToken}";
+                throw new SecurityTokenException(message);
+            }
         }
 
         private TokenValidationParameters GetValidationParameters(string rsaKeyId)

@@ -8,21 +8,22 @@ namespace FederationGatewayApi.Mappers
 {
     public class OriginCountryIsoCodeResolver : IValueResolver<TemporaryExposureKeyGatewayDto, TemporaryExposureKey, Country>
     {
-        private readonly ICountryRepository countryRepositor;
+        private readonly ICountryRepository _countryRepository;
 
-        public OriginCountryIsoCodeResolver(ICountryRepository _countryRepositor)
+        public OriginCountryIsoCodeResolver(ICountryRepository countryRepository)
         {
-            countryRepositor = _countryRepositor;
+            _countryRepository = countryRepository;
         }
 
         public Country Resolve(TemporaryExposureKeyGatewayDto source, TemporaryExposureKey destination, Country destMember, ResolutionContext context)
         {
             var isoCode = source.Origin;
-            var country = countryRepositor.FindByIsoCode(source.Origin);
+            var country = _countryRepository.FindByIsoCode(isoCode);
             if (country == null)
             {
                 throw new ArgumentException($"Country with code {isoCode} not found!");
             }
+
             return country;
         }
     }
