@@ -4,6 +4,7 @@ using Microsoft.Security.Application;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -23,11 +24,10 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
         public void ValidateLogMobileMessagePatterns(LogMessageMobile logMessageMobile, IDictionary<string, string> patternsDictionary)
         {
-            IDictionary<string, KeyValuePair<string, string>> elements = logMessageMobile.GetPatternsValueToVerify(patternsDictionary);
-            foreach (var keyValuePair in elements)
+            var elements = logMessageMobile.GetPatternsValueToVerify(patternsDictionary);
+            if (elements.Any(keyValuePair => !IsValidRegularExpression(keyValuePair.Value)))
             {
-                if (!IsValidRegularExpression(keyValuePair.Value))
-                    throw new JsonException("Invalid pattern");
+                throw new JsonException("Invalid pattern");
             }
         }
 
@@ -39,16 +39,18 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
         private bool IsValidDateTimeFormat(string value)
         {
-            DateTime result;
-            if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+            if (!DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
             {
-                TimeSpan timeSpan = (DateTime.UtcNow - result).Duration();
-                double years = timeSpan.TotalDays / 365.25;
-                if (years > 2)
-                    return false;
-                return true;
+                return false;
             }
-            return false;
+
+            TimeSpan timeSpan = (DateTime.UtcNow - result).Duration();
+            double years = timeSpan.TotalDays / 365.25;
+            if (years > 2)
+            {
+                return false;
+            }
+            return true;
         }
 
         public void SanitizeAndShortenTextFields(LogMessageMobile lm, int maxLength)
@@ -74,7 +76,11 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
         public void SanitizeAndShortenField(string value, Action<string> setFieldOnLogMessage, int maxLength)
         {
-            if (String.IsNullOrWhiteSpace(value)) return;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return;
+            }
+
             var modifiedField = Sanitizer.GetSafeHtmlFragment(value.Trim());
             bool valueHasChanged = (!modifiedField.Equals(value, StringComparison.OrdinalIgnoreCase));
             if (modifiedField.Length > maxLength)
@@ -87,7 +93,5 @@ namespace DIGNDB.App.SmitteStop.API.Services
                 setFieldOnLogMessage(modifiedField);
             }
         }
-
-
     }
 }

@@ -42,8 +42,8 @@ namespace FederationGatewayApi.Mappers
                 _logger.LogError($"Country codes have not been found in the DataBase: {notMappedCountriesStr}");
             }
 
-            var interectionEnties = visitedDbCountries.Select(
-                country => new TemporaryExposureKeyCountry()
+            var tekCountryEntities = visitedDbCountries.Select(
+                country => new TemporaryExposureKeyCountry
                 {
                     Country = country,
                     CountryId = country.Id,
@@ -51,7 +51,8 @@ namespace FederationGatewayApi.Mappers
                     TemporaryExposureKeyId = destination.Id
                 })
                 .ToList();
-            return interectionEnties;
+
+            return tekCountryEntities;
         }
     }
 }
