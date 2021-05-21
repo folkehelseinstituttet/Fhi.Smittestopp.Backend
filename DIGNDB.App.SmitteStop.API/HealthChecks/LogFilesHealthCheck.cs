@@ -26,9 +26,8 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         private const string LogFilesDatePattern = "yyyyMMdd";
-        private readonly Regex _apiRegex = new Regex("API_Logs-[0-9]{4}[0-9]{2}[0-9]{2}");
+        private readonly Regex _apiRegex = new Regex("Api-logs-[0-9]{4}[0-9]{2}[0-9]{2}");
         private readonly Regex _jobsRegex = new Regex("Jobs_Logs-[0-9]{4}[0-9]{2}[0-9]{2}");
-
         private const string MobileLogFilesDatePattern = "dd-MM-yyyy";
         private readonly Regex _mobileRegex = new Regex("Mobile_Logs_[0-9]{2}-[0-9]{2}-[0-9]{4}");
 
@@ -73,13 +72,7 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                 }
 
                 // Mobile log files
-                var mobileLogFilesNamePrefix =
-                    "D:\\logs\\SmitteStop\\Mobile_Logs_.txt"; // see log4net.config where this is configured
-#if DEBUG
-                mobileLogFilesNamePrefix =
-                    "C:\\projects\\smittestop\\no\\logs\\SmitteStop\\Mobile_Logs_.txt"; // see log4net.config where this is configured
-#endif
-
+                var mobileLogFilesNamePrefix = _appSettingsConfig.LogsMobilePath; // see also log4net.config where this is configured
                 CheckLogFiles(mobileLogFilesNamePrefix, _mobileRegex, ref status, data, MobileLogFilesDatePattern);
             }
             catch (Exception e)

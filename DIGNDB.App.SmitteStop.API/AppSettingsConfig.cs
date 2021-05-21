@@ -32,6 +32,9 @@ namespace DIGNDB.App.SmitteStop.API
 
         [Required]
         public string LogsJobsPath { get; set; }
+
+        [Required]
+        public string LogsMobilePath { get; set; }
         
         [Range(minimum: 100, maximum: int.MaxValue)]
         public long LogFileSizeLimitBytes { get; set; }
