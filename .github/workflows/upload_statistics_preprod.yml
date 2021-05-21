@@ -1,7 +1,7 @@
 name: PreProd Download and upload covid files 
 on:
   schedule:
-    - cron: '0/10 11-18 * * *' # UTC 
+    - cron: '0/20 11-16 * * *' # UTC 
   workflow_dispatch:
 
 jobs:
