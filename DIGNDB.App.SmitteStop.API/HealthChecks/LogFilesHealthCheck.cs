@@ -25,12 +25,11 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
         private readonly ILogger<LogFilesHealthCheck> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        private const string LogFilesDatePattern = "yyyyMMdd";
-        private readonly Regex _apiRegex = new Regex("API_Logs-[0-9]{4}[0-9]{2}[0-9]{2}");
-        private readonly Regex _jobsRegex = new Regex("Jobs_Logs-[0-9]{4}[0-9]{2}[0-9]{2}");
-
-        private const string MobileLogFilesDatePattern = "dd-MM-yyyy";
-        private readonly Regex _mobileRegex = new Regex("Mobile_Logs_[0-9]{2}-[0-9]{2}-[0-9]{4}");
+        private readonly string _logFilesDatePattern;
+        private readonly Regex _apiRegex;
+        private readonly Regex _jobsRegex;
+        private readonly string _mobileLogFilesDatePattern;
+        private readonly Regex _mobileRegex;
 
         /// <summary>
         /// Ctor 
@@ -43,6 +42,16 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
             _appSettingsConfig = appSettingsConfig;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+
+            // Initialize Health Check AppSettings
+            var apiRegex = _appSettingsConfig.HealthCheckSettings.ApiRegex;
+            _apiRegex = new Regex(apiRegex);
+            var jobsRegex = _appSettingsConfig.HealthCheckSettings.JobsRegex;
+            _jobsRegex = new Regex(jobsRegex);
+            var mobileRegex = _appSettingsConfig.HealthCheckSettings.MobileRegex;
+            _mobileRegex = new Regex(mobileRegex);
+            _logFilesDatePattern = _appSettingsConfig.HealthCheckSettings.LogFilesDatePattern;
+            _mobileLogFilesDatePattern = _appSettingsConfig.HealthCheckSettings.MobileLogFilesDatePattern;
         }
 
         /// <summary>
@@ -62,25 +71,19 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
             {
                 // Api log files
                 var apiLogFilesNamePrefix = _appSettingsConfig.LogsApiPath;
-                CheckLogFiles(apiLogFilesNamePrefix, _apiRegex, ref status, data, LogFilesDatePattern);
+                CheckLogFiles(apiLogFilesNamePrefix, _apiRegex, ref status, data, _logFilesDatePattern);
 
                 // Jobs log files
                 var query = _httpContextAccessor.HttpContext.Request.Query;
                 if (QueryContainsWfe01(query))
                 {
                     var jobsLogFilesNamePrefix = _appSettingsConfig.LogsJobsPath;
-                    CheckLogFiles(jobsLogFilesNamePrefix, _jobsRegex, ref status, data, LogFilesDatePattern);
+                    CheckLogFiles(jobsLogFilesNamePrefix, _jobsRegex, ref status, data, _logFilesDatePattern);
                 }
 
                 // Mobile log files
-                var mobileLogFilesNamePrefix =
-                    "D:\\logs\\SmitteStop\\Mobile_Logs_.txt"; // see log4net.config where this is configured
-#if DEBUG
-                mobileLogFilesNamePrefix =
-                    "C:\\projects\\smittestop\\no\\logs\\SmitteStop\\Mobile_Logs_.txt"; // see log4net.config where this is configured
-#endif
-
-                CheckLogFiles(mobileLogFilesNamePrefix, _mobileRegex, ref status, data, MobileLogFilesDatePattern);
+                var mobileLogFilesNamePrefix = _appSettingsConfig.LogsMobilePath; // see also log4net.config where this is configured
+                CheckLogFiles(mobileLogFilesNamePrefix, _mobileRegex, ref status, data, _mobileLogFilesDatePattern);
             }
             catch (Exception e)
             {

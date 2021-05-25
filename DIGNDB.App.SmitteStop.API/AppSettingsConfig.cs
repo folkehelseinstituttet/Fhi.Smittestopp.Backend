@@ -32,6 +32,9 @@ namespace DIGNDB.App.SmitteStop.API
 
         [Required]
         public string LogsJobsPath { get; set; }
+
+        [Required]
+        public string LogsMobilePath { get; set; }
         
         [Range(minimum: 100, maximum: int.MaxValue)]
         public long LogFileSizeLimitBytes { get; set; }
@@ -98,15 +101,45 @@ namespace DIGNDB.App.SmitteStop.API
         public string AuthorizationHealthCheck { get; set; }
 
         /// <summary>
-        /// 
+        /// Appsettings value for numbers today earliest call time
         /// </summary>
         [Required(AllowEmptyStrings = false)]
         public int NumbersTodayCallAfter24Hour { get; set; }
 
         /// <summary>
-        /// 
+        /// Appsettings value for zip files earliest call time
         /// </summary>
         [Required(AllowEmptyStrings = false)]
         public int ZipFilesCallAfter24Hour { get; set; }
+
+        /// <summary>
+        /// Appsettings value for api log file name
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public string ApiRegex { get; set; }
+
+        /// <summary>
+        /// Appsettings value jobs log file name
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public string JobsRegex { get; set; }
+
+        /// <summary>
+        /// Appsettings value mobile logs file name
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public string MobileRegex { get; set; }
+
+        /// <summary>
+        /// Appsettings value log files date pattern
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public string LogFilesDatePattern { get; set; }
+
+        /// <summary>
+        /// Appsettings value mobile log files date pattern
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public string MobileLogFilesDatePattern { get; set; }
     }
 }
