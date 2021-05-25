@@ -56,6 +56,18 @@ jobs:
     #############################
     
     # tested file
+    - name: Check tested file uploaded
+      id: check_tested_file_uploaded
+      run: |
+        response_tested_check=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/uploadStatistics?filename=${{env.file_tested}}")
+        echo "Download check tested file response: $response_tested_check"
+        if [ "true" == "${response_tested_check}" ]
+        then
+          echo "File already uploaded"
+        else
+          echo "File not uploaded yet"
+        fi
+        echo "tested_check_response=${response_tested_check}" >> $GITHUB_ENV
     - name: Download tested file
       id: download_tested_file
       run: |
