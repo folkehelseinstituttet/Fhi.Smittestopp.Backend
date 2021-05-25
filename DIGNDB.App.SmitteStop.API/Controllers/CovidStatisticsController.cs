@@ -42,11 +42,10 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
                     return Ok("File already uploaded");
                 }
 
+                await using Stream fileStream = new FileStream(destinationPath, FileMode.Create);
                 try
                 {
-                    await using Stream fileStream = new FileStream(destinationPath, FileMode.Create);
                     await file.CopyToAsync(fileStream);
-                    await fileStream.DisposeAsync();
 
                     _logger.LogInformation($"File uploaded completed successfully: {file.FileName}");
 
@@ -59,6 +58,10 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
                     var errorMessage = "Server error: Error when trying to save zip file";
                     _logger.LogError(errorMessage, e);
                     throw new GitHubControllerServerErrorException(errorMessage, e);
+                }
+                finally
+                {
+                    await fileStream.DisposeAsync();
                 }
             }
             catch (GitHubControllerServerErrorException e)
@@ -73,6 +76,36 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
 
                 return StatusCode(500, e.Message);
             }
+        }
+
+        [HttpGet]
+        [ServiceFilter(typeof(GitHubAuthorizationAttribute))]
+        public async Task<bool> CovidStatisticsAlreadyUploaded()
+        {
+            _logger.LogInformation("Check covid file uploaded called");
+
+            Request.Query.TryGetValue("filename", out var fileName);
+            var folderPath = _appSettingsConfig.GitHubSettings.GitHubStatisticsZipFileFolder;
+            if (!CheckFileName(fileName))
+            {
+                _logger.LogWarning("File name not acceptable");
+                return await Task.FromResult(false);
+            }
+
+            if (!Directory.Exists(folderPath))
+            {
+                _logger.LogWarning($"Folder {folderPath} does not exists");
+                return await Task.FromResult(false);
+            }
+
+            var destinationPath = Path.Combine(folderPath, fileName);
+            if (System.IO.File.Exists(destinationPath))
+            {
+                _logger.LogInformation($"File {fileName} already exists");
+                return await Task.FromResult(true);
+            }
+
+            return await Task.FromResult(false);
         }
 
         private void DeleteOldStatisticsFiles(string path)
@@ -144,7 +177,8 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             var timeLocationMatch = timeLocationFileNameMatches.Count == 1;
             var locationMatch = locationFileNameMatches.Count == 1;
 
-            return testedMatch || hospitalAdmissionMatch || vaccinationMatch || timeLocationMatch || locationMatch;
+            var result = testedMatch || hospitalAdmissionMatch || vaccinationMatch || timeLocationMatch || locationMatch;
+            return result;
         }
     }
 }
