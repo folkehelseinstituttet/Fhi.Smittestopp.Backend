@@ -71,7 +71,7 @@ jobs:
     - name: Download tested file
       id: download_tested_file
       run: |
-        if [ !${{env.tested_check_response}} ]
+        if [ ! ${{env.tested_check_response}} ]
         then
           response_tested=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_tested}}")
           echo "Download tested file response: $response_tested"        
