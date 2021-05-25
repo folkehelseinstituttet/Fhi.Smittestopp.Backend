@@ -67,11 +67,11 @@ jobs:
         else
           echo "File not uploaded yet"
         fi
-        #echo "tested_check_response=${response_tested_check}" >> $GITHUB_ENV
+        echo "tested_check_response=${response_tested_check}" >> $GITHUB_ENV
     - name: Download tested file
       id: download_tested_file
       run: |
-        if [ !$response_tested_check ]
+        if [ !$tested_check_response ]
         then
           response_tested=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_tested}}")
           echo "Download tested file response: $response_tested"        
@@ -90,7 +90,7 @@ jobs:
       id: upload_tested_file
       run: |
         echo "Download of ${{env.file_tested}} response: ${{env.tested_response}}"
-        if [ $response_tested_check ]
+        if [ $tested_check_response ]
         then
           echo "File for ${{env.file_tested}} already uploaded"
         else
