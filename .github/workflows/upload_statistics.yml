@@ -73,7 +73,7 @@ jobs:
       run: |
         response_tested=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_tested}}")
         echo "Download tested file response: $response_tested"
-        if [ "200" == "${response_tested}" ]
+        if [ !$response_tested_check and "200" == "${response_tested}" ]
         then
           curl "${{env.base_url}}/${{env.file_tested}}" -o ${{env.file_tested}}          
           echo "Download of ${{env.file_tested}} completed"
@@ -85,7 +85,7 @@ jobs:
       id: upload_tested_file
       run: |
         echo "Download of ${{env.file_tested}} response: ${{env.tested_response}}"
-        if [ "200" == "${{env.tested_response}}" ]
+        if [ !$response_tested_check and "200" == "${{env.tested_response}}" ]
         then
           echo "Uploading file: ${{env.file_tested}}"
           response_tested_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@${{env.file_tested}}" ${{secrets.UPLOAD_URL}})
