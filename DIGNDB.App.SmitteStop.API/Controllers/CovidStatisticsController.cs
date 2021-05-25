@@ -42,11 +42,10 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
                     return Ok("File already uploaded");
                 }
 
+                await using Stream fileStream = new FileStream(destinationPath, FileMode.Create);
                 try
                 {
-                    await using Stream fileStream = new FileStream(destinationPath, FileMode.Create);
                     await file.CopyToAsync(fileStream);
-                    await fileStream.DisposeAsync();
 
                     _logger.LogInformation($"File uploaded completed successfully: {file.FileName}");
 
@@ -59,6 +58,10 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
                     var errorMessage = "Server error: Error when trying to save zip file";
                     _logger.LogError(errorMessage, e);
                     throw new GitHubControllerServerErrorException(errorMessage, e);
+                }
+                finally
+                {
+                    await fileStream.DisposeAsync();
                 }
             }
             catch (GitHubControllerServerErrorException e)
