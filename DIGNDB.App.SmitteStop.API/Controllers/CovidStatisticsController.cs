@@ -75,6 +75,36 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             }
         }
 
+        [HttpGet]
+        [ServiceFilter(typeof(GitHubAuthorizationAttribute))]
+        public async Task<bool> CovidStatisticsAlreadyUploaded()
+        {
+            _logger.LogInformation("Check covid file uploaded called");
+
+            Request.Query.TryGetValue("filename", out var fileName);
+            var folderPath = _appSettingsConfig.GitHubSettings.GitHubStatisticsZipFileFolder;
+            if (!CheckFileName(fileName))
+            {
+                _logger.LogWarning("File name not acceptable");
+                return await Task.FromResult(false);
+            }
+
+            if (!Directory.Exists(folderPath))
+            {
+                _logger.LogWarning($"Folder {folderPath} does not exists");
+                return await Task.FromResult(false);
+            }
+
+            var destinationPath = Path.Combine(folderPath, fileName);
+            if (System.IO.File.Exists(destinationPath))
+            {
+                _logger.LogInformation($"File {fileName} already exists");
+                return await Task.FromResult(true);
+            }
+
+            return await Task.FromResult(false);
+        }
+
         private void DeleteOldStatisticsFiles(string path)
         {
             var gitHubSettings = _appSettingsConfig.GitHubSettings;
@@ -144,7 +174,8 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             var timeLocationMatch = timeLocationFileNameMatches.Count == 1;
             var locationMatch = locationFileNameMatches.Count == 1;
 
-            return testedMatch || hospitalAdmissionMatch || vaccinationMatch || timeLocationMatch || locationMatch;
+            var result = testedMatch || hospitalAdmissionMatch || vaccinationMatch || timeLocationMatch || locationMatch;
+            return result;
         }
     }
 }
