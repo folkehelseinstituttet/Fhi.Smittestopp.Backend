@@ -64,7 +64,7 @@ jobs:
         if [ "true" == "${response_tested_check}" ]
         then
           echo "File already uploaded"
-          exit 1
+          throw "File already uploaded"
         else
           echo "File not uploaded yet"
           exit 0
