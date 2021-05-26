@@ -64,10 +64,10 @@ jobs:
         if [ "true" == "${response_tested_check}" ]
         then
           echo "File already uploaded"
-          throw "File already uploaded"
+          false
         else
           echo "File not uploaded yet"
-          exit 0
+          true
         fi
         echo "tested_check_response=${response_tested_check}" >> $GITHUB_ENV
     - name: Download tested file      
