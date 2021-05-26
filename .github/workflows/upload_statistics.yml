@@ -64,13 +64,17 @@ jobs:
         if [ "true" == "${response_tested_check}" ]
         then
           echo "File already uploaded"
+          false
         else
           echo "File not uploaded yet"
+          true
         fi
         echo "tested_check_response=${response_tested_check}" >> $GITHUB_ENV
     - name: Download tested file
       id: download_tested_file
       run: |
+        if: {{ success() }}
+          echo "success"
         if [ ! ${{env.tested_check_response}} ]
         then
           response_tested=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_tested}}")
