@@ -59,7 +59,7 @@ jobs:
     - name: Check tested file uploaded
       id: check_tested_file_uploaded
       run: |
-        response_tested_check=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" "https://test-be-op.ss2np.fhi.no/uploadStatistics?filename=${{env.file_tested}}")
+        response_tested_check=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" "${{secrets.UPLOAD_URL}}?filename=${{env.file_tested}}")
         echo "Download check tested file response: $response_tested_check"
         if [ "true" == "${response_tested_check}" ]
         then
