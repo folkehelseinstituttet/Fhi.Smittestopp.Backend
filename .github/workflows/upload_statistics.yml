@@ -64,15 +64,12 @@ jobs:
         if [ "true" == "${response_tested_check}" ]
         then
           echo "File already uploaded"
-          false
         else
           echo "File not uploaded yet"
-          true
         fi
         echo "tested_check_response=${response_tested_check}" >> $GITHUB_ENV
     - name: Download tested file      
       id: download_tested_file
-      if: ${{ success() }}
       run: |        
         if [ ! ${{env.tested_check_response}} ]
         then
@@ -91,7 +88,6 @@ jobs:
         echo "tested_response=${response_tested}" >> $GITHUB_ENV
     - name: Upload tested file
       id: upload_tested_file
-      #if: ${{ success() }}
       run: |
         echo "Download of ${{env.file_tested}} response: ${{env.tested_response}}"
         if [ ${{env.tested_check_response}} ]
