@@ -72,7 +72,7 @@ jobs:
         echo "tested_check_response=${response_tested_check}" >> $GITHUB_ENV
     - name: Download tested file      
       id: download_tested_file
-      if: ${{ success() }}
+      if: ${{ failure() }}
       run: |        
         if [ ! ${{env.tested_check_response}} ]
         then
