@@ -58,7 +58,7 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
             var hour = _appSettingsConfig.HealthCheckSettings.NumbersTodayCallAfter24Hour;
             if (TooEarly(hour, _logger))
             {
-                var key = $"Too early to check zip files {DateTime.Now}";
+                var key = $"Too early to check numbers today {DateTime.Now}";
                 data.Add(key, $"Configured value is {hour}");
                 return await Task.FromResult(new HealthCheckResult(
                     status,
