@@ -71,8 +71,8 @@ jobs:
     - name: Download tested file      
       id: download_tested_file
       run: |        
-        if [ ! ${{env.tested_check_response}} ]
-        then
+        #if [ ! ${{env.tested_check_response}} ]
+        #then
           response_tested=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_tested}}")
           echo "Download tested file response: $response_tested"        
           if [ "200" == "${response_tested}" ]
@@ -82,18 +82,18 @@ jobs:
           else
             echo "File for ${{env.file_tested}} not available yet"
           fi
-        else
-          echo "Download failure: ${response_tested}"
-        fi
+        #else
+        #  echo "Download failure: ${response_tested}"
+        #fi
         echo "tested_response=${response_tested}" >> $GITHUB_ENV
     - name: Upload tested file
       id: upload_tested_file
       run: |
         echo "Download of ${{env.file_tested}} response: ${{env.tested_response}}"
-        if [ ${{env.tested_check_response}} ]
-        then
-          echo "File for ${{env.file_tested}} already uploaded"
-        else
+        #if [ ${{env.tested_check_response}} ]
+        #then
+        #  echo "File for ${{env.file_tested}} already uploaded"
+        #else
           if [ "200" == "${{env.tested_response}}" ]
           then
             echo "Uploading file: ${{env.file_tested}}"
@@ -102,7 +102,7 @@ jobs:
           else
             echo "File for ${{env.file_tested}} not available yet"
           fi
-        fi
+        #fi
     
     # hospital admission file
     - name: Download hospital admission file
