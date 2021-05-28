@@ -39,19 +39,16 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
             }
 
             //othwerwise treat as thumbprint for a certstore-cert
-            using (var certStore = new X509Store(StoreName.My, StoreLocation.LocalMachine))
+            using var certStore = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+            certStore.Open(OpenFlags.ReadOnly);
+            var certCollection = certStore.Certificates.Find(X509FindType.FindByThumbprint, certificateThumbprintOrPath, false);
+            if (certCollection.Count > 0)
             {
-                certStore.Open(OpenFlags.ReadOnly);
-                var certCollection =
-                    certStore.Certificates.Find(X509FindType.FindByThumbprint, certificateThumbprintOrPath, false);
-                if (certCollection.Count > 0)
-                {
-                    var privateKey = certCollection[0].GetECDsaPrivateKey().ExportECPrivateKey().ToString();
-                    return privateKey;
-                }
-                
-                throw new SecurityException("Unable to read key from certificate");
+                var privateKey = certCollection[0].GetECDsaPrivateKey().ExportECPrivateKey().ToString();
+                return privateKey;
             }
+                
+            throw new SecurityException("Unable to read key from certificate");
         }
 
         public SignatureInfo[] Signatures => new []

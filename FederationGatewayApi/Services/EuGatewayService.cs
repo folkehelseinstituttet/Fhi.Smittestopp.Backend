@@ -262,7 +262,6 @@ namespace FederationGatewayApi.Services
                 currentDownloadDate = currentDownloadDate.AddDays(1);
                 lastSyncedBatchTag = null;
             }
-
         }
 
         private string DownloadKeysFromGatewayFromGivenDate(DateTime date, string lastSyncedBatchTag)
@@ -303,7 +302,6 @@ namespace FederationGatewayApi.Services
                         throw;
                     }
                 }
-
 
                 var jsonString = GetResponseOrThrow(responseMessage);
                 _logger.LogInformation($"|SmitteStop:DownloadKeysFromGateway| Parsed response successfully. JsonResponse is not null or empty: {string.IsNullOrEmpty(jsonString)} ");
