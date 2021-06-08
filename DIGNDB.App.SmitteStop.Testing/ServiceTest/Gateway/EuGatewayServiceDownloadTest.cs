@@ -43,12 +43,12 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         private EuGatewayConfig _config;
         private IEpochConverter _epochConverter;
         private Mock<ILogger<TemporaryExposureKeyRepository>> _temporaryExposureKeyRepositoryLogger;
+        private Mock<ILogger<GatewayWebContextReader>> _loggerGatewayWebContextReader;
 
         private Country _denmark;
         private Country _poland;
         private Country _germany;
         private Country _latviaDisabledDownload;
-        private readonly Country _spain;
         private TemporaryExposureKeyRepository _keysRepository;
 
         [SetUp]
@@ -62,6 +62,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             _dbContext.Database.EnsureDeleted();
 
             _temporaryExposureKeyRepositoryLogger = new Mock<ILogger<TemporaryExposureKeyRepository>>(MockBehavior.Loose);
+            _loggerGatewayWebContextReader = new Mock<ILogger<GatewayWebContextReader>>();
             var translationsRepositoryMock = new Mock<IGenericRepository<Translation>>(MockBehavior.Strict);
             _countryRepository = new CountryRepository(_dbContext, translationsRepositoryMock.Object, new AppSettingsConfig());
             _autoMapper = CreateAutoMapperWithDependencies(_countryRepository);
@@ -235,7 +236,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 
             var signatureServiceMock = new Mock<ISignatureService>(MockBehavior.Strict);
 
-            var webContextReader = new GatewayWebContextReader(_autoMapper);
+            var webContextReader = new GatewayWebContextReader(_autoMapper, _loggerGatewayWebContextReader.Object);
 
             var epochConverter = new EpochConverter();
 

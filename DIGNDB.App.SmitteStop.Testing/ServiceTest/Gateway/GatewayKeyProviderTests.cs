@@ -57,7 +57,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             {
                 throw;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // ignored because testing only interaction with X509Store
             }
