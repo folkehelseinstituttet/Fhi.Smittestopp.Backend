@@ -1,7 +1,7 @@
 name: Download and upload covid files 
 on:
   schedule:
-    - cron: '0/20 11-16 * * *' # UTC 
+    - cron: '0/20 11-14 * * *' # UTC 
   workflow_dispatch:
 
 jobs:
@@ -56,31 +56,53 @@ jobs:
     #############################
     
     # tested file
-    - name: Download tested file
-      id: download_tested_file
+    - name: Check tested file uploaded
+      id: check_tested_file_uploaded
       run: |
-        response_tested=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_tested}}")
-        echo "Download tested file response: $response_tested"
-        if [ "200" == "${response_tested}" ]
+        response_tested_check=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" "${{secrets.UPLOAD_URL}}?filename=${{env.file_tested}}")
+        echo "Download check tested file response: $response_tested_check"
+        if [ "true" == "${response_tested_check}" ]
         then
-          curl "${{env.base_url}}/${{env.file_tested}}" -o ${{env.file_tested}}          
-          echo "Download of ${{env.file_tested}} completed"
+          echo "File already uploaded"
         else
-          echo "Download failure: ${response_tested}"
+          echo "File not uploaded yet"
         fi
+        echo "tested_check_response=${response_tested_check}" >> $GITHUB_ENV
+    - name: Download tested file      
+      id: download_tested_file
+      run: |        
+        #if [ ! ${{env.tested_check_response}} ]
+        #then
+          response_tested=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_tested}}")
+          echo "Download tested file response: $response_tested"        
+          if [ "200" == "${response_tested}" ]
+          then 
+            curl "${{env.base_url}}/${{env.file_tested}}" -o ${{env.file_tested}}          
+            echo "Download of ${{env.file_tested}} completed"
+          else
+            echo "File for ${{env.file_tested}} not available yet"
+          fi
+        #else
+        #  echo "Download failure: ${response_tested}"
+        #fi
         echo "tested_response=${response_tested}" >> $GITHUB_ENV
     - name: Upload tested file
       id: upload_tested_file
       run: |
         echo "Download of ${{env.file_tested}} response: ${{env.tested_response}}"
-        if [ "200" == "${{env.tested_response}}" ]
-        then
-          echo "Uploading file: ${{env.file_tested}}"
-          response_tested_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@${{env.file_tested}}" ${{secrets.UPLOAD_URL}})
-          echo "Upload response: ${response_tested_upload}"
-        else
-          echo "File for ${{env.file_tested}} not available yet"
-        fi       
+        #if [ ${{env.tested_check_response}} ]
+        #then
+        #  echo "File for ${{env.file_tested}} already uploaded"
+        #else
+          if [ "200" == "${{env.tested_response}}" ]
+          then
+            echo "Uploading file: ${{env.file_tested}}"
+            response_tested_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL }}" -F "file=@${{env.file_tested}}" ${{secrets.UPLOAD_URL}})
+            echo "Upload response: ${response_tested_upload}"
+          else
+            echo "File for ${{env.file_tested}} not available yet"
+          fi
+        #fi
     
     # hospital admission file
     - name: Download hospital admission file
