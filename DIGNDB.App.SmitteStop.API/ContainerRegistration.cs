@@ -50,11 +50,11 @@ namespace DIGNDB.App.SmitteStop.API
 
             services.AddSingleton<IAuthorizationHandler, HealthCheckAuthorizationHandler>();
 
-
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(DeprecatedCheckAttribute));
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
             services.AddApiVersioning(config =>
             {
                 // Specify the default API Version
@@ -123,7 +123,6 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICacheOperationsV3, CacheOperationsV3>();
-            services.AddSingleton<IExposureConfigurationService, ExposureConfigurationService>();
             services.AddScoped<IAddTemporaryExposureKeyService, AddTemporaryExposureKeyService>();
             services.AddScoped<IExposureKeyValidator, ExposureKeyValidator>();
             services.AddScoped<IExposureKeyReader, ExposureKeyReader>();

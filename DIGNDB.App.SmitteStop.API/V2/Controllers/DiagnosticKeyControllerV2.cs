@@ -53,6 +53,7 @@ namespace DIGNDB.App.SmitteStop.API
         }
 
         #region Smitte|stop API
+
         [HttpGet]
         [Route("exposureconfiguration")]
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
