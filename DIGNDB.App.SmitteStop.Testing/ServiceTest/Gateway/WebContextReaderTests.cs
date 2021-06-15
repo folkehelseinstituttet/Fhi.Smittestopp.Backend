@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Text.Json;
 
 namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 {
@@ -30,11 +31,28 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         }
 
         [Test]
-        public void ReaderReadsObjectsBasedOnJSON()
+        public void ReaderReadsObjectsBasedOnJson()
         {
-            var mockResponseBody = WebContextMock.MockValidBodyJSON();
+            var mockResponseBody = WebContextMock.MockValidBodyJson();
             var keys = WebContextReader.GetItemsFromRequest(mockResponseBody);
             Assert.That(keys.Count > 0);
+        }
+
+        [Test]
+        public void ReaderReadsObjectsBasedOnInvalidJson()
+        {
+            var mockResponseBody = WebContextMock.MockInvalidBodyJson();
+
+            Assert.Throws<JsonException>(() => WebContextReader.GetItemsFromRequest(mockResponseBody));
+        }
+
+        [Test]
+        public void ReaderReadsObjectsBasedOnJsonForNoBatches()
+        {
+            var mockResponseBody = WebContextMock.MockNoBatchesBodyJson();
+            var keys = WebContextReader.GetItemsFromRequest(mockResponseBody);
+
+            Assert.That(keys.Count == 0);
         }
 
         [Test]
@@ -42,7 +60,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         {
             var mockResponse = WebContextMock.MockHttpResponse();
             var response = WebContextReader.ReadHttpContextStream(mockResponse);
-            Assert.AreEqual(response, WebContextMock.MockValidBodyJSON());
+            Assert.AreEqual(response, WebContextMock.MockValidBodyJson());
         }
     }
 }

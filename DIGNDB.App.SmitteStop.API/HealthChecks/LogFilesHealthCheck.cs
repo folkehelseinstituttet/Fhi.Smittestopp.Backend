@@ -75,7 +75,7 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
 
                 // Jobs log files
                 var query = _httpContextAccessor.HttpContext.Request.Query;
-                if (QueryContainsWfe01(query))
+                if (QueryContainsWfe01AndMachineIsWfe01(query))
                 {
                     var jobsLogFilesNamePrefix = _appSettingsConfig.LogsJobsPath;
                     CheckLogFiles(jobsLogFilesNamePrefix, _jobsRegex, ref status, data, _logFilesDatePattern);
@@ -140,10 +140,21 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
             }
         }
 
-        private bool QueryContainsWfe01(IQueryCollection query)
+        private bool QueryContainsWfe01AndMachineIsWfe01(IQueryCollection query)
         {
             query.TryGetValue("server", out var server);
-            return server == "wfe01";
+            var serverParameter = server[0].ToLower();
+
+            var server1Name = _appSettingsConfig.HealthCheckSettings.Server1Name.ToLower();
+            var queryContainsServer1Name = serverParameter == server1Name;
+
+            var name = Environment.MachineName.ToLower();
+            var isServer1 = name.Contains(server1Name);
+
+            _logger.LogInformation($"|Health check log files| Server name: {name}; Field for server name 'isWfe01' value: {isServer1}; Query contains 'wfe01': {queryContainsServer1Name}; Query: {query}");
+
+            // true IF query contains server name AND request is received on server 1
+            return queryContainsServer1Name && isServer1;
         }
     }
 }

@@ -39,21 +39,22 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
         {
             gatewayContextReader.Setup(mock => mock.GetItemsFromRequest(It.IsAny<string>())).Returns((string response) =>
             {
-                if (response == null)
-                    return new List<TemporaryExposureKeyGatewayDto>();
-                else
-                    return _exposureKeyMock.MockListOfTemporaryExposureKeyDto();
+                return response == null
+                    ? new List<TemporaryExposureKeyGatewayDto>()
+                    : _exposureKeyMock.MockListOfTemporaryExposureKeyDto();
             });
 
             gatewayContextReader.Setup(mock => mock.ReadHttpContextStream(It.IsAny<HttpResponseMessage>())).Returns((HttpResponseMessage responseMessage) =>
             {
-
-                if (responseMessage == null || responseMessage.RequestMessage == null)
+                if (responseMessage?.RequestMessage == null)
+                {
                     throw new Exception();
-                else
-                    return _webContextMock.MockValidBodyJSON();
+                }
+                
+                return _webContextMock.MockValidBodyJson();
             });
         }
+
         public void SetupWebContextReaderMockWithBadContext(Mock<IGatewayWebContextReader> gatewayContextReader)
         {
             gatewayContextReader.Setup(mock => mock.GetItemsFromRequest(It.IsAny<string>())).Returns((string response) =>
@@ -143,7 +144,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 
         }
 
-
         public void SetupSettingsServiceMock(Mock<ISettingsService> settingsService)
         {
 
@@ -163,16 +163,20 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             keyValidator.Setup(mock => mock.ValidateKeyAPI(It.IsAny<TemporaryExposureKey>(), out errorMessage)).Returns((TemporaryExposureKey key, string errorMessage) =>
             {
                 if (key.KeyData.Length == 16)
+                {
                     return true;
-                else
-                    return false;
+                }
+                
+                return false;
             });
             keyValidator.Setup(mock => mock.ValidateKeyGateway(It.IsAny<TemporaryExposureKey>(), out errorMessage)).Returns((TemporaryExposureKey key, string errorMessage) =>
             {
                 if (key.Origin != _countryFactory.GenerateCountry(7, "DK") && key.KeyData.Length == 16)
+                {
                     return true;
-                else
-                    return false;
+                }
+                
+                return false;
             });
 
         }
@@ -234,8 +238,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
                 .Returns(
                     (IList<string> param) => mockedVisitedCountries.Where(country => param.Contains(country.Code))
                 );
-
-
         }
 
         public IMapper CreateAutoMapperWithDependencies(ICountryRepository repository)
@@ -249,7 +251,6 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
             return serviceProvider.GetService<IMapper>();
-
         }
 
         public EuGatewayConfig CreateEuGatewayConfig()
