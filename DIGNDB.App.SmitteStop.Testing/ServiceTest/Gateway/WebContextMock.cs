@@ -6,37 +6,34 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 {
     public class WebContextMock
     {
-
-        public MockRandomGenerator _rndGenerator { get; set; }
-        // private const string ResponseBodySource = @"./../../../../../ServiceTest/Gateway/Files/GatewayResponse.txt";
         private const string ResponseBodySource = @"./ServiceTest/Gateway/Files/GatewayResponse.txt";
 
-        public WebContextMock()
-        {
-            _rndGenerator = new MockRandomGenerator();
-        }
-
-        public string MockValidBodyJSON()
+        public string MockValidBodyJson()
         {
             var response = File.ReadAllText(ResponseBodySource); 
             return response;
         }
-        public string MockInvalidBodyJSON()
+
+        public string MockNoBatchesBodyJson()
+        {
+            return "{\"message\": \"Could not find any batches for given date\"}"; ;
+        }
+
+        public string MockInvalidBodyJson()
         {
             return "#!blahbidy blah";
         }
 
-
         public HttpResponseMessage MockHttpResponse(bool empty = false)
         {
-            var content = MockValidBodyJSON();
+            var content = MockValidBodyJson();
             var fakeResponse = new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK
 
             };
 
-            if(empty == true) 
+            if(empty) 
             {
                 fakeResponse.Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
             }
@@ -48,6 +45,5 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest.Gateway
 
             return fakeResponse;
         }
-
     }
 }

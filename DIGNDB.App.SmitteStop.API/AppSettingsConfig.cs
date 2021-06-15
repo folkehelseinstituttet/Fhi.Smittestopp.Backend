@@ -95,6 +95,12 @@ namespace DIGNDB.App.SmitteStop.API
     public class HealthCheckSettings
     {
         /// <summary>
+        /// Appsettings value holding name of server 1
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public string Server1Name { get; set; }
+
+        /// <summary>
         /// Appsettings value used when accessing health check endpoints
         /// </summary>
         [Required(AllowEmptyStrings = false)]

@@ -1,17 +1,20 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using FederationGatewayApi.Contracts;
 using FederationGatewayApi.Models;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace FederationGatewayApi.Services
 {
     public class GatewayWebContextReader : IGatewayWebContextReader
     {
+        private const string GatewayMessage = "Could not find any batches for given date";
+
         private readonly IMapper _mapper;
         private readonly ILogger<GatewayWebContextReader> _logger;
 
@@ -38,8 +41,26 @@ namespace FederationGatewayApi.Services
             }
             catch (Exception e)
             {
-                _logger.LogError($"|SmitteStop:DownloadKeysFromGateway|GetItemsFromRequest: responseBody '{responseBody}' - {e.Message} - {e.StackTrace}");
-                throw;
+                try
+                {
+                    var gatewayMessage = JsonSerializer.Deserialize<GatewayMessage>(responseBody);
+                    if (!gatewayMessage.message.Equals(GatewayMessage))
+                    {
+                        throw;
+                    }
+
+                    var warning = $"|SmitteStop:DownloadKeysFromGateway|GetItemsFromRequest: responseBody {responseBody}";
+                    _logger.LogWarning(warning);
+                    return new List<TemporaryExposureKeyGatewayDto>();
+
+                }
+                catch (Exception ex)
+                {
+                    var secondException = $"Second exception: {ex.Message} - {ex.StackTrace}";
+                    var errorMessage = $"|SmitteStop:DownloadKeysFromGateway|GetItemsFromRequest: responseBody '{responseBody}' - {e.Message} - {e.StackTrace}.\n{secondException}";
+                    _logger.LogError(errorMessage);
+                    throw;
+                }
             }
         }
     }
