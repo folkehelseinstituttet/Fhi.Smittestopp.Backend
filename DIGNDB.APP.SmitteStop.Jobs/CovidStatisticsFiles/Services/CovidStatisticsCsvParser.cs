@@ -53,6 +53,10 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
             var confirmedTotalFileContent = RetrieveDataFromCsvFile(confirmedTotalFile, new ConfirmedCasesTotalMap());
             parsedPackage.AddFileContent(confirmedTotalFileContent);
 
+            var deathTotalFile = GetFileOrThrow(package.Files, CovidStatisticsFileName.DeathsTotal);
+            var deathTotalFileContent = RetrieveDataFromCsvFile(deathTotalFile, new DeathsCasesTotalMap());
+            parsedPackage.AddFileContent(deathTotalFileContent);
+
             return parsedPackage;
         }
 

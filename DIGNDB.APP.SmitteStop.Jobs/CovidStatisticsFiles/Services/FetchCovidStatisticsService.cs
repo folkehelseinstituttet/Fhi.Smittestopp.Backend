@@ -15,6 +15,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
         private const string VaccinationFileName = "data_covid19_sysvak_by_time_location_";
         private const string TimeLocationFileName = "data_covid19_msis_by_time_location_";
         private const string LocationFileName = "data_covid19_msis_by_location_";
+        private const string DemographicsFileName = "data_covid19_demographics_";
 
         public FetchCovidStatisticsService(IFileSystem fileSystem, GetCovidStatisticsJobConfig config)
         {
@@ -60,6 +61,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
         {
             var dateFormatted = $"{date:yyyy-MM-dd}";
             var filePath = $"{_config.CovidStatisticsFolder}/{LocationFileName}{dateFormatted}.csv";
+
+            return GetStreamOrThrow(filePath);
+        }
+
+        public Stream FetchDeathsCasesTotalNumbersFromDate(DateTime date)
+        {
+            var dateFormatted = $"{date:yyyy-MM-dd}";
+            var filePath = $"{_config.CovidStatisticsFolder}/{DemographicsFileName}{dateFormatted}.csv";
 
             return GetStreamOrThrow(filePath);
         }

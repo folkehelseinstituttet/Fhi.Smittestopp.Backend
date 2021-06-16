@@ -42,6 +42,10 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
             var locationNumbers = new CsvFileDto {File = locationFile, Name = CovidStatisticsFileName.ConfirmedTotal};
             package.Files.Add(locationNumbers);
 
+            var demographicsFile = _fetchCovidStatisticsService.FetchDeathsCasesTotalNumbersFromDate(today);
+            var demographicsNumbers = new CsvFileDto { File = demographicsFile, Name = CovidStatisticsFileName.DeathsTotal };
+            package.Files.Add(demographicsNumbers);
+
             return package;
         }
     }

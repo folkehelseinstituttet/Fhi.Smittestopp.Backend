@@ -36,12 +36,16 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
                 TestsConductedTotal = CalculateTestedTotal(),
 
                 PatientsAdmittedToday = CalculateAdmittedToday(),
+                PatientsAdmittedTotal = CalculateAdmittedTotal(),
                 IcuAdmittedToday = CalculateIcuAdmittedToday(),
+                IcuAdmittedTotal = CalculateIcuAdmittedTotal(),
 
                 VaccinatedFirstDoseTotal = CalculateVaccinatedFirstDoseTotal(),
                 VaccinatedFirstDoseToday = CalculateVaccinatedFirstDoseToday(),
                 VaccinatedSecondDoseTotal = CalculateVaccinatedSecondDoseTotal(),
                 VaccinatedSecondDoseToday = CalculateVaccinatedSecondDoseToday(),
+
+                DeathsCasesTotal = DeathsCasesTotal(),
 
                 ModificationDate = DateTime.UtcNow,
                 EntryDate = _dateTimeResolver.GetDateTime().Date,
@@ -101,11 +105,25 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
                 x => ((HospitalCsvContent) x).HospitalAdmitted);
         }
 
+        private int CalculateAdmittedTotal()
+        {
+            return _covidStatisticsCsvDataRetrieveService.GetSumFromEntries(_inputData?.FileContents
+                    .SingleOrDefault(x => x is IEnumerable<HospitalCsvContent>),
+                x => ((HospitalCsvContent)x).HospitalAdmitted);
+        }
+
         private int CalculateIcuAdmittedToday()
         {
             return _covidStatisticsCsvDataRetrieveService.GetFromMostRecentEntry(_inputData?.FileContents
                     .Single(x => x is IEnumerable<HospitalCsvContent>),
                 x => ((HospitalCsvContent) x).IcuPatients);
+        }
+
+        private int CalculateIcuAdmittedTotal()
+        {
+            return _covidStatisticsCsvDataRetrieveService.GetSumFromEntries(_inputData?.FileContents
+                    .Single(x => x is IEnumerable<HospitalCsvContent>),
+                x => ((HospitalCsvContent)x).IcuPatients);
         }
 
         private int CalculateVaccinatedFirstDoseTotal()
@@ -138,6 +156,14 @@ namespace DIGNDB.APP.SmitteStop.Jobs.CovidStatisticsFiles.Services
                     .Single(x => x is IEnumerable<VaccinatedCsvContent>)
                     ?.Where(x => (x as VaccinatedCsvContent)?.Region == VaccinatedCsvContent.NorwayRegionName),
                 x => ((VaccinatedCsvContent) x).SecondDose);
+        }
+
+        private int DeathsCasesTotal()
+        {
+            return _covidStatisticsCsvDataRetrieveService.GetSumFromEntries(_inputData?.FileContents
+                    .Single(x => x is IEnumerable<DeathsCsvContent>)
+                    ?.Where(x => (x as DeathsCsvContent)?.Region == DeathsCsvContent.NorwayRegionName),
+                x => ((DeathsCsvContent)x).DeathsCasesTotal);
         }
 
         #endregion

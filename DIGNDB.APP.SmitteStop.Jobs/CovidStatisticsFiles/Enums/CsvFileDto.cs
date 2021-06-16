@@ -6,6 +6,7 @@
         Hospital,
         Vaccination,
         ConfirmedToday,
-        ConfirmedTotal
+        ConfirmedTotal,
+        DeathsTotal
     }
 }
