@@ -31,6 +31,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
         private List<HospitalCsvContent> _sampleHospitalCsvContent;
         private List<TimeLocationCsvContent> _sampleConfirmedCasesTodayCsvContent;
         private List<LocationCsvContent> _sampleConfirmedCasesTotalCsvContent;
+        private List<DeathsCsvContent> _sampleDeathcsCasesTotalCsvContent;
 
         [SetUp]
         public void SetUp()
@@ -87,13 +88,13 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
                 {
                     Date = DateYesterday,
                     HospitalAdmitted = 3,
-                    IcuPatients = 4
+                    IcuPatients = 4,
                 },
                 new HospitalCsvContent
                 {
                     Date = DateToday,
                     HospitalAdmitted = 30,
-                    IcuPatients = 40
+                    IcuPatients = 40,
                 }
             };
 
@@ -144,6 +145,17 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
                 }
             };
 
+            _sampleDeathcsCasesTotalCsvContent = new List<DeathsCsvContent>
+            {
+                new DeathsCsvContent
+                {
+                    Date = new DateTime(1900, 01, 01),
+                    Age = "age",
+                    Region = "norge",
+                    DeathsCasesTotal = 666
+                }
+            };
+
             BuildSampleCsvContentFromSampleFilesAndCorrespondingStatisticsEntry();
         }
 
@@ -156,6 +168,7 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
             _sampleCsvContent.AddFileContent(_sampleVaccinatedCsvContent);
             _sampleCsvContent.AddFileContent(_sampleConfirmedCasesTodayCsvContent);
             _sampleCsvContent.AddFileContent(_sampleConfirmedCasesTotalCsvContent);
+            _sampleCsvContent.AddFileContent(_sampleDeathcsCasesTotalCsvContent);
 
             BuildStatisticsEntryFromSampleCsvContent();
         }
@@ -168,7 +181,11 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
                 ConfirmedCasesTotal = _sampleConfirmedCasesTotalCsvContent[0].ConfirmedCasesTotal,
 
                 IcuAdmittedToday = _sampleHospitalCsvContent[1].IcuPatients,
+                IcuAdmittedTotal = _sampleHospitalCsvContent[0].IcuPatients +
+                                   _sampleHospitalCsvContent[1].IcuPatients,
                 PatientsAdmittedToday = _sampleHospitalCsvContent[1].HospitalAdmitted,
+                PatientsAdmittedTotal = _sampleHospitalCsvContent[0].HospitalAdmitted + 
+                                        _sampleHospitalCsvContent[1].HospitalAdmitted,
 
                 TestsConductedToday = _sampleTestedCsvContent[1].Positive + _sampleTestedCsvContent[1].Negative,
                 TestsConductedTotal = _sampleTestedCsvContent[1].Positive + _sampleTestedCsvContent[1].Negative +
@@ -178,6 +195,8 @@ namespace DIGNDB.App.SmitteStop.Testing.CovidStatisticsFilesTests.Services
                 VaccinatedFirstDoseTotal = _sampleVaccinatedCsvContent[0].FirstDoseTotal,
                 VaccinatedSecondDoseToday = _sampleVaccinatedCsvContent[0].SecondDose,
                 VaccinatedSecondDoseTotal = _sampleVaccinatedCsvContent[0].SecondDoseTotal,
+
+                DeathsCasesTotal = _sampleDeathcsCasesTotalCsvContent[0].DeathsCasesTotal,
                 
                 ModificationDate = DateTimeToday,
                 EntryDate = DateTimeToday.Date,

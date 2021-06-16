@@ -346,16 +346,25 @@ namespace DIGNDB.App.SmitteStop.DAL.Migrations
                     b.Property<int>("ConfirmedCasesTotal")
                         .HasColumnType("int");
 
+                    b.Property<int>("DeathsCasesTotal")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("EntryDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("IcuAdmittedToday")
                         .HasColumnType("int");
 
+                    b.Property<int>("IcuAdmittedTotal")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ModificationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PatientsAdmittedToday")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientsAdmittedTotal")
                         .HasColumnType("int");
 
                     b.Property<int>("TestsConductedToday")
