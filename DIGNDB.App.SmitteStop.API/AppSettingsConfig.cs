@@ -90,6 +90,8 @@ namespace DIGNDB.App.SmitteStop.API
         public string TimeLocationFileNamePattern { get; set; }
         [Required]
         public string LocationFileNamePattern { get; set; }
+        [Required]
+        public string DemographicsFileNamePattern { get; set; }
     }
 
     public class HealthCheckSettings
