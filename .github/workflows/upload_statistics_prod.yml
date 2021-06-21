@@ -50,7 +50,13 @@ jobs:
       id: step_location_file_name
       run: |
         echo "file_location=data_covid19_msis_by_location_${{ env.date }}.csv" >> $GITHUB_ENV
-        
+    
+    # Set env.file_death
+    - name: Set death file name
+      id: step_death_file_name
+      run: |
+        echo "file_death=data_covid19_demographics_${{ env.date }}.csv" >> $GITHUB_ENV
+
     #############################
     # Download and upload files #
     #############################
@@ -189,4 +195,29 @@ jobs:
           echo "File for ${{env.file_vaccination}} not available yet"
         fi
     
-    
+  # death file
+    - name: Download death file
+      id: download_death_file
+      run: |
+        response_death=$(curl -s -o /dev/null -I -w "%{http_code}" "${{env.base_url}}/${{env.file_death}}")
+        echo "Download death file response: $response_death"
+        if [ "200" == "${response_death}" ]
+        then
+          curl "${{env.base_url}}/${{env.file_death}}" -o ${{env.file_death}}          
+          echo "Download of ${{env.file_death}} completed"
+        else
+          echo "Download failure: ${response_death}"
+        fi
+        echo "death_response=${response_death}" >> $GITHUB_ENV
+    - name: Upload death file
+      id: upload_death_file
+      run: |
+        echo "Download of ${{env.file_death}} response: ${{env.death_response}}"
+        if [ "200" == "${{env.death_response}}" ]
+        then
+          echo "Uploading file: ${{env.file_death}}"
+          #response_death_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL_PROD }}" -F "file=@${{env.file_death}}" ${{secrets.UPLOAD_URL_PROD}})
+          #echo "Upload response: ${response_death_upload}"
+        else
+          echo "File for ${{env.file_death}} not available yet"
+        fi
