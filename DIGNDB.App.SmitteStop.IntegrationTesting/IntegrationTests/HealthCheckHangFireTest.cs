@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Helpers;
-using DIGNDB.App.SmitteStop.IntegrationTesting.Mocks;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
+﻿using DIGNDB.App.SmitteStop.IntegrationTesting.Mocks;
 using NUnit.Framework;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
@@ -17,21 +10,16 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
     [TestFixture]
     public class HealthCheckHangFireTest : HealthCheckTests
     {
-        private WebApplicationFactory<API.Startup> _factory;
-        private HttpClient _client;
-
         [OneTimeSetUp]
         public void Init()
         {
-            _factory = new WebApplicationFactory<API.Startup>();
-            _client = _factory.CreateClient();
+            InitializeFactory();
         }
 
         [OneTimeTearDown]
         public void Cleanup()
         {
-            _client.Dispose();
-            _factory.Dispose();
+            DisposeClientAndFactory();
         }
 
         [Test]
@@ -50,7 +38,7 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
             InitiateClient(appSettings);
 
             //Act
-            var response = await _client.GetAsync("/health/hangfire");
+            var response = await Client.GetAsync("/health/hangfire");
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);

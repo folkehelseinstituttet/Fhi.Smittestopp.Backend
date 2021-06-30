@@ -1,6 +1,4 @@
-﻿using DIGNDB.App.SmitteStop.API;
-using DIGNDB.App.SmitteStop.IntegrationTesting.Mocks;
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿using DIGNDB.App.SmitteStop.IntegrationTesting.Mocks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NUnit.Framework;
 using System;
@@ -16,14 +14,13 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
         [OneTimeSetUp]
         public void Init()
         {
-            Factory = new WebApplicationFactory<Startup>();
+            InitializeFactory();
         }
 
         [OneTimeTearDown]
         public void Cleanup()
         {
-            Client.Dispose();
-            Factory.Dispose();
+            DisposeClientAndFactory();
         }
 
         [SetUp]

@@ -1,4 +1,5 @@
 ﻿using DIGNDB.App.SmitteStop.API;
+using DIGNDB.App.SmitteStop.API.Contracts;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
 using DIGNDB.App.SmitteStop.IntegrationTesting.Mocks;
@@ -20,12 +21,23 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
     {
         Healthy,
         Unhealthy
-    };
+    }
 
     public class HealthCheckTests
     {
-        public WebApplicationFactory<Startup> Factory;
+        private WebApplicationFactory<Startup> _factory;
         public HttpClient Client;
+
+        public void InitializeFactory()
+        {
+            _factory = new WebApplicationFactory<API.Startup>();
+        }
+
+        public void DisposeClientAndFactory()
+        {
+            Client.Dispose();
+            _factory.Dispose();
+        }
 
         /// <summary>
         /// Initiates _client using passed appSettings 
@@ -33,15 +45,21 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
         /// <param name="appSettings">Overwrites configuration values, see API/appsetting.json</param>
         public void InitiateClient(Dictionary<string, string> appSettings)
         {
-            Client = Factory.WithWebHostBuilder(builder =>
+            Client = _factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(FileSystem));
-                    services.Remove(descriptor);
-
+                    var fileSystemDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IFileSystem));
+                    services.Remove(fileSystemDescriptor);
                     services.AddScoped<IFileSystem, FileSystemMock>();
+
+                    var pathHelperDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IPathHelper));
+                    services.Remove(pathHelperDescriptor);
                     services.AddScoped<IPathHelper, PathHelperMock>();
+
+                    var hangFireServiceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IHealthCheckHangFireService));
+                    services.Remove(hangFireServiceDescriptor);
+                    services.AddScoped<IHealthCheckHangFireService, HealthCheckHangFireServiceMock>();
                 });
                 builder.ConfigureAppConfiguration((context, configBuilder) =>
                 {

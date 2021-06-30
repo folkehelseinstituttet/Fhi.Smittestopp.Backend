@@ -1,7 +1,5 @@
-﻿using DIGNDB.App.SmitteStop.API.HealthCheckAuthorization;
-using DIGNDB.APP.SmitteStop.Jobs.Config;
-using Hangfire;
-using Hangfire.SqlServer;
+﻿using DIGNDB.App.SmitteStop.API.Contracts;
+using DIGNDB.App.SmitteStop.API.HealthCheckAuthorization;
 using Hangfire.Storage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -22,29 +20,17 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
     {
         private const string Description = "HangFire health check inspects No. of servers and failed jobs";
 
-        private readonly HangFireConfig _hangFireConfig;
         private readonly ILogger<HangFireHealthCheck> _logger;
-
+        
         private readonly IMonitoringApi _hangFireMonitoringApi;
-        private static JobStorage _jobStorageCurrent;
-
+        
         /// <summary>
         /// Ctor initializing HangFire monitoring API object
         /// </summary>
-        public HangFireHealthCheck(HangFireConfig hangFireConfiguration, ILogger<HangFireHealthCheck> logger)
+        public HangFireHealthCheck(ILogger<HangFireHealthCheck> logger, IHealthCheckHangFireService healthCheckHangFireService)
         {
-            _hangFireConfig = hangFireConfiguration;
             _logger = logger;
-
-            if (_jobStorageCurrent == null)
-            {
-                InitializeHangFire();
-            }
-
-            if (_jobStorageCurrent != null)
-            {
-                _hangFireMonitoringApi = _jobStorageCurrent.GetMonitoringApi();
-            }
+            _hangFireMonitoringApi = healthCheckHangFireService.GetHangFireMonitoringApi();
         }
 
         /// <summary>
@@ -107,7 +93,6 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                             data));
                     }
                 }
-
             }
 
             if (data.Count == 0)
@@ -119,12 +104,6 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                 status,
                 Description,
                 data: data));
-        }
-
-        private void InitializeHangFire()
-        {
-            JobStorage.Current = new SqlServerStorage(_hangFireConfig.HangFireConnectionString);
-            _jobStorageCurrent = JobStorage.Current;
         }
     }
 }
