@@ -7,8 +7,6 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.Helpers
 {
     public static class Utilities
     {
-        #region snippet1
-
         public static void InitializeDbForTests(DigNDB_SmittestopContext db)
         {
             var tokens = GetTokens();
@@ -29,7 +27,5 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.Helpers
                 new JwtToken{ Id = "someRandomString", ExpirationTime = DateTime.Now.Add(new TimeSpan(0, 0, 0, 10))},
             };
         }
-
-        #endregion
     }
 }

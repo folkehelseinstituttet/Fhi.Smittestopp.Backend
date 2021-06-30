@@ -14,6 +14,7 @@ namespace DIGNDB.App.SmitteStop.Core.DependencyInjection
             services.AddScoped<IEpochConverter, EpochConverter>();
             services.AddScoped<IZipFileInfoService, ZipFileInfoService>();
             services.AddScoped<IFileSystem, FileSystem>();
+            services.AddScoped<IPathHelper, PathHelper>();
             services.AddScoped(typeof(IDataAccessLoggingService<>), typeof(DataAccessLoggingService<>));
             services.AddScoped<IExposureKeyMapper, ExposureKeyMapper>();
             services.AddScoped<IPackageBuilderService, PackageBuilderService>();

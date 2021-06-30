@@ -41,7 +41,7 @@ namespace DIGNDB.App.SmitteStop.Core.Helpers
 
         public bool FileExists(string path)
         {
-            return (File.Exists(path));
+            return File.Exists(path);
         }
 
         public byte[] ReadFile(string path)

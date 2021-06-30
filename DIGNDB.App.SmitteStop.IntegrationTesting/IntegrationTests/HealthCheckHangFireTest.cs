@@ -1,18 +1,21 @@
-﻿using DIGNDB.App.SmitteStop.API.HealthCheckAuthorization;
+﻿using System;
+using System.Collections.Generic;
+using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.Core.Helpers;
+using DIGNDB.App.SmitteStop.IntegrationTesting.Mocks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
 {
     [TestFixture]
-    public class HealthCheckHangFireTest
+    public class HealthCheckHangFireTest : HealthCheckTests
     {
         private WebApplicationFactory<API.Startup> _factory;
         private HttpClient _client;
@@ -31,45 +34,20 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
             _factory.Dispose();
         }
 
-        //[Test]
-        //public async Task WhenSomeTextIsPosted_ThenTheResultIsOk()
-        //{
-        //    var textContent = new ByteArrayContent(Encoding.UTF8.GetBytes("Backpack for his applesauce"));
-        //    textContent.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-
-        //    var result = await _client.PostAsync("/sample", textContent);
-        //    Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        //}
-
-        //[Test]
-        //public async Task WhenNoTextIsPosted_ThenTheResultIsBadRequest()
-        //{
-        //    var result = await _client.PostAsync("/sample", new StringContent(string.Empty));
-        //    Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-        //}
-
         [Test]
-        public async Task HealthCheckHangFire_NoFailedJobs_Returns200()
+        public async Task HealthCheckHangFire_NoFailedJobs_ReturnsHealthy()
         {
             // Arrange
-            //var client = _factory.WithWebHostBuilder(builder =>
-            //    {
-            //        builder.ConfigureTestServices(services =>
-            //        {
-            //            services.AddAuthentication(HealthCheckBasicAuthenticationHandler.HealthCheckBasicAuthenticationScheme).AddNoOperationAuthentication();
+            var machineName = Environment.MachineName.ToLower();
+            var appSettings = new Dictionary<string, string>
+            {
+                ["AppSettings:LogsApiPath"] = $"ApiLogs{Constants.DoesNotExist}",
+                ["AppSettings:LogsJobsPath"] = $"JobsLogs{Constants.DoesNotExist}",
+                ["AppSettings:LogsMobilePath"] = $"MobileLogs{Constants.DoesNotExist}",
+                ["HealthCheckSettings:Server1Name"] = machineName
+            };
 
-            //            //services.AddAuthentication(HealthCheckBasicAuthenticationHandler.HealthCheckBasicAuthenticationScheme)
-            //            //    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-            //            //        "Test", options => { });
-            //        });
-            //    })
-            //    .CreateClient(new WebApplicationFactoryClientOptions
-            //    {
-            //        AllowAutoRedirect = false,
-            //    });
-
-            //client.DefaultRequestHeaders.Authorization =
-            //    new AuthenticationHeaderValue("Test");
+            InitiateClient(appSettings);
 
             //Act
             var response = await _client.GetAsync("/health/hangfire");

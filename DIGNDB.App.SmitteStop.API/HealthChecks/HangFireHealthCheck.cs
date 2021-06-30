@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Hangfire.Storage.Monitoring;
 
 namespace DIGNDB.App.SmitteStop.API.HealthChecks
 {
