@@ -1,8 +1,11 @@
-﻿using DIGNDB.App.SmitteStop.IntegrationTesting.Mocks;
+﻿using DIGNDB.App.SmitteStop.Core.Contracts;
+using DIGNDB.App.SmitteStop.IntegrationTesting.Mocks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -26,7 +29,7 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
         [SetUp]
         public void EnsureClient()
         {
-            InitiateClient(new Dictionary<string, string>());
+            InitiateClient(new Dictionary<string, string>(), null);
         }
 
         [Test]
@@ -42,7 +45,7 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
                 ["HealthCheckSettings:Server1Name"] = machineName
             };
 
-            InitiateClient(appSettings);
+            InitiateClient(appSettings, AddServices);
 
             //Act
             var response = await Client.GetAsync($"/health/logfiles?server={machineName}");
@@ -70,7 +73,7 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
                 ["HealthCheckSettings:Server1Name"] = machineName
             };
 
-            InitiateClient(appSettings);
+            InitiateClient(appSettings, AddServices);
 
             //Act
             var response = await Client.GetAsync($"/health/logfiles?server={machineName}");
@@ -83,6 +86,19 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
 
             Assert.AreEqual(HealthStatus.Healthy.ToString(), result.status);
             Assert.AreEqual(0, result.results.data.Count);
+        }
+
+        private static int AddServices(IServiceCollection services)
+        {
+            var fileSystemDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IFileSystem));
+            services.Remove(fileSystemDescriptor);
+            services.AddScoped<IFileSystem, FileSystemMock>();
+
+            var pathHelperDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IPathHelper));
+            services.Remove(pathHelperDescriptor);
+            services.AddScoped<IPathHelper, PathHelperMock>();
+
+            return 1;
         }
     }
 }

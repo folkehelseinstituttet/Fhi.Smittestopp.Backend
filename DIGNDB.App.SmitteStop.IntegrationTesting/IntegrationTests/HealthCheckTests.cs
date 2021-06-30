@@ -1,4 +1,5 @@
-﻿using DIGNDB.App.SmitteStop.API;
+﻿using System;
+using DIGNDB.App.SmitteStop.API;
 using DIGNDB.App.SmitteStop.API.Contracts;
 using DIGNDB.App.SmitteStop.Core.Contracts;
 using DIGNDB.App.SmitteStop.Core.Helpers;
@@ -43,30 +44,22 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
         /// Initiates _client using passed appSettings 
         /// </summary>
         /// <param name="appSettings">Overwrites configuration values, see API/appsetting.json</param>
-        public void InitiateClient(Dictionary<string, string> appSettings)
+        /// <param name="addServices"></param>
+        public void InitiateClient(Dictionary<string, string> appSettings, Func<IServiceCollection, int> addServices)
         {
             Client = _factory.WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
                 {
-                    var fileSystemDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IFileSystem));
-                    services.Remove(fileSystemDescriptor);
-                    services.AddScoped<IFileSystem, FileSystemMock>();
+                    builder.ConfigureTestServices(services =>
+                    {
+                        addServices(services);
+                    });
 
-                    var pathHelperDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IPathHelper));
-                    services.Remove(pathHelperDescriptor);
-                    services.AddScoped<IPathHelper, PathHelperMock>();
+                    builder.ConfigureAppConfiguration((context, configBuilder) =>
+                    {
+                        var c = configBuilder.AddInMemoryCollection(appSettings);
 
-                    var hangFireServiceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IHealthCheckHangFireService));
-                    services.Remove(hangFireServiceDescriptor);
-                    services.AddScoped<IHealthCheckHangFireService, HealthCheckHangFireServiceMock>();
-                });
-                builder.ConfigureAppConfiguration((context, configBuilder) =>
-                {
-                    var c = configBuilder.AddInMemoryCollection(appSettings);
-
-                });
-            })
+                    });
+                })
                 .CreateClient();
         }
 

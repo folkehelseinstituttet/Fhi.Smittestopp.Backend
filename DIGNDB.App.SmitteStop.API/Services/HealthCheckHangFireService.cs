@@ -18,16 +18,6 @@ namespace DIGNDB.App.SmitteStop.API.Services
             _hangFireConfiguration = hangFireConfiguration;
         }
 
-        //public JobStorage GetJobStorage()
-        //{
-        //    if (_jobStorageCurrent == null)
-        //    {
-        //        InitializeHangFire();
-        //    }
-
-        //    return _jobStorageCurrent;
-        //}
-
         public IMonitoringApi GetHangFireMonitoringApi()
         {
             if (_jobStorageCurrent == null)

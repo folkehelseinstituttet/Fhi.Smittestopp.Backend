@@ -1,21 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using DIGNDB.App.SmitteStop.API.Contracts;
+﻿using DIGNDB.App.SmitteStop.API.Contracts;
 using Hangfire.Storage;
 using Hangfire.Storage.Monitoring;
+using System;
+using System.Collections.Generic;
 
 namespace DIGNDB.App.SmitteStop.IntegrationTesting.Mocks
 {
     public class HealthCheckHangFireServiceMock : IHealthCheckHangFireService
     {
+        private long FailedCountOverwrite { get; }
+        private int ServersCountOverWrite { get; }
+
+        public HealthCheckHangFireServiceMock(long failedCount, int serversCount)
+        {
+            FailedCountOverwrite = failedCount;
+            ServersCountOverWrite = serversCount;
+        }
+
         public IMonitoringApi GetHangFireMonitoringApi()
         {
-            return new MonitoringApiMock();
+            var monitoringApiMock = new MonitoringApiMock(FailedCountOverwrite, ServersCountOverWrite);
+            return monitoringApiMock;
         }
     }
 
     public class MonitoringApiMock : IMonitoringApi
     {
+        private long FailedCountOverwrite { get; }
+        private int ServersCountOverWrite { get; }
+
+        public MonitoringApiMock(long failedCount, int serversCount)
+        {
+            FailedCountOverwrite = failedCount;
+            ServersCountOverWrite = serversCount;
+        }
+
         public IList<QueueWithTopEnqueuedJobsDto> Queues()
         {
             throw new NotImplementedException();
@@ -23,7 +42,13 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.Mocks
 
         public IList<ServerDto> Servers()
         {
-            return new List<ServerDto> {new ServerDto()};
+            var servers = new List<ServerDto>();
+            for (var i = 0; i < ServersCountOverWrite; i++)
+            {
+                servers.Add(new ServerDto());
+            }
+
+            return servers;
         }
 
         public JobDetailsDto JobDetails(string jobId)
@@ -88,7 +113,7 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.Mocks
 
         public long FailedCount()
         {
-            return 0L;
+            return FailedCountOverwrite;
         }
 
         public long ProcessingCount()
