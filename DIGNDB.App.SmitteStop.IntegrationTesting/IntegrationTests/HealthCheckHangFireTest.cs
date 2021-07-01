@@ -28,7 +28,11 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
         public async Task HealthCheckHangFire_NoFailedJobs_ReturnsHealthy()
         {
             // Arrange
-            var appSettings = new Dictionary<string, string>();
+            var appSettings = new Dictionary<string, string>
+            {
+                ["AppSettings:HealthCheckSettings:NoOfEnabledJobs"] = "0",
+                ["AppSettings:LoHealthCheckSettings:EnabledJobIds"] = "[]"
+            };
 
             InitiateClient(appSettings, AddServices);
 
@@ -45,9 +49,9 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
             services.Remove(hangFireServiceDescriptor);
             services.AddScoped<IHealthCheckHangFireService, HealthCheckHangFireServiceMock>(x =>
             {
-                long failedCount = 0;
-                int serversCount = 1;
-                int noOfRecurringJobs = 5;
+                const long failedCount = 0;
+                const int serversCount = 1;
+                const int noOfRecurringJobs = 0;
                 return new HealthCheckHangFireServiceMock(failedCount, serversCount, noOfRecurringJobs);
             });
 
