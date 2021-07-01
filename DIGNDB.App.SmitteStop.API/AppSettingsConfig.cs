@@ -149,5 +149,17 @@ namespace DIGNDB.App.SmitteStop.API
         /// </summary>
         [Required(AllowEmptyStrings = false)]
         public string MobileLogFilesDatePattern { get; set; }
+
+        /// <summary>
+        /// Appsettings value for No. of jobs that should be enabled
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public int NoOfEnabledJobs { get; set; }
+
+        /// <summary>
+        /// Appsettings value for jobs IDs that is expected to be enabled
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public List<string> EnabledJobIds { get; set; }
     }
 }

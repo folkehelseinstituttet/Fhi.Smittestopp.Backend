@@ -3,6 +3,7 @@ using DIGNDB.APP.SmitteStop.Jobs.Config;
 using Hangfire;
 using Hangfire.SqlServer;
 using Hangfire.Storage;
+using System.Collections.Generic;
 
 namespace DIGNDB.App.SmitteStop.API.Services
 {
@@ -31,6 +32,12 @@ namespace DIGNDB.App.SmitteStop.API.Services
             }
 
             return _hangFireMonitoringApi;
+        }
+
+        public List<RecurringJobDto> GetRecurringJobs()
+        {
+            var recurringJobs = _jobStorageCurrent.GetConnection().GetRecurringJobs();
+            return recurringJobs;
         }
 
         private void InitializeHangFire()

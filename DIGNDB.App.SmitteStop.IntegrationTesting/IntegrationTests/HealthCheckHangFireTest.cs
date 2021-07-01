@@ -47,7 +47,8 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
             {
                 long failedCount = 0;
                 int serversCount = 1;
-                return new HealthCheckHangFireServiceMock(failedCount, serversCount);
+                int noOfRecurringJobs = 5;
+                return new HealthCheckHangFireServiceMock(failedCount, serversCount, noOfRecurringJobs);
             });
 
             return 0;

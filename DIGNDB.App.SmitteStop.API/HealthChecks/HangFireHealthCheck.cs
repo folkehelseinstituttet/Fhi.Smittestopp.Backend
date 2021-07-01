@@ -6,9 +6,11 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net.Util;
 
 namespace DIGNDB.App.SmitteStop.API.HealthChecks
 {
@@ -21,16 +23,19 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
         private const string Description = "HangFire health check inspects No. of servers and failed jobs";
 
         private readonly ILogger<HangFireHealthCheck> _logger;
-        
         private readonly IMonitoringApi _hangFireMonitoringApi;
-        
+        private readonly IHealthCheckHangFireService _healthCheckHangFireService;
+        private readonly AppSettingsConfig _appSettingsConfig;
+
         /// <summary>
         /// Ctor initializing HangFire monitoring API object
         /// </summary>
-        public HangFireHealthCheck(ILogger<HangFireHealthCheck> logger, IHealthCheckHangFireService healthCheckHangFireService)
+        public HangFireHealthCheck(ILogger<HangFireHealthCheck> logger, IHealthCheckHangFireService healthCheckHangFireService, AppSettingsConfig appSettingsConfig)
         {
             _logger = logger;
             _hangFireMonitoringApi = healthCheckHangFireService.GetHangFireMonitoringApi();
+            _healthCheckHangFireService = healthCheckHangFireService;
+            _appSettingsConfig = appSettingsConfig;
         }
 
         /// <summary>
@@ -54,6 +59,36 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                 _logger.LogWarning(message);
                 status = HealthStatus.Unhealthy;
                 data.Add(message, servers.Count);
+            }
+
+            // Check status of recurring jobs
+            var recurringJobs = _healthCheckHangFireService.GetRecurringJobs();
+            var noOfActuallyEnabledJobs = recurringJobs.Count(j => j.NextExecution != null);
+            var noOfExpectedEnabledJobs = _appSettingsConfig.HealthCheckSettings.NoOfEnabledJobs;
+            if (noOfActuallyEnabledJobs < noOfExpectedEnabledJobs)
+            {
+                var message = $"Number of enabled jobs is less than expected at time {DateTime.Now}. Expected:{noOfExpectedEnabledJobs} - Actual:{noOfActuallyEnabledJobs}";
+                _logger.LogWarning(message);
+                status = HealthStatus.Unhealthy;
+                data.Add(message, noOfActuallyEnabledJobs);
+
+                var enabledJobIds= _appSettingsConfig.HealthCheckSettings.EnabledJobIds;
+                foreach (var jobId in enabledJobIds)
+                {
+                    var job = recurringJobs.First(j => j.Id == jobId);
+                    if (job.NextExecution != null)
+                    {
+                        continue;
+                    }
+
+                    var jobMessage = $"Job '{jobId}' is not enabled as expected";
+                    _logger.LogWarning(jobMessage);
+                    status = HealthStatus.Unhealthy;
+                    var info = job.LastExecution != null
+                        ? $"Last execution time: {job.LastExecution}"
+                        : $"No last execution time for {jobId}";
+                    data.Add(jobMessage, info);
+                }
             }
 
             // Check failing jobs

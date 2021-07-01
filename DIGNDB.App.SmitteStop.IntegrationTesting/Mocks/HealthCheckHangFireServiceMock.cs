@@ -10,17 +10,30 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.Mocks
     {
         private long FailedCountOverwrite { get; }
         private int ServersCountOverWrite { get; }
+        private int NoOfRecurringJobs { get; }
 
-        public HealthCheckHangFireServiceMock(long failedCount, int serversCount)
+        public HealthCheckHangFireServiceMock(long failedCount, int serversCount, int noOfRecurringJobs)
         {
             FailedCountOverwrite = failedCount;
             ServersCountOverWrite = serversCount;
+            NoOfRecurringJobs = noOfRecurringJobs;
         }
 
         public IMonitoringApi GetHangFireMonitoringApi()
         {
             var monitoringApiMock = new MonitoringApiMock(FailedCountOverwrite, ServersCountOverWrite);
             return monitoringApiMock;
+        }
+
+        public List<RecurringJobDto> GetRecurringJobs()
+        {
+            var retVal = new List<RecurringJobDto>();
+            for (var i = 0; i < NoOfRecurringJobs; i++)
+            {
+                retVal.Add(new RecurringJobDto());
+            }
+
+            return retVal;
         }
     }
 
