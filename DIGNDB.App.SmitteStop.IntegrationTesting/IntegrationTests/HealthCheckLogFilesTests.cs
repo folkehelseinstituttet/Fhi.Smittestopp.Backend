@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
 {
     [TestFixture]
-    public class HealthCheckLogFilesTests : HealthCheckTests
+    public class HealthCheckLogFilesTests : IntegrationTest
     {
         [OneTimeSetUp]
         public void Init()
@@ -26,11 +26,11 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
             DisposeClientAndFactory();
         }
 
-        [SetUp]
-        public void EnsureClient()
-        {
-            InitiateClient(new Dictionary<string, string>(), null);
-        }
+        //[SetUp]
+        //public void EnsureClient()
+        //{
+        //    InitiateClient(new Dictionary<string, string>(), null);
+        //}
 
         [Test]
         public async Task HealthCheckLogFiles_DirectoriesDoesNotExist_ReturnsUnhealthy()

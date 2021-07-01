@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
 {
     [TestFixture]
-    public class HealthCheckHangFireTest : HealthCheckTests
+    public class HealthCheckHangFireTest : IntegrationTest
     {
         [OneTimeSetUp]
         public void Init()
@@ -39,7 +39,7 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
-        private int AddServices(IServiceCollection services)
+        private static int AddServices(IServiceCollection services)
         {
             var hangFireServiceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IHealthCheckHangFireService));
             services.Remove(hangFireServiceDescriptor);

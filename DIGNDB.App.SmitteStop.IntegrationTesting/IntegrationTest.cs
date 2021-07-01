@@ -1,22 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 using DIGNDB.App.SmitteStop.API;
-using DIGNDB.App.SmitteStop.API.Contracts;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using DIGNDB.App.SmitteStop.Core.Helpers;
-using DIGNDB.App.SmitteStop.IntegrationTesting.Mocks;
 using DIGNDB.App.SmitteStop.IntegrationTesting.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
+namespace DIGNDB.App.SmitteStop.IntegrationTesting
 {
     public enum HealthStatus
     {
@@ -24,7 +19,7 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
         Unhealthy
     }
 
-    public class HealthCheckTests
+    public class IntegrationTest
     {
         private WebApplicationFactory<Startup> _factory;
         public HttpClient Client;
@@ -49,10 +44,7 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
         {
             Client = _factory.WithWebHostBuilder(builder =>
                 {
-                    builder.ConfigureTestServices(services =>
-                    {
-                        addServices(services);
-                    });
+                    builder.ConfigureTestServices(services => { addServices(services); });
 
                     builder.ConfigureAppConfiguration((context, configBuilder) =>
                     {
@@ -63,17 +55,10 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
                 .CreateClient();
         }
 
-        public static async Task<T> HealthCheckResultReadAsStreamAsync<T>(HttpResponseMessage response, JsonSerializerOptions options)
-        {
-            var contentStream = await response.Content.ReadAsStreamAsync();
-            var health = await JsonSerializer.DeserializeAsync<T>(contentStream, options);
+        #region HealthCheck test helpers
 
-            Assert.NotNull(health);
-
-            return health;
-        }
-
-        public static async Task<HealthCheckStatusResult> HealthCheckResultReadAsStringAsync<T>(HttpResponseMessage response)
+        public static async Task<HealthCheckStatusResult> HealthCheckResultReadAsStringAsync<T>(
+            HttpResponseMessage response)
         {
             var result = await response.Content.ReadAsStringAsync();
             var health = JsonSerializer.Deserialize<HealthCheckStatusResult>(result);
@@ -82,5 +67,7 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
 
             return health;
         }
+
+        #endregion
     }
 }
