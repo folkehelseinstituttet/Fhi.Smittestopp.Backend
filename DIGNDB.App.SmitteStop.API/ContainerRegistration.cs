@@ -94,10 +94,10 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddHealthChecks()
                 .AddDbContextCheck<DigNDB_SmittestopContext>("DB Smittestopp", HealthStatus.Unhealthy, new[] {Startup.DatabaseTag})
                 .AddCheck<HangFireHealthCheck>("HangFire", HealthStatus.Unhealthy, new[] {Startup.HangFireTag})
-                .AddCheck<LogFilesHealthCheck>("Log files", HealthStatus.Unhealthy, new[] {Startup.LogFilesTag})
-                .AddCheck<ZipFilesHealthCheck>("Zip files", HealthStatus.Unhealthy, new[] {Startup.ZipFilesTag})
-                .AddCheck<NumbersTodayHealthCheck>("Numbers today", HealthStatus.Unhealthy, new[] {Startup.NumbersTodayTag})
-                .AddCheck<RollingStartNumberHealthCheck>("Rolling start number", HealthStatus.Unhealthy, new[] {Startup.RollingStartNumberTag});
+                .AddCheck<LogFilesHealthCheck>("LogFiles", HealthStatus.Unhealthy, new[] {Startup.LogFilesTag})
+                .AddCheck<ZipFilesHealthCheck>("ZipFiles", HealthStatus.Unhealthy, new[] {Startup.ZipFilesTag})
+                .AddCheck<NumbersTodayHealthCheck>("NumbersToday", HealthStatus.Unhealthy, new[] {Startup.NumbersTodayTag})
+                .AddCheck<RollingStartNumberHealthCheck>("RollingStartNumber", HealthStatus.Unhealthy, new[] {Startup.RollingStartNumberTag});
                 
             var connectionString = configuration["SQLConnectionString"];
             services.AddDbContext<DigNDB_SmittestopContext>(opts =>
@@ -132,6 +132,8 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<GitHubAuthorizationAttribute>();
             services.AddScoped<DeprecatedCheckAttribute>();
             services.AddScoped<UploadKeysAuthorizationAttribute>();
+
+            services.AddScoped<IHealthCheckHangFireService, HealthCheckHangFireService>();
 
             services.AddScoped<IJwtValidationService, JwtValidationService>();
             services.AddSingleton<IRsaProviderService, JwkRsaProviderService>();

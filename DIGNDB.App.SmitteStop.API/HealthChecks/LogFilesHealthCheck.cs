@@ -1,4 +1,5 @@
 ﻿using DIGNDB.App.SmitteStop.API.HealthCheckAuthorization;
+using DIGNDB.App.SmitteStop.Core.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace DIGNDB.App.SmitteStop.API.HealthChecks
 {
@@ -24,6 +26,8 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
         private readonly AppSettingsConfig _appSettingsConfig;
         private readonly ILogger<LogFilesHealthCheck> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IFileSystem _fileSystem;
+        private readonly IPathHelper _pathHelper;
 
         private readonly string _logFilesDatePattern;
         private readonly Regex _apiRegex;
@@ -37,11 +41,15 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
         /// <param name="appSettingsConfig"></param>
         /// <param name="logger"></param>
         /// <param name="httpContextAccessor"></param>
-        public LogFilesHealthCheck(AppSettingsConfig appSettingsConfig, ILogger<LogFilesHealthCheck> logger, IHttpContextAccessor httpContextAccessor)
+        /// <param name="fileSystem"></param>
+        /// <param name="pathHelper"></param>
+        public LogFilesHealthCheck(AppSettingsConfig appSettingsConfig, ILogger<LogFilesHealthCheck> logger, IHttpContextAccessor httpContextAccessor, IFileSystem fileSystem, IPathHelper pathHelper)
         {
             _appSettingsConfig = appSettingsConfig;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _fileSystem = fileSystem;
+            _pathHelper = pathHelper;
 
             // Initialize Health Check AppSettings
             var apiRegex = _appSettingsConfig.HealthCheckSettings.ApiRegex;
@@ -104,12 +112,13 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
         private void CheckLogFiles(string logFilesNamePrefix, Regex logFilesRegex, ref HealthStatus status,
             IDictionary<string, object> data, string datePattern)
         {
-            var logFilesDirectoryName = Path.GetDirectoryName(logFilesNamePrefix);
-            if (!Directory.Exists(logFilesDirectoryName))
+            var logFilesDirectoryName = _pathHelper.GetDirectoryName(logFilesNamePrefix);
+            if (!_fileSystem.DirectoryExists(logFilesDirectoryName))
             {
                 status = HealthStatus.Unhealthy;
-                data.Add($"Could not find log files for {logFilesNamePrefix}",
-                    $"Folder for {logFilesNamePrefix} does not exist");
+                data.Add($"Could not find log files for {logFilesNamePrefix}", $"Folder for {logFilesNamePrefix} does not exist");
+                //var keyValue = new KeyValuePair<string, object>("State", $"Could not find log files for {logFilesNamePrefix}: Folder for {logFilesNamePrefix} does not exist");
+                //data.Add(keyValue);
             }
             else if (logFilesDirectoryName == null)
             {
@@ -143,6 +152,11 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
         private bool QueryContainsWfe01AndMachineIsWfe01(IQueryCollection query)
         {
             query.TryGetValue("server", out var server);
+            if (!server.Any())
+            {
+                return false;
+            }
+
             var serverParameter = server[0].ToLower();
 
             var server1Name = _appSettingsConfig.HealthCheckSettings.Server1Name.ToLower();

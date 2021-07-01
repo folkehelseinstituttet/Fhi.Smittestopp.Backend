@@ -30,7 +30,7 @@ namespace DIGNDB.App.SmitteStop.API
         private IConfiguration Configuration { get; }
         private readonly IWebHostEnvironment _env;
 
-        public Startup(IWebHostEnvironment env)
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
             _env = env;
             var combinedEnvironmentName = env.EnvironmentName.Split('.');
@@ -39,9 +39,10 @@ namespace DIGNDB.App.SmitteStop.API
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile($"appsettings.json", optional: true)
+                .AddJsonFile("appsettings.json", optional: true)
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
-                .AddEnvironmentVariables();
+                .AddEnvironmentVariables()
+                .AddConfiguration(configuration);
             Configuration = builder.Build();
         }
 
@@ -155,7 +156,7 @@ namespace DIGNDB.App.SmitteStop.API
 
         public const string RollingStartNumberTag = "rollingstartnumber";
         /// <summary>
-        /// Path to health check endpoint for checking rolllingStartNumber
+        /// Path to health check endpoint for checking rollingStartNumber
         /// </summary>
         public const string RollingStartNumberPattern = "/health/rollingstartnumber";
 
@@ -232,7 +233,7 @@ namespace DIGNDB.App.SmitteStop.API
                     // Exception
                     if (entry.Value.Exception != null)
                     {
-                        writer.WriteStartObject("exception");
+                        writer.WriteStartObject("healthException");
                         writer.WriteString("message", entry.Value.Exception.Message);
                         writer.WriteString("stackTrace", entry.Value.Exception.StackTrace);
                         writer.WriteEndObject();
