@@ -216,8 +216,8 @@ jobs:
         if [ "200" == "${{env.death_response}}" ]
         then
           echo "Uploading file: ${{env.file_death}}"
-          #response_death_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL_PROD }}" -F "file=@${{env.file_death}}" ${{secrets.UPLOAD_URL_PROD}})
-          #echo "Upload response: ${response_death_upload}"
+          response_death_upload=$(curl -H "Authorization_GitHub: ${{ secrets.UPLOAD_STATS_H_VAL_PROD }}" -F "file=@${{env.file_death}}" ${{secrets.UPLOAD_URL_PROD}})
+          echo "Upload response: ${response_death_upload}"
         else
           echo "File for ${{env.file_death}} not available yet"
         fi
