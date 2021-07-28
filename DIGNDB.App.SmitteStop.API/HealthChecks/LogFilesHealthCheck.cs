@@ -165,7 +165,7 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
             var name = Environment.MachineName.ToLower();
             var isServer1 = name.Contains(server1Name);
 
-            _logger.LogInformation($"|Health check log files| Server name: {name}; Field for server name 'isWfe01' value: {isServer1}; Query contains 'wfe01': {queryContainsServer1Name}; Query: {query}");
+            _logger.LogInformation($"|Health check log files| Server name: {name}; Server1Name: {server1Name}; ServerParameter: {serverParameter}; Field for server name 'isWfe01' value: {isServer1}; Query contains 'wfe01': {queryContainsServer1Name}; Query: {query.Keys}");
 
             // true IF query contains server name AND request is received on server 1
             return queryContainsServer1Name && isServer1;

@@ -24,7 +24,6 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
         public void ValidateParameterAndThrowIfIncorrect(TemporaryExposureKeyBatchDto parameter, KeyValidationConfiguration configuration)
         {
-            ValidateKeyCount(parameter, configuration);
             ValidateKeyDuplication(parameter);
             ValidateKeyDataLength(parameter);
             ValidateRollingStartDate(parameter, configuration);
@@ -32,18 +31,6 @@ namespace DIGNDB.App.SmitteStop.API.Services
             ValidateRegions(parameter);
             ValidateVisitedCountries(parameter);
             ValidatePackageNames(parameter, configuration);
-        }
-
-        private void ValidateKeyCount(TemporaryExposureKeyBatchDto parameter, KeyValidationConfiguration configuration)
-        {
-            //The period of time covered by the data file exceeds 14 days
-            if (parameter.keys.Count <= configuration.OutdatedKeysDayOffset)
-            {
-                return;
-            }
-
-            var errorMessage = $"Incorrect key count. Given key count: {parameter.keys.Count}. Expected: {configuration.OutdatedKeysDayOffset}";
-            throw new ArgumentException(errorMessage);
         }
 
         private void ValidateKeyDuplication(TemporaryExposureKeyBatchDto parameter)
