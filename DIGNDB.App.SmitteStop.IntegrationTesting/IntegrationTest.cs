@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using DIGNDB.App.SmitteStop.API;
+using DIGNDB.App.SmitteStop.Domain.Dto;
 using DIGNDB.App.SmitteStop.IntegrationTesting.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -64,6 +65,17 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting
             var health = JsonSerializer.Deserialize<HealthCheckStatusResult>(result);
 
             Assert.NotNull(health);
+
+            return health;
+        }
+
+        public static async Task<CountryCollectionDto> ReadJsonFromResponse<T>(
+            HttpResponseMessage response)
+        {
+            var result = await response.Content.ReadAsStringAsync();
+            var health = JsonSerializer.Deserialize<CountryCollectionDto>(result);
+
+            //Assert.NotNull(health);
 
             return health;
         }
