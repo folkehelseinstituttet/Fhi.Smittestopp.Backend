@@ -111,7 +111,7 @@ namespace DIGNDB.APP.SmitteStop.Jobs.Services
 
         private string GetZipFilePath(string originPostfix, int nextBatchNumber)
         {
-            return _fileSystem.JoinPaths(_currentZipFilesFolder, $".{_currentDateTime.Date:yyyy-MM-dd}_{nextBatchNumber}_{originPostfix.ToLower()}.zip");
+            return _fileSystem.JoinPaths(_currentZipFilesFolder, $"{_temporaryFileMarker}{_currentDateTime.Date:yyyy-MM-dd}_{nextBatchNumber}_{originPostfix.ToLower()}.zip");
         }
 
         private void CreateZipFileSingleBatch(byte[] zipFileContent, string zipFilePath)
