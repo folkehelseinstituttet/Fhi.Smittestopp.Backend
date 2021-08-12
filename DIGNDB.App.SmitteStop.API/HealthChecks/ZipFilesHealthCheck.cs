@@ -109,17 +109,22 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                         data.Add("Expected folder for zip files does not exist", $"{directoryInfo.Name}");
                     }
 
-                    var latestFile = directoryInfo.GetFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
-                    var today = DateTime.Today.ToString("yyyy-MM-dd");
-                    if (latestFile == null)
+                    if (directoryInfo.Name == "all")
                     {
-                        status = HealthStatus.Unhealthy;
-                        data.Add($"No zip file found in folder {directoryInfo.Name}", $"{directoryInfo.Name}");
-                    }
-                    else if (!latestFile.Name.Contains(today))
-                    {
-                        status = HealthStatus.Unhealthy;
-                        data.Add($"No zip file for today has been written to folder {directoryInfo.Name}", $"Latest file is {latestFile.Name}");
+                        var latestFile = directoryInfo.GetFiles().OrderByDescending(f => f.LastWriteTime)
+                            .FirstOrDefault();
+                        var today = DateTime.Today.ToString("yyyy-MM-dd");
+                        if (latestFile == null)
+                        {
+                            status = HealthStatus.Unhealthy;
+                            data.Add($"No zip file found in folder {directoryInfo.Name}", $"{directoryInfo.Name}");
+                        }
+                        else if (!latestFile.Name.Contains(today))
+                        {
+                            status = HealthStatus.Unhealthy;
+                            data.Add($"No zip file for today has been written to folder {directoryInfo.Name}",
+                                $"Latest file is {latestFile.Name}");
+                        }
                     }
                 }
             }
