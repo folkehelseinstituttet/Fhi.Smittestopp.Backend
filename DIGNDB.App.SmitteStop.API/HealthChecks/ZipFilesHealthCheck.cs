@@ -49,9 +49,10 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
 
             var status = HealthStatus.Healthy;
             var data = new Dictionary<string, object>();
+            var daysBefore = _appSettingsConfig.HealthCheckSettings.ZipFilesCheckFilesDaysBefore;
 
             var hour = _appSettingsConfig.HealthCheckSettings.ZipFilesCallAfter24Hour;
-            if (TooEarly(hour, _logger))
+            if (TooEarly(hour, _logger) && daysBefore == 0)
             {
                 var key = $"Too early to check zip files {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
                 data.Add(key, $"Configured value is {hour}");
@@ -71,7 +72,14 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                 }
                 else
                 {
-                    CheckLatestFileIsFromToday(directoryPath, ref status, data);
+                    if (daysBefore > 0)
+                    {
+                        CheckLatestFileDaysBefore(directoryPath, ref status, data, daysBefore);
+                    }
+                    else
+                    {
+                        CheckLatestFileDaysBefore(directoryPath, ref status, data, 0);
+                    }
                 }
             }
             catch (Exception e)
@@ -123,6 +131,55 @@ namespace DIGNDB.App.SmitteStop.API.HealthChecks
                         {
                             status = HealthStatus.Unhealthy;
                             data.Add($"No zip file for today has been written to folder {directoryInfo.Name}",
+                                $"Latest file is {latestFile.Name}");
+                        }
+                    }
+                }
+            }
+        }
+        private void CheckLatestFileDaysBefore(string directoryPath, ref HealthStatus status, IDictionary<string, object> data, int daysBefore)
+        {
+            // Check latest file is from today
+            var directory = new DirectoryInfo(directoryPath);
+            var directories = directory.GetDirectories();
+            if (!directories.Any())
+            {
+                status = HealthStatus.Unhealthy;
+                data.Add("Expected folders 'dk' and 'all' for zip files do not exist", "");
+            }
+            else
+            {
+                foreach (var directoryInfo in directories)
+                {
+                    if (directoryInfo.Name != "no" && directoryInfo.Name != "all")
+                    {
+                        status = HealthStatus.Unhealthy;
+                        data.Add("Expected folder for zip files does not exist", $"{directoryInfo.Name}");
+                    }
+
+                    var latestFile = directoryInfo.GetFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
+                    if (latestFile == null)
+                    {
+                        status = HealthStatus.Unhealthy;
+                        data.Add($"No zip file found in folder {directoryInfo.Name}", $"{directoryInfo.Name}");
+                    }
+                    else
+                    {
+                        bool exists = false;
+                        for (int i = 0; i <= daysBefore; i++)
+                        {
+                            var day = DateTime.Today.AddDays(-i).ToString("yyyy-MM-dd");
+                            if (latestFile.Name.Contains(day))
+                            {
+                                exists = true;
+                            }
+                        }
+
+                        if (!exists)
+                        {
+                            status = HealthStatus.Unhealthy;
+                            data.Add(
+                                $"No zip files for last {daysBefore + 1} days has been written to folder {directoryInfo.Name}",
                                 $"Latest file is {latestFile.Name}");
                         }
                     }
