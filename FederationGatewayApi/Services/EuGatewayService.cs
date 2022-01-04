@@ -68,12 +68,14 @@ namespace FederationGatewayApi.Services
 
         public void UploadKeysToTheGateway(int fromLastNumberOfDays, int batchSize, int? batchCountLimit = null)
         {
+            _logger.LogDebug($"fromLastNumberOfDays = {fromLastNumberOfDays} batchSize = {batchSize} batchCountLimit = {batchCountLimit}");
             ValidateParameters(fromLastNumberOfDays, batchSize, batchCountLimit);
 
             var stats = new BatchUploadStats();
             BatchStatus lastStatus = new BatchStatus();
             do
             {
+                _logger.LogDebug($"stats = {stats.LogString}");
                 if (IsLimitReached(currentValue: stats.CurrentBatchNumber, limitValue: batchCountLimit))
                 {
                     _logger.LogInformation($"Limit of {batchCountLimit} batches has been reached. Stopping upload process");
@@ -84,6 +86,9 @@ namespace FederationGatewayApi.Services
 
                 stats.TotalKeysProcessed += lastStatus.KeysProcessed;
                 stats.TotalKeysSent += lastStatus.KeysSent;
+                _logger.LogDebug($"stats = {stats.LogString}");
+                _logger.LogDebug($"lastStatus = {lastStatus.KeysProcessed} | {lastStatus.KeysSent}");
+                _logger.LogDebug($"lastStatus = {lastStatus.ProcessedSuccessfully} | {lastStatus.NextBatchExists}");
             }
             while (lastStatus.ProcessedSuccessfully && lastStatus.NextBatchExists);
 
@@ -128,6 +133,7 @@ namespace FederationGatewayApi.Services
             // Select only keys from last N days (by date of record creation)
             var uploadedOnAndAfterTicks = lastSyncState.CreationDateOfLastUploadedKey;
             var uploadedOnAndAfter = uploadedOnAndAfterTicks.HasValue ? new DateTime(uploadedOnAndAfterTicks.Value, DateTimeKind.Utc) : DateTime.UnixEpoch;
+            _logger.LogDebug($"uploadedOnAndAfter = {uploadedOnAndAfter}");
 
             int batchSizePlusOne = batchSize + 1; // if it will return n + 1 then there is at last one more records to send
 
@@ -141,9 +147,13 @@ namespace FederationGatewayApi.Services
             // Take all record uploaded after the date.
             var currBatchStatus = new BatchStatus() { NextBatchExists = keyPackage.Count == batchSizePlusOne };
 
+            _logger.LogDebug($"keyPackage.Count == batchSizePlusOne = {keyPackage.Count == batchSizePlusOne}");
+
             keyPackage = keyPackage.Take(batchSize).ToList();
             currBatchStatus.KeysProcessed = keyPackage.Count;
             currBatchStatus.ProcessedSuccessfully = true;
+
+            _logger.LogDebug($"keyPackage.Count = {keyPackage.Count}");
 
             if (!keyPackage.Any())
             {

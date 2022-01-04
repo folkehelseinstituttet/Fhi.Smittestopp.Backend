@@ -120,7 +120,7 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             }
 
             Country apiOrigin = _countryRepository.GetApiOriginCountry();
-
+            
             var query = _dbContext.TemporaryExposureKey
                 .Include(k => k.Origin)
                 .Where(k => k.Origin == apiOrigin)
@@ -130,6 +130,17 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
                 .Include(k => k.VisitedCountries).ThenInclude(k => k.Country)
                 .OrderBy(c => c.CreatedOn)
                 .ThenBy(c => c.RollingStartNumber);
+
+            _logger.LogDebug($"apiOrigin = {apiOrigin} uploadedOnAndLater = {uploadedOnAndLater} query.Count() = {query.Count()}");
+
+            var query2 = _dbContext.TemporaryExposureKey
+                .Include(k => k.Origin)
+                .Where(k => k.Origin == apiOrigin)
+                .Where(k => k.CreatedOn >= uploadedOnAndLater)
+                .Include(k => k.VisitedCountries).ThenInclude(k => k.Country)
+                .OrderBy(c => c.CreatedOn)
+                .ThenBy(c => c.RollingStartNumber);
+            _logger.LogDebug($"query2.Count() = {query2.Count()}");
 
             return TakeNextBatch(query, numberOfRecordToSkip, maxCount).ToList();
         }
@@ -191,6 +202,8 @@ namespace DIGNDB.App.SmitteStop.DAL.Repositories
             {
                 throw new ArgumentException($"Incorrect argument batchSize= {batchSize}");
             }
+
+            _logger.LogDebug($"keys = {keys.Count()} numberOfRecordsToSkip = {numberOfRecordsToSkip} batchSize = {batchSize}");
 
             return keys
                 .Skip(numberOfRecordsToSkip)

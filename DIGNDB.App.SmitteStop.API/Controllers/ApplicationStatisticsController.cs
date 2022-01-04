@@ -75,7 +75,7 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             }
 
             const string message = "Application statistics uploaded successfully";
-            _logger.LogDebug(message);
+            _logger.LogInformation(message);
             return Ok(message);
         }
     }
