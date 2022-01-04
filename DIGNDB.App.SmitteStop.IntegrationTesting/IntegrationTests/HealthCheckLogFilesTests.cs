@@ -57,7 +57,7 @@ namespace DIGNDB.App.SmitteStop.IntegrationTesting.IntegrationTests
             var result = healthCheckResult.Result;
 
             Assert.AreEqual(HealthStatus.Unhealthy.ToString(), result.status);
-            Assert.AreEqual(2, result.results.data.Count);
+            Assert.AreEqual(3, result.results.data.Count);
         }
 
         [Test]
