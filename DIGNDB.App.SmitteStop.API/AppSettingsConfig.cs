@@ -62,6 +62,7 @@ namespace DIGNDB.App.SmitteStop.API
         public HealthCheckSettings HealthCheckSettings { get; set; }
 
         public bool EnableCacheOverride { get; set; }
+        public bool DebugMode { get; set; }
     }
 
     public class GitHubSettings

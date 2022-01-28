@@ -18,7 +18,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
         private readonly IZipFileInfoService _zipFileInfoService;
 
         private readonly TimeSpan _fileCachingTimespan;
-        private static readonly object _cacheLock = new object();
+        public static readonly object _cacheLock = new object();
         private bool _lockTaken;
         private TimeSpan _timeout;
 

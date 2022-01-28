@@ -13,7 +13,6 @@ namespace DIGNDB.App.SmitteStop.API.Services
         const int DefaultCacheMonitorTimeout = 100;
         private readonly ILogger<CacheOperations> _logger;
         private IMemoryCache _memoryCache;
-        private static Object _cacheLock = new object();
         private readonly IPackageBuilderService _cachePackageBuilder;
 
         private readonly AppSettingsConfig _appSettingsConfig;
@@ -47,7 +46,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
             try
             {
-                Monitor.TryEnter(_cacheLock, timeout, ref lockTaken);
+                Monitor.TryEnter(CacheOperationsV3._cacheLock, timeout, ref lockTaken);
                 if (lockTaken)
                 {
                     if (!forceRefresh && _memoryCache.TryGetValue(key, out result))
@@ -87,7 +86,7 @@ namespace DIGNDB.App.SmitteStop.API.Services
                 // Ensure that the lock is released.
                 if (lockTaken)
                 {
-                    Monitor.Exit(_cacheLock);
+                    Monitor.Exit(CacheOperationsV3._cacheLock);
                 }
             }
             return result;
