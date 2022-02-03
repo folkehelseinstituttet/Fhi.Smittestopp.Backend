@@ -104,7 +104,7 @@ namespace DIGNDB.App.SmitteStop.Core.Services
             {
                 key.Origin = origin;
                 key.KeySource = apiVersion;
-                key.ReportType = ReportType.CONFIRMED_TEST;
+                key.ReportType = parameters.ReportType ?? ReportType.CONFIRMED_TEST ;
             }
 
             var visitedCountries = parameters.visitedCountries.FindAll(countryCode => countryCode.ToLower() != origin.Code.ToLower());
