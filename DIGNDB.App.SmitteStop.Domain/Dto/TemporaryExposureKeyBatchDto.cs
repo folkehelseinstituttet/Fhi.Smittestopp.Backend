@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 
 namespace DIGNDB.App.SmitteStop.Domain.Dto
@@ -12,6 +13,7 @@ namespace DIGNDB.App.SmitteStop.Domain.Dto
         public string appPackageName { get; set; }
         public string platform { get; set; }
         public bool isSharingAllowed { get; set; }
+        [JsonPropertyName("reportType")]
         public ReportType? ReportType { get; set; }
 
         public string ToJson()
