@@ -7,8 +7,7 @@ namespace DIGNDB.App.SmitteStop.API.Contracts
 {
     public interface IImportantInfoService
     {
-        public Message ParseConfig(ImportantInfoRequest request);
+        public ImportantInfoResponse ParseConfig(ImportantInfoRequest request);
         public bool ConfigFileExists();
-        public string GetColor();
     }
 }

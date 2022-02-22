@@ -2,22 +2,17 @@
   "message": [
     {
       "lang": "EN",
-      "text": "En- text",
-      "creationDate": "2022-02-01",
-      "expirationDate": "2022-02-17"
+      "text": "En- text"
     },
     {
       "lang": "PL",
-      "text": "PL - text",
-      "creationDate": "2022-01-01",
-      "expirationDate": "2022-03-17"
+      "text": "PL - text"
     },
     {
       "lang": "DK",
-      "text": "DK - text",
-      "creationDate": "2022-01-01",
-      "expirationDate": "2022-03-17"
+      "text": "DK - text"
     }
   ],
-  "color": "#FFFF00"
+  "color": "#FFFF00",
+  "isClickable" : true 
 }

@@ -33,57 +33,29 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
             _importantInfoService = importantInfoService;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ImportantInfoResponse), 200)]
         [ServiceFilter(typeof(MobileAuthorizationAttribute))]
-        public async Task<IActionResult> GetImportantInfo()
+        public async Task<IActionResult> GetImportantInfo(string lang)
         {
             _logger.LogInformation($"{nameof(GetImportantInfo)} endpoint called.");
 
             try
             {
-                using var reader = new StreamReader(HttpContext.Request.Body);
-                var body = await reader.ReadToEndAsync();
-                _logger.LogInformation($"Logging request body: {HttpContext.Request.Body}");
-                var parameters = JsonSerializer.Deserialize<ImportantInfoRequest>(body);
-
-                ImportantInfoList items;
-                ImportantInfoResponse res;
+                _logger.LogInformation($"Logging request param: {lang}");
+                ImportantInfoRequest parameters = new ImportantInfoRequest(){lang = lang};
 
                 if (!_importantInfoService.ConfigFileExists())
                     return NoContent();
 
-                var message = _importantInfoService.ParseConfig(parameters);
+                var res = _importantInfoService.ParseConfig(parameters);
 
-                if (message == null)
+                if (res.text == null)
                     return NoContent();
-
-                //if (parameters.lastTimeStamp <= DateTime.Parse(message.creationDate))
-                //{
-                res = new ImportantInfoResponse()
-                {
-                    text = message.text,
-                    //creationDate = message.creationDate,
-                    //expirationDate = message.expirationDate,
-                    bannerColor = _importantInfoService.GetColor()
-                };
+               
                 _logger.LogInformation("Important info send");
                 return Ok(res);
-                //}
-
-                //if (parameters.lastTimeStamp >= DateTime.Parse(message.creationDate) &&
-                //    parameters.lastTimeStamp <= DateTime.Parse(message.expirationDate))
-                //{
-                //    return StatusCode(304);
-                //}
-
-                //if (parameters.lastTimeStamp > DateTime.Parse(message.expirationDate))
-                //{
-                //    return NoContent();
-                //}
-
-                return NoContent();
             }
             catch (JsonException je)
             {
