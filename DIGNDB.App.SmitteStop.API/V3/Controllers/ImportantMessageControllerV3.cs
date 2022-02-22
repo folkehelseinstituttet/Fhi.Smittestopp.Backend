@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using DIGNDB.App.SmitteStop.API.Attributes;
 using DIGNDB.App.SmitteStop.Domain.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using DIGNDB.App.SmitteStop.API.Config;
 using DIGNDB.App.SmitteStop.API.Contracts;
-using DIGNDB.App.SmitteStop.Core.Contracts;
-using Microsoft.Data.SqlClient;
-using Newtonsoft.Json;
 using JsonException = System.Text.Json.JsonException;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 

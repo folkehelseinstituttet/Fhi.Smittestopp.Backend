@@ -9,7 +9,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V2
+namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V3
 {
 
     [TestFixture]
