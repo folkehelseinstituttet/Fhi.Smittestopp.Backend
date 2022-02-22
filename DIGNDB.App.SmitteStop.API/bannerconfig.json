@@ -1,15 +1,15 @@
 {
   "message": [
     {
-      "lang": "EN",
+      "lang": "en",
       "text": "En- text"
     },
     {
-      "lang": "PL",
+      "lang": "pl",
       "text": "PL - text"
     },
     {
-      "lang": "DK",
+      "lang": "dk",
       "text": "DK - text"
     }
   ],

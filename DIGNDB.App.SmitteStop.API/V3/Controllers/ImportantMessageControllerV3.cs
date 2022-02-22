@@ -59,7 +59,6 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
             }
             catch (JsonException je)
             {
-
                 _logger.LogError($"Incorrect JSON format: {je}  [Deserialized request]: {HttpContext.Request.Body}");
                 return BadRequest($"Incorrect JSON format: {je.Message}");
             }
@@ -73,7 +72,6 @@ namespace DIGNDB.App.SmitteStop.API.V3.Controllers
                 _logger.LogError("Error sending important info:" + e);
                 return StatusCode(500);
             }
-
         }
     }
 }
