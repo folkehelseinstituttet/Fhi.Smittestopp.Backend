@@ -9,7 +9,7 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 
-namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V2
+namespace DIGNDB.App.SmitteStop.Testing.ControllersTest.V3
 {
     [TestFixture]
     public class CovidStatisticsControllerTests

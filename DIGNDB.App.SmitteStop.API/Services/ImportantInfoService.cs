@@ -11,8 +11,9 @@ namespace DIGNDB.App.SmitteStop.API.Services
 {
     public class ImportantInfoService : IImportantInfoService
     {
+        private const string BannerConfigurationFile = "BannerConfigurationFile";
         private readonly ILogger<ImportantInfoService> _logger;
-        private IConfiguration _configuration; 
+        private IConfiguration _configuration;
 
         public ImportantInfoService( ILogger<ImportantInfoService> logger, IConfiguration configuration)
         {
@@ -22,13 +23,13 @@ namespace DIGNDB.App.SmitteStop.API.Services
 
         public bool ConfigFileExists()
         {
-            return File.Exists(_configuration["BannerConfigurationFile"]);
+            return File.Exists(_configuration[BannerConfigurationFile]);
         }
 
         public ImportantInfoResponse ParseConfig(ImportantInfoRequest request)
         {
             ImportantInfoList items;
-            using (StreamReader r = new StreamReader(_configuration["BannerConfigurationFile"]))
+            using (StreamReader r = new StreamReader(_configuration[BannerConfigurationFile]))
             {
                 string json = r.ReadToEnd();
                 items = JsonConvert.DeserializeObject<ImportantInfoList>(json);

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="ServiceTest\Gateway\Files\GatewayResponse.txt" />
+    <None Remove="ServiceTest\Files\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,4 +39,7 @@
     <ProjectReference Include="..\FederationGatewayApi\FederationGatewayApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ServiceTest\Files\" />
+  </ItemGroup>
 </Project>
