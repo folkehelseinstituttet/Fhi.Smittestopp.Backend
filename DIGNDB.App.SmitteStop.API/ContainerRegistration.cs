@@ -132,6 +132,7 @@ namespace DIGNDB.App.SmitteStop.API
             services.AddScoped<GitHubAuthorizationAttribute>();
             services.AddScoped<DeprecatedCheckAttribute>();
             services.AddScoped<UploadKeysAuthorizationAttribute>();
+            services.AddScoped<IImportantInfoService, ImportantInfoService>();
 
             services.AddScoped<IHealthCheckHangFireService, HealthCheckHangFireService>();
 

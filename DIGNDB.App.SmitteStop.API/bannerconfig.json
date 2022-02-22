@@ -1,0 +1,23 @@
+{
+  "message": [
+    {
+      "lang": "EN",
+      "text": "En- text",
+      "creationDate": "2022-02-01",
+      "expirationDate": "2022-02-17"
+    },
+    {
+      "lang": "PL",
+      "text": "PL - text",
+      "creationDate": "2022-01-01",
+      "expirationDate": "2022-03-17"
+    },
+    {
+      "lang": "DK",
+      "text": "DK - text",
+      "creationDate": "2022-01-01",
+      "expirationDate": "2022-03-17"
+    }
+  ],
+  "color": "#FFFF00"
+}
