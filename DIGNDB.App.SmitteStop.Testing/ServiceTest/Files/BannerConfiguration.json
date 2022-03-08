@@ -1,0 +1,14 @@
+﻿{
+  "color": "#FFFFFF",
+  "isClickable": true,
+  "message": [
+    {
+      "lang": "NB",
+      "text": "Viktig"
+    },
+    {
+      "lang": "EN",
+      "text": "Important"
+    }
+  ]
+}

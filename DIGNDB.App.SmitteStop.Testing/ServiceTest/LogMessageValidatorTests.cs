@@ -20,7 +20,7 @@ namespace DIGNDB.App.SmitteStop.Testing.ServiceTest
         [Test]
         [TestCase("123")]
         [TestCase("absh1/!@.l")]
-        [TestCase("10-04-2023")]
+        [TestCase("10-04-20234")]
         public void ValidateLogMobileMessageDateTimeFormats_GiveInvalidDateTimeFormat_ShouldThrowError(string invalidDate)
         {
             LogMessageMobile log = new LogMessageMobile();
