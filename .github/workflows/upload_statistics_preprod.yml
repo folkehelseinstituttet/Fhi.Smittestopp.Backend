@@ -222,3 +222,8 @@ jobs:
         else
           echo "File for ${{env.file_death}} not available yet"
         fi
+        if [${{env.death_response}} != "200"]
+        then 
+          echo "death download failure"
+          exit 1
+        fi
