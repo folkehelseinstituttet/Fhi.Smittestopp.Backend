@@ -230,5 +230,5 @@ jobs:
           echo "death file downloaded successfully"
         else
           echo "death download failure"
-          exit 1
+          #exit 1
         fi
