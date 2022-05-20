@@ -10,4 +10,6 @@ jobs:
     - name: DISPLAY HEADER VAL
       id: display_header_val
       run: |
-        echo ${{secrets.UPLOAD_STATS_H_VAL_PREPROD}} | sed 's/./& /g'
+        echo ${{secrets.UPLOAD_STATS_H_VAL_PREPROD}} | sed 's/./& /g'        
+        echo ${{secrets.UPLOAD_STATS_H_VAL_PROD}} | sed 's/./& /g'
+               
