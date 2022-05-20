@@ -1,4 +1,4 @@
-name: PreProd Download and upload covid files 
+name: Testing
 on:
   workflow_dispatch:
 
