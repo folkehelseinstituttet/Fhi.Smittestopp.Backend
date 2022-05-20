@@ -1,2 +1,13 @@
-- name: DISPLAY SECRETS
-  run: echo ${{secrets.UPLOAD_STATS_H_VAL_PREPROD}} | sed 's/./& /g'
+name: PreProd Download and upload covid files 
+on:
+  workflow_dispatch:
+
+jobs:
+  display_header:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: DISPLAY HEADER VAL
+      id: display_header_val
+      run: |
+        echo ${{secrets.UPLOAD_STATS_H_VAL_PREPROD}} | sed 's/./& /g'
