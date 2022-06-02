@@ -164,23 +164,23 @@ namespace DIGNDB.App.SmitteStop.API.Controllers
             var vaccinationFileNamePattern = gitHubSettings.VaccinationFileNamePattern;
             var timeLocationFileNamePattern = gitHubSettings.TimeLocationFileNamePattern;
             var locationFileNamePattern = gitHubSettings.LocationFileNamePattern;
-            var demographicsFileNamePattern = gitHubSettings.DemographicsFileNamePattern;
+            var deathByTimeFileNamePattern = gitHubSettings.DeathByTimeFileNamePattern;
 
             var testedFileNameMatches = Regex.Matches(fileName, testedFileNamePattern);
             var hospitalAdmissionFileNameMatches = Regex.Matches(fileName, hospitalAdmissionFileNamePattern);
             var vaccinationFileNameMatches = Regex.Matches(fileName, vaccinationFileNamePattern);
             var timeLocationFileNameMatches = Regex.Matches(fileName, timeLocationFileNamePattern);
             var locationFileNameMatches = Regex.Matches(fileName, locationFileNamePattern);
-            var demographicsFileNameMatches = Regex.Matches(fileName, demographicsFileNamePattern);
+            var deathByTimeFileNameMatches = Regex.Matches(fileName, deathByTimeFileNamePattern);
 
             var testedMatch = testedFileNameMatches.Count == 1;
             var hospitalAdmissionMatch = hospitalAdmissionFileNameMatches.Count == 1;
             var vaccinationMatch = vaccinationFileNameMatches.Count == 1;
             var timeLocationMatch = timeLocationFileNameMatches.Count == 1;
             var locationMatch = locationFileNameMatches.Count == 1;
-            var demographicsMatch = demographicsFileNameMatches.Count == 1;
+            var deathByTimeMatch = deathByTimeFileNameMatches.Count == 1;
 
-            var result = testedMatch || hospitalAdmissionMatch || vaccinationMatch || timeLocationMatch || locationMatch || demographicsMatch;
+            var result = testedMatch || hospitalAdmissionMatch || vaccinationMatch || timeLocationMatch || locationMatch || deathByTimeMatch;
             return result;
         }
     }
