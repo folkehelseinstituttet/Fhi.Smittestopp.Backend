@@ -55,7 +55,7 @@ jobs:
     - name: Set death file name
       id: step_death_file_name
       run: |
-        echo "file_death=data_covid19_demographics_${{ env.date }}.csv" >> $GITHUB_ENV
+        echo "file_death=data_covid19_death_by_time_${{ env.date }}.csv" >> $GITHUB_ENV
 
     #############################
     # Download and upload files #
