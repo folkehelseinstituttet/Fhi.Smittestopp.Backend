@@ -5,6 +5,8 @@ image:https://img.shields.io/github/issues/folkehelseinstituttet/Fhi.Smittestopp
 image:https://img.shields.io/github/issues-pr/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
 image:https://img.shields.io/github/last-commit/folkehelseinstituttet/Fhi.Smittestopp.Backend[]
 
+This app has been retired as of August 10th 2022, see https://www.fhi.no/nyheter/2022/fhi-legger-ned-smittestopp/
+
 WebAPI project, which facilitates receiving, storing and distributing Temporary Exposure Keys
 footnote:[https://google.github.io/exposure-notifications-server/getting-started/publishing-temporary-exposure-keys.html[Temporary Exposure Key (TEK) Publishing Guide]].
 
